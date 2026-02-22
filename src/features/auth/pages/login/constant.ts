@@ -15,3 +15,8 @@ export const LOGIN_FIELDS = [
     minLength: 6,
   },
 ];
+
+export const DUMMY_ADMIN = {
+  email: 'super@gmail.com',
+  password: '123456',
+};

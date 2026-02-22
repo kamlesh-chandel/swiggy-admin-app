@@ -38,7 +38,8 @@ export const Form = <T extends Record<string, string>>({
   };
 
   const validateField = (name: keyof T, value: string) => {
-    const field = fields.find(({ name }) => name === name);
+    const field = fields.find((field) => field.name === name);
+
     if (!field) return '';
 
     let error = '';
@@ -87,8 +88,9 @@ export const Form = <T extends Record<string, string>>({
   };
 
   const getFields = () => {
-    return fields.map(({ label, type, name }) => (
+    return fields.map(({ id, label, type, name }) => (
       <Input
+        key={id}
         fullWidth
         margin="normal"
         label={label}
