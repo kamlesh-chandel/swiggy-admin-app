@@ -1,9 +1,7 @@
+import AppRoutes from './routes';
+
 function App() {
-  return (
-    <div>
-      Swiggy Admin App
-    </div>
-  )
+  return <AppRoutes />;
 }
 
-export default App
+export default App;
