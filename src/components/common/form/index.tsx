@@ -4,8 +4,6 @@ import Input from '../input';
 import Button from '../button';
 import { EMAIL_REGEX } from '@/utils/regex';
 
-import '@/theme/colors.css';
-
 export interface FieldConfig<T> {
   id: string;
   name: keyof T;
@@ -106,12 +104,7 @@ export const Form = <T extends Record<string, string>>({
   return (
     <Box component="form" onSubmit={handleSubmit}>
       {getFields()}
-      <Button
-        type="submit"
-        variant="contained"
-        fullWidth
-        style={{ mt: 3, backgroundColor: 'var(--orange)' }}
-      >
+      <Button type="submit" variant="contained" fullWidth style={{ mt: 3 }}>
         {buttonText}
       </Button>
     </Box>

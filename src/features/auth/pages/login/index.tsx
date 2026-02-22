@@ -8,8 +8,6 @@ import { toast } from 'react-toastify';
 import { DUMMY_ADMIN, LOGIN_FIELDS } from './constant';
 import { ROUTES } from '@/constants/routes';
 
-import '@/theme/colors.css';
-
 interface LoginFormType {
   email: string;
   password: string;
@@ -48,16 +46,13 @@ const Login = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    title: {
-      color: 'var(--orange)',
-    },
   };
 
   return (
     <Box sx={styles.container}>
       <Card sx={styles.card}>
         <CardContent sx={styles.cardContent}>
-          <Typography variant="h5" fontWeight={600} mb={1} sx={styles.title}>
+          <Typography variant="h5" fontWeight={600} mb={1}>
             Swiggy Admin
           </Typography>
 
