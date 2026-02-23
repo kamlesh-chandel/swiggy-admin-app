@@ -1,6 +1,6 @@
 export const COLORS = {
   brand: '#FF5200',
-
+  white: '#fff',
   light: {
     primary: '#1f2937',
     secondary: '#64748b',

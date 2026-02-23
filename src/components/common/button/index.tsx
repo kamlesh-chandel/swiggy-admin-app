@@ -8,6 +8,7 @@ interface ButtonProps {
   variant?: 'text' | 'contained' | 'outlined';
   fullWidth?: boolean;
   style?: object;
+  color?: string;
 }
 
 const Button = ({
@@ -17,6 +18,7 @@ const Button = ({
   onClick,
   fullWidth = true,
   style,
+  color,
 }: ButtonProps) => {
   return (
     <MuiButton
@@ -25,6 +27,7 @@ const Button = ({
       fullWidth={fullWidth}
       sx={style}
       onClick={onClick}
+      color={color}
     >
       {children}
     </MuiButton>
