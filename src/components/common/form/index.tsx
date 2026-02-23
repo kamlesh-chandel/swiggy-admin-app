@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import { EMAIL_REGEX } from '@/utils/regex';
-import '@/theme/colors.css';
+import { COLORS } from '@/theme/colors';
 
 import Input from '../input';
 import Button from '../button';
@@ -109,7 +109,7 @@ export const Form = <T extends Record<string, string>>({
         type="submit"
         variant="contained"
         fullWidth
-        style={{ mt: 3, backgroundColor: 'var(--orange)' }}
+        style={{ mt: 3, backgroundColor: COLORS.brand }}
       >
         {buttonText}
       </Button>
