@@ -1,15 +1,20 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes as RouterRoutes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import PublicRoute from './PublicRoute';
 import ProtectedRoute from './ProtectedRoute';
 
-import Login from '@/features/auth/pages/login';
 import Dashboard from '@/features/dashboard';
+import Login from '@/features/auth/pages/login';
 import { ROUTES } from '@/constants/routes';
 
-const AppRoutes = () => {
+const Routes = () => {
   return (
     <BrowserRouter>
-      <Routes>
+      <RouterRoutes>
         <Route element={<PublicRoute />}>
           <Route path={ROUTES.LOGIN} element={<Login />} />
         </Route>
@@ -18,9 +23,9 @@ const AppRoutes = () => {
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         </Route>
         <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-      </Routes>
+      </RouterRoutes>
     </BrowserRouter>
   );
 };
 
-export default AppRoutes;
+export default Routes;
