@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
+import { EMAIL_REGEX } from '@/utils/regex';
+import '@/theme/colors.css';
+
 import Input from '../input';
 import Button from '../button';
-import { EMAIL_REGEX } from '@/utils/regex';
-
-import '@/theme/colors.css';
 
 export interface FieldConfig<T> {
   id: string;
@@ -37,47 +37,40 @@ export const Form = <T extends Record<string, string>>({
     validateField(name, value);
   };
 
-  const validateField = (name: keyof T, value: string) => {
-    const field = fields.find(({ name }) => name === name);
+  const validateField = (fieldName: keyof T, value: string) => {
+    const field = fields.find((f) => f.name === fieldName);
     if (!field) return '';
 
-    let error = '';
-
-    if (field.required && !value) {
-      error = `${field.label} is required`;
-    }
-
-    if (!error && field.type === 'email' && !EMAIL_REGEX.test(value)) {
-      error = 'Invalid email format';
-    }
-
-    if (!error && field.minLength && value.length < field.minLength) {
-      error = `${field.label} must be at least ${field.minLength} characters`;
-    }
+    const error =
+      (field.required && !value && `${field.label} is required`) ||
+      (field.type === 'email' &&
+        value &&
+        !EMAIL_REGEX.test(value) &&
+        'Invalid email format') ||
+      (field.minLength &&
+        value.length < field.minLength &&
+        `${field.label} must be at least ${field.minLength} characters`) ||
+      '';
 
     setErrors((prev) => ({
       ...prev,
-      [name as string]: error,
+      [fieldName as string]: error,
     }));
 
     return error;
   };
 
   const validateAll = () => {
-    let hasError = false;
     const newErrors: Record<string, string> = {};
 
     fields.forEach(({ name }) => {
       const value = formData[name] || '';
       const error = validateField(name, value);
-      if (error) {
-        hasError = true;
-        newErrors[name as string] = error;
-      }
+      if (error) newErrors[name as string] = error;
     });
 
     setErrors(newErrors);
-    return !hasError;
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
