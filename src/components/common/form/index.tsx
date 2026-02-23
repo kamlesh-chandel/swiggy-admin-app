@@ -87,8 +87,9 @@ export const Form = <T extends Record<string, string>>({
   };
 
   const getFields = () => {
-    return fields.map(({ label, type, name }) => (
+    return fields.map(({ id, label, type, name }) => (
       <Input
+        key={id}
         fullWidth
         margin="normal"
         label={label}

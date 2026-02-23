@@ -2,7 +2,10 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import { Form } from '@/components/common/form';
-import { LOGIN_FIELDS } from './constants';
+import { useAuth } from '@/context/auth/useAuth';
+import { toast } from 'react-toastify';
+
+import { DUMMY_ADMIN, LOGIN_FIELDS } from './constant';
 import { ROUTES } from '@/constants/routes';
 
 import '@/theme/colors.css';
@@ -14,11 +17,16 @@ interface LoginFormType {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = (data: LoginFormType) => {
-    //will integrate api later
-    console.log(data);
-    navigate(ROUTES.DASHBOARD);
+  const handleLogin = ({ email, password }: LoginFormType) => {
+    if (email === DUMMY_ADMIN.email && password === DUMMY_ADMIN.password) {
+      login(DUMMY_ADMIN);
+      navigate(ROUTES.DASHBOARD);
+      toast.success('Login Successfull');
+    } else {
+      toast.error('Email or Password are incorrect');
+    }
   };
 
   const styles = {
