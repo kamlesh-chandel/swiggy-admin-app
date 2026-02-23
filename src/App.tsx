@@ -1,10 +1,10 @@
 import { ToastContainer } from 'react-toastify';
-import AppRoutes from './routes';
+import Routes from './routes';
 
 function App() {
   return (
     <>
-      <AppRoutes />
+      <Routes />
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -16,5 +16,4 @@ function App() {
     </>
   );
 }
-
 export default App;
