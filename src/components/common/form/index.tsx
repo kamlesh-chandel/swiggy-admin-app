@@ -41,23 +41,30 @@ export const Form = <T extends Record<string, string>>({
     const field = fields.find((f) => f.name === fieldName);
     if (!field) return '';
 
-    const error =
-      (field.required && !value && `${field.label} is required`) ||
-      (field.type === 'email' &&
-        value &&
-        !EMAIL_REGEX.test(value) &&
-        'Invalid email format') ||
-      (field.minLength &&
-        value.length < field.minLength &&
-        `${field.label} must be at least ${field.minLength} characters`) ||
-      '';
+    if (field.required && !value) {
+      const error = `${field.label} is required`;
+      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+      return error;
+    }
+
+    if (field.type === 'email' && value && !EMAIL_REGEX.test(value)) {
+      const error = 'Invalid email format';
+      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+      return error;
+    }
+
+    if (field.minLength && value.length < field.minLength) {
+      const error = `${field.label} must be at least ${field.minLength} characters`;
+      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+      return error;
+    }
 
     setErrors((prev) => ({
       ...prev,
-      [fieldName as string]: error,
+      [fieldName as string]: '',
     }));
 
-    return error;
+    return '';
   };
 
   const validateAll = () => {

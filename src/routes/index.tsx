@@ -1,15 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes as RouterRoutes, Route } from 'react-router-dom';
 import Login from '@/pages/auth/login';
 import { ROUTES } from '@/constants/routes';
 
-const AppRoutes = () => {
+const Routes = () => {
   return (
     <BrowserRouter>
-      <Routes>
+      <RouterRoutes>
         <Route path={ROUTES.LOGIN} element={<Login />} />
-      </Routes>
+      </RouterRoutes>
     </BrowserRouter>
   );
 };
 
-export default AppRoutes;
+export default Routes;
