@@ -5,7 +5,10 @@ export const lightPalette: PaletteOptions = {
   mode: 'light',
 
   primary: {
-    main: COLORS.primary,
+    main: COLORS.light.primary,
+  },
+  secondary: {
+    main: COLORS.light.secondary,
   },
 
   background: {
@@ -25,9 +28,11 @@ export const darkPalette: PaletteOptions = {
   mode: 'dark',
 
   primary: {
-    main: COLORS.primary,
+    main: COLORS.dark.primary,
   },
-
+  secondary: {
+    main: COLORS.dark.secondary,
+  },
   background: {
     default: COLORS.dark.bg,
     paper: COLORS.dark.surface,

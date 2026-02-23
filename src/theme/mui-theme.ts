@@ -19,5 +19,12 @@ export const getMuiTheme = (palette: PaletteOptions) => {
     shape: {
       borderRadius: 10,
     },
+    components: {
+      MuiTextField: {
+        defaultProps: {
+          color: 'secondary',
+        },
+      },
+    },
   });
 };
