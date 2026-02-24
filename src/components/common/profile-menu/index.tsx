@@ -52,9 +52,6 @@ const ProfileMenu = ({ anchorEl, open, onClose, user }: ProfileMenuProps) => {
       anchorEl={anchorEl}
       open={open}
       onClose={onClose}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      sx={{}}
       PaperProps={{
         sx: styles.menu,
       }}
