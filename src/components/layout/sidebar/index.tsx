@@ -16,7 +16,7 @@ import { ROUTES } from '@/constants/routes';
 import { SIDEBAR_LINKS } from './constant';
 
 import Button from '@/components/common/button';
-import ConfirmDialog from '@/components/common/confirm-dialog';
+import Dialog from '@/components/common/dialog';
 
 const drawerWidth = 250;
 
@@ -44,9 +44,9 @@ const Sidebar = ({ mobileOpen, onClose }: SidebarProps) => {
       borderRadius: 2,
       '&.Mui-selected': {
         backgroundColor: COLORS.brand,
-        color: COLORS.white,
+        color: COLORS.common.white,
         '& .MuiListItemIcon-root': {
-          color: COLORS.white,
+          color: COLORS.common.white,
         },
         '&:hover': {
           backgroundColor: COLORS.brand,
@@ -125,7 +125,7 @@ const Sidebar = ({ mobileOpen, onClose }: SidebarProps) => {
         {content}
       </Drawer>
 
-      <ConfirmDialog
+      <Dialog
         open={openLogoutDialog}
         title="Confirm Logout"
         description="Are you sure you want to logout from the admin panel?"
