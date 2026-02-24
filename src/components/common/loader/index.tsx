@@ -12,8 +12,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    bgcolor: 'rgba(255,255,255,0.6)',
-    zIndex: 9999,
   },
 };
 
