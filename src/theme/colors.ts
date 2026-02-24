@@ -1,6 +1,10 @@
 export const COLORS = {
   brand: '#FF5200',
-  white: '#fff',
+
+  common: {
+    white: '#ffffff',
+  },
+
   roles: {
     superadmin: {
       bg: '#fee2e2',
@@ -15,6 +19,7 @@ export const COLORS = {
       text: '#475569',
     },
   },
+
   light: {
     primary: '#1f2937',
     secondary: '#64748b',

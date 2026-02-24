@@ -1,5 +1,5 @@
 import {
-  Dialog,
+  Dialog as MuiDialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 
-interface ConfirmDialogProps {
+interface DialogProps {
   open: boolean;
   title: string;
   description?: string;
@@ -18,7 +18,7 @@ interface ConfirmDialogProps {
   loading?: boolean;
 }
 
-const ConfirmDialog = ({
+const Dialog = ({
   open,
   title,
   description,
@@ -26,9 +26,9 @@ const ConfirmDialog = ({
   onConfirm,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
-}: ConfirmDialogProps) => {
+}: DialogProps) => {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <MuiDialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>{title}</DialogTitle>
 
       {description && (
@@ -46,8 +46,8 @@ const ConfirmDialog = ({
           {confirmText}
         </Button>
       </DialogActions>
-    </Dialog>
+    </MuiDialog>
   );
 };
 
-export default ConfirmDialog;
+export default Dialog;
