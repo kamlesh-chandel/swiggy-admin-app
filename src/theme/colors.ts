@@ -2,7 +2,7 @@ export const COLORS = {
   brand: '#FF5200',
 
   common: {
-    white: '#ffffff',
+    softPink: '#f8ececff',
   },
 
   light: {
