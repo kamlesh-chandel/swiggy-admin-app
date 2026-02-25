@@ -37,7 +37,6 @@ const CustomPieChart = ({
           </Typography>
         )}
 
-        {/* skeleton while loading */}
         {loading ? (
           <Skeleton variant="rounded" width="100%" height={height} />
         ) : (

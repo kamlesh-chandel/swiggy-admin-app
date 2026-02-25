@@ -5,11 +5,15 @@ import type {
   UseDashboardReturn,
   DashboardStats,
   OrdersStatusItem,
+  TopRestaurantItem,
+  OrdersTrendItem,
 } from '../types/dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [ordersStatus, setOrdersStatus] = useState<OrdersStatusItem[]>([]);
+  const [topRestaurants, setTopRestaurants] = useState<TopRestaurantItem[]>([]);
+  const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,6 +23,8 @@ export const useDashboard = (): UseDashboardReturn => {
 
         setStats(res.stats);
         setOrdersStatus(res.ordersByStatus);
+        setTopRestaurants(res.topRestaurants);
+        setOrdersTrend(res.ordersTrend);
       } catch (error) {
         console.error('Dashboard analytics error:', error);
       } finally {
@@ -32,6 +38,8 @@ export const useDashboard = (): UseDashboardReturn => {
   return {
     stats,
     ordersStatus,
+    topRestaurants,
+    ordersTrend,
     loading,
   };
 };

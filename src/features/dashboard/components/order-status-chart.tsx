@@ -8,6 +8,16 @@ interface OrdersStatusChartProps {
   loading?: boolean;
 }
 
+const styles = {
+  statusBox: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
+
 const OrdersStatusChart = ({ data, loading }: OrdersStatusChartProps) => {
   const formattedData = data.map(({ status, value }) => ({
     name: status,
@@ -16,15 +26,7 @@ const OrdersStatusChart = ({ data, loading }: OrdersStatusChartProps) => {
   }));
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: { xs: 260, sm: 320, md: '100%' },
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <Box sx={styles.statusBox}>
       <CustomPieChart
         title="Orders by Status"
         data={formattedData}

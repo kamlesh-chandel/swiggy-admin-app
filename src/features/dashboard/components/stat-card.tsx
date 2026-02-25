@@ -40,6 +40,10 @@ const styles = {
     bgcolor: 'background.default',
     flexShrink: 0,
   },
+  iconSkelaton: {
+    width: { xs: 20, sm: 28, md: 50 },
+    height: { xs: 20, sm: 28, md: 50 },
+  },
 };
 
 const StatCard = ({ title, value, icon, loading }: Props) => {
@@ -66,13 +70,7 @@ const StatCard = ({ title, value, icon, loading }: Props) => {
         </Box>
 
         {loading ? (
-          <Skeleton
-            variant="rounded"
-            sx={{
-              width: { xs: 20, sm: 28, md: 50 },
-              height: { xs: 20, sm: 28, md: 50 },
-            }}
-          />
+          <Skeleton variant="rounded" sx={styles.iconSkelaton} />
         ) : (
           icon && <Box sx={styles.iconBox}>{icon}</Box>
         )}

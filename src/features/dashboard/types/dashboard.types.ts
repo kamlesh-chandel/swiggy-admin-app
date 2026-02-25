@@ -19,11 +19,6 @@ export interface StatCardProps {
   icon?: ReactNode;
 }
 
-export interface OrdersStatusItem {
-  status: string;
-  value: number;
-}
-
 export interface DashboardStats {
   totalOrders: number;
   totalRevenue: number;
@@ -36,13 +31,30 @@ export interface OrdersStatusItem {
   value: number;
 }
 
+export interface TopRestaurantItem {
+  name: string;
+  revenue: number;
+}
+
+export interface OrdersTrendItem {
+  date: string;
+  orders: number;
+}
+
 export interface DashboardAnalyticsResponse {
   stats: DashboardStats;
   ordersByStatus: OrdersStatusItem[];
+  topRestaurants: {
+    name: string;
+    revenue: number;
+  }[];
+  ordersTrend: OrdersTrendItem[];
 }
 
 export interface UseDashboardReturn {
   stats: DashboardStats | null;
   ordersStatus: OrdersStatusItem[];
+  topRestaurants: { name: string; revenue: number }[];
+  ordersTrend: OrdersTrendItem[];
   loading: boolean;
 }

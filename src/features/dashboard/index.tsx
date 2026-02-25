@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import {
   ReceiptLong as ReceiptLongIcon,
   CurrencyRupee as CurrencyRupeeIcon,
@@ -9,6 +9,8 @@ import type { Theme } from '@mui/material';
 
 import StatCard from './components/stat-card';
 import OrdersStatusChart from './components/order-status-chart';
+import TopRestaurantsChart from './components/top-restaurants-chart';
+import OrdersTrendChart from './components/order-trend-chart';
 import { useDashboard } from './hooks/useDashboard';
 
 import type {
@@ -33,6 +35,8 @@ const styles = {
     borderRadius: 2,
     height: '100%',
   },
+  gridSize: { xs: 12, md: 6 },
+  gridContainer: { height: '50%', mt: 2, mb: 2 },
 };
 
 const statCardsConfig = (data: DashboardOverview): StatCardConfig[] => [
@@ -59,7 +63,8 @@ const statCardsConfig = (data: DashboardOverview): StatCardConfig[] => [
 ];
 
 const Dashboard = () => {
-  const { stats, ordersStatus, loading } = useDashboard();
+  const { stats, ordersStatus, topRestaurants, ordersTrend, loading } =
+    useDashboard();
 
   if (!loading && !stats) {
     return (
@@ -69,35 +74,47 @@ const Dashboard = () => {
 
   const cards = stats ? statCardsConfig(stats) : [];
 
+  const getStatCards = () => {
+    return (loading ? Array(4).fill(null) : cards).map((card, index) => (
+      <Grid key={index} size={{ xs: 6, sm: 6 }}>
+        <StatCard
+          title={card?.title}
+          value={card?.value}
+          icon={card?.icon}
+          loading={loading}
+        />
+      </Grid>
+    ));
+  };
+
   return (
-    <>
+    <Box sx={{ height: '100%' }}>
       <Typography variant="h5" sx={styles.heading}>
         Dashboard Overview
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={styles.gridSize}>
           <Grid container spacing={3}>
-            {(loading ? Array(4).fill(null) : cards).map((card, index) => (
-              <Grid key={index} size={{ xs: 6, sm: 6 }}>
-                <StatCard
-                  title={card?.title}
-                  value={card?.value}
-                  icon={card?.icon}
-                  loading={loading}
-                />
-              </Grid>
-            ))}
+            {getStatCards()}
           </Grid>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={styles.gridSize}>
           <Grid sx={styles.chartWrapper}>
             <OrdersStatusChart data={ordersStatus} loading={loading} />
           </Grid>
         </Grid>
       </Grid>
-    </>
+      <Grid container spacing={3} sx={styles.gridContainer}>
+        <Grid size={styles.gridSize}>
+          <TopRestaurantsChart data={topRestaurants} loading={loading} />
+        </Grid>
+        <Grid size={styles.gridSize}>
+          <OrdersTrendChart data={ordersTrend} loading={loading} />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
