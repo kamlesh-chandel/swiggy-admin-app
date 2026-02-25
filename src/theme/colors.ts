@@ -2,12 +2,12 @@ export const COLORS = {
   brand: '#FF5200',
 
   common: {
-    white: '#ffffff',
     yellow: '#f59e0b',
     lightBlue: '#3b82f6',
     darkBlue: '#6366f1',
     green: '#22c55e',
     red: '#ef4444',
+    softPink: '#f8ececff',
   },
 
   roles: {
