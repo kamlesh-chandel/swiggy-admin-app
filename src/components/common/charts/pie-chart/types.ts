@@ -1,10 +1,10 @@
-export interface PieChartItem {
+interface PieChartItem {
   name: string;
   value: number;
   color?: string;
 }
 
-export interface CustomPieChartProps {
+export interface CustomPieChartItem {
   title?: string;
   data: PieChartItem[];
   height?: number;

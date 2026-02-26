@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
 import type { Theme } from '@mui/material';
-import type { StatCardProps } from '../types/dashboard.types';
+import type { StatCardConfig } from '../types/dashboard.types';
 
-interface Props extends StatCardProps {
+interface StatCardProps extends StatCardConfig {
   loading?: boolean;
 }
 
@@ -46,7 +46,7 @@ const styles = {
   },
 };
 
-const StatCard = ({ title, value, icon, loading }: Props) => {
+const StatCard = ({ title, value, icon, loading }: StatCardProps) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent sx={styles.cardContent}>

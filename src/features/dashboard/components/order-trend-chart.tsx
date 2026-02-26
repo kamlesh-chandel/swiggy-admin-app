@@ -1,12 +1,7 @@
 import { Box } from '@mui/material';
 import CustomLineChart from '@/components/common/charts/line-chart';
 
-import type { OrdersTrendItem } from '../types/dashboard.types';
-
-interface Props {
-  data: OrdersTrendItem[];
-  loading?: boolean;
-}
+import type { OrdersTrendChartProps } from '../types/dashboard.types';
 
 const styles = {
   ordersTrendBox: {
@@ -18,7 +13,7 @@ const styles = {
   },
 };
 
-const OrdersTrendChart = ({ data, loading }: Props) => {
+const OrdersTrendChart = ({ data, loading }: OrdersTrendChartProps) => {
   return (
     <Box sx={styles.ordersTrendBox}>
       <CustomLineChart

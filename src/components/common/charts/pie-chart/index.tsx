@@ -2,9 +2,9 @@ import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import type { CustomPieChartProps } from './types';
+import type { CustomPieChartItem } from './types';
 
-interface Props extends CustomPieChartProps {
+interface Props extends CustomPieChartItem {
   loading?: boolean;
 }
 
@@ -51,11 +51,8 @@ const CustomPieChart = ({
                 outerRadius={outerRadius}
                 label
               >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.color || theme.palette.primary.main}
-                  />
+                {data.map(({ color, name }) => (
+                  <Cell key={name} fill={color || theme.palette.primary.main} />
                 ))}
               </Pie>
 
