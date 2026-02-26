@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import type { AuthContextType, User } from './auth.types';
+import type { AuthContextType, AuthUser, AuthResponse } from './auth.types';
 import { AuthContext } from './auth.context';
 
 interface AuthProviderProps {
@@ -9,26 +9,28 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const storedUser = localStorage.getItem('user');
 
-  const [user, setUser] = useState<User | null>(
+  const [user, setUser] = useState<AuthUser | null>(
     storedUser ? JSON.parse(storedUser) : null,
   );
 
-  const login = (newUser: User) => {
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+  const setAuthSession = (response: AuthResponse) => {
+    setUser(response.user);
+    localStorage.setItem('user', JSON.stringify(response.user));
+    localStorage.setItem('token', response.jwt);
   };
 
-  const logout = () => {
+  const removeAuthSession = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   const value = useMemo<AuthContextType>(() => {
     return {
       user,
       isAuthenticated: !!user,
-      login,
-      logout,
+      setAuthSession,
+      removeAuthSession,
     };
   }, [user]);
 

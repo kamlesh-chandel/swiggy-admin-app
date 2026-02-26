@@ -1,4 +1,7 @@
-export const LOGIN_FIELDS = [
+import type { FieldConfig } from '@/components/common/form';
+import type { LoginFormType } from './login.types';
+
+export const LOGIN_FIELDS: FieldConfig<LoginFormType>[] = [
   {
     id: 'email',
     name: 'email',
@@ -15,8 +18,3 @@ export const LOGIN_FIELDS = [
     minLength: 6,
   },
 ];
-
-export const DUMMY_ADMIN = {
-  email: 'super@gmail.com',
-  password: '123456',
-};

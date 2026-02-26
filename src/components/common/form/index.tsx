@@ -17,14 +17,16 @@ export interface FieldConfig<T> {
 
 interface FormProps<T> {
   fields: FieldConfig<T>[];
-  onSubmit: (data: T) => void;
+  onSubmit: (data: T) => void | Promise<void>;
   buttonText?: string;
+  loading?: boolean;
 }
 
-export const Form = <T extends Record<string, string>>({
+export const Form = <T extends { [K in keyof T]: string }>({
   fields,
   onSubmit,
   buttonText = 'Submit',
+  loading = false,
 }: FormProps<T>) => {
   const [formData, setFormData] = useState<T>({} as T);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -80,10 +82,21 @@ export const Form = <T extends Record<string, string>>({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const isFormValid = () => {
+    const allRequiredFilled = fields.every(({ required, name }) => {
+      if (!required) return true;
+      const value = formData[name];
+      return value && value.trim() !== '';
+    });
+    const noErrors = Object.values(errors).every((error) => !error);
+
+    return allRequiredFilled && noErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateAll()) return;
-    onSubmit(formData);
+    await onSubmit(formData);
   };
 
   const getFields = () => {
@@ -105,10 +118,13 @@ export const Form = <T extends Record<string, string>>({
   return (
     <Box component="form" onSubmit={handleSubmit}>
       {getFields()}
+
       <Button
         type="submit"
         variant="contained"
         fullWidth
+        loading={loading}
+        disabled={loading || !isFormValid()}
         style={{ mt: 3, backgroundColor: COLORS.brand }}
       >
         {buttonText}

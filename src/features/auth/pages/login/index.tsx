@@ -1,29 +1,34 @@
+import { useState } from 'react';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-import { Form } from '@/components/common/form';
-import { useAuth } from '@/context/auth/useAuth';
 import { toast } from 'react-toastify';
 
-import { DUMMY_ADMIN, LOGIN_FIELDS } from './constant';
+import { Form } from '@/components/common/form';
+import { loginRequest } from '@/services/auth.service';
+import { useAuth } from '@/context/auth/useAuth';
+import type { LoginFormType } from './login.types';
 import { ROUTES } from '@/constants/routes';
-
-interface LoginFormType {
-  email: string;
-  password: string;
-}
+import { LOGIN_FIELDS } from './constant';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = ({ email, password }: LoginFormType) => {
-    if (email === DUMMY_ADMIN.email && password === DUMMY_ADMIN.password) {
-      login(DUMMY_ADMIN);
+  const navigate = useNavigate();
+  const { setAuthSession } = useAuth();
+
+  const handleLogin = async ({ email, password }: LoginFormType) => {
+    try {
+      setLoading(true);
+
+      const response = await loginRequest(email, password);
+      setAuthSession(response);
+
       navigate(ROUTES.DASHBOARD);
-      toast.success('Login Successfull');
-    } else {
-      toast.error('Email or Password are incorrect');
+      toast.success('Login successful');
+    } catch {
+      toast.error('Invalid email or password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,6 +69,7 @@ const Login = () => {
             fields={LOGIN_FIELDS}
             onSubmit={handleLogin}
             buttonText="Login"
+            loading={loading}
           />
         </CardContent>
       </Card>

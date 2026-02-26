@@ -1,12 +1,25 @@
-export interface User {
+export interface AuthUser {
+  id: number;
+  username: string;
   email: string;
-  password: string;
+  blocked: boolean;
+  confirmed: boolean;
+  provider: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  documentId: string;
+}
+
+export interface AuthResponse {
+  jwt: string;
+  user: AuthUser;
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   isAuthenticated: boolean;
 
-  login: (user: User) => void;
-  logout: () => void;
+  setAuthSession: (response: AuthResponse) => void;
+  removeAuthSession: () => void;
 }

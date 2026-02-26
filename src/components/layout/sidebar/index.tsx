@@ -31,10 +31,10 @@ const Sidebar = ({ mobileOpen, onClose }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { logout } = useAuth();
+  const { removeAuthSession } = useAuth();
 
   const handleLogout = () => {
-    logout();
+    removeAuthSession();
     navigate(ROUTES.LOGIN);
   };
 
