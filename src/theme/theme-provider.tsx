@@ -8,8 +8,16 @@ import { lightPalette, darkPalette } from './mui-palette';
 import { getMuiTheme } from './mui-theme';
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const stored = localStorage.getItem('theme') as ThemeMode | null;
-  const [mode, setMode] = useState<ThemeMode>(stored || 'dark');
+  const getSystemTheme = () =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    return getSystemTheme();
+  });
 
   const toggleTheme = () => {
     setMode((prev) => {

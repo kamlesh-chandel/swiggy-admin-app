@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import PublicRoute from './PublicRoute';
 import ProtectedRoute from './ProtectedRoute';
+import Layout from '@/components/layout';
 
 import Dashboard from '@/features/dashboard';
 import Login from '@/features/auth/pages/login';
@@ -20,7 +21,9 @@ const Routes = () => {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route element={<Layout />}>
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
       </RouterRoutes>
