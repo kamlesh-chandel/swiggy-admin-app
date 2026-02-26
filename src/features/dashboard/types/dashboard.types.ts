@@ -20,7 +20,7 @@ export interface DashboardStats {
   totalCustomers: number;
 }
 
-export interface OrdersStatusItem {
+export interface OrdersByStatusItem {
   status: string;
   value: number;
 }
@@ -37,7 +37,7 @@ export interface OrdersTrendItem {
 
 export interface UseDashboardReturn {
   stats: DashboardStats | null;
-  ordersStatus: OrdersStatusItem[];
+  ordersByStatus: OrdersByStatusItem[];
   topRestaurants: { name: string; revenue: number }[];
   ordersTrend: OrdersTrendItem[];
   loading: boolean;

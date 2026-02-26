@@ -63,7 +63,7 @@ const statCardsConfig = (data: DashboardOverview): StatCardConfig[] => [
 ];
 
 const Dashboard = () => {
-  const { stats, ordersStatus, topRestaurants, ordersTrend, loading } =
+  const { stats, ordersByStatus, topRestaurants, ordersTrend, loading } =
     useDashboard();
 
   if (!loading && !stats) {
@@ -102,7 +102,7 @@ const Dashboard = () => {
 
         <Grid size={styles.gridSize}>
           <Grid sx={styles.chartWrapper}>
-            <OrdersStatusChart data={ordersStatus} loading={loading} />
+            <OrdersStatusChart data={ordersByStatus} loading={loading} />
           </Grid>
         </Grid>
       </Grid>

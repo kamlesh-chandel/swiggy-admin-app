@@ -4,14 +4,16 @@ import { getDashboardAnalytics } from '../services/dashboard.service';
 import type {
   UseDashboardReturn,
   DashboardStats,
-  OrdersStatusItem,
+  OrdersByStatusItem,
   TopRestaurantItem,
   OrdersTrendItem,
 } from '../types/dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [ordersStatus, setOrdersStatus] = useState<OrdersStatusItem[]>([]);
+  const [ordersByStatus, setOrdersByStatus] = useState<OrdersByStatusItem[]>(
+    [],
+  );
   const [topRestaurants, setTopRestaurants] = useState<TopRestaurantItem[]>([]);
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,7 +24,7 @@ export const useDashboard = (): UseDashboardReturn => {
         const res = await getDashboardAnalytics();
 
         setStats(res.stats);
-        setOrdersStatus(res.ordersByStatus);
+        setOrdersByStatus(res.ordersByStatus);
         setTopRestaurants(res.topRestaurants);
         setOrdersTrend(res.ordersTrend);
       } catch (error) {
@@ -37,7 +39,7 @@ export const useDashboard = (): UseDashboardReturn => {
 
   return {
     stats,
-    ordersStatus,
+    ordersByStatus,
     topRestaurants,
     ordersTrend,
     loading,
