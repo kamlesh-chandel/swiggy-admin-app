@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import CustomLineChart from '@/components/common/charts/line-chart';
 
-import type { OrdersTrendChartProps } from '../types/dashboard.types';
+import type { OrdersTrendChartProps } from '../dashboard.types';
 
 const styles = {
   ordersTrendBox: {

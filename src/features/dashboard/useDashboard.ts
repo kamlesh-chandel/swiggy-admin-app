@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getDashboardAnalytics } from '../services/dashboard.service';
+import { getDashboardAnalytics } from './dashboard.service';
 
 import type {
   UseDashboardReturn,
@@ -7,7 +7,7 @@ import type {
   OrdersByStatusItem,
   TopRestaurantItem,
   OrdersTrendItem,
-} from '../types/dashboard.types';
+} from './dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [stats, setStats] = useState<DashboardStats | null>(null);

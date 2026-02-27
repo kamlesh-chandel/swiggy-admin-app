@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
 import type { Theme } from '@mui/material';
-import type { StatCardConfig } from '../types/dashboard.types';
+import type { StatCardConfig } from '../dashboard.types';
 
 interface StatCardProps extends StatCardConfig {
   loading?: boolean;

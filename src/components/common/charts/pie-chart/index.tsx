@@ -2,11 +2,7 @@ import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import type { CustomPieChartItem } from './types';
-
-interface Props extends CustomPieChartItem {
-  loading?: boolean;
-}
+import type { CustomPieChartProps } from './types';
 
 const styles = {
   card: {
@@ -25,7 +21,7 @@ const CustomPieChart = ({
   outerRadius = 90,
   showLegend = true,
   loading,
-}: Props) => {
+}: CustomPieChartProps) => {
   const theme = useTheme();
 
   return (

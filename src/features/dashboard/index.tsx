@@ -11,12 +11,9 @@ import StatCard from './components/stat-card';
 import OrdersStatusChart from './components/order-status-chart';
 import TopRestaurantsChart from './components/top-restaurants-chart';
 import OrdersTrendChart from './components/order-trend-chart';
-import { useDashboard } from './hooks/useDashboard';
+import { useDashboard } from './useDashboard';
 
-import type {
-  DashboardOverview,
-  StatCardConfig,
-} from './types/dashboard.types';
+import type { DashboardOverview, StatCardConfig } from './dashboard.types';
 
 const styles = {
   heading: {

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import CustomBarChart from '@/components/common/charts/bar-chart';
 
-import type { TopRestaurantItem } from '../types/dashboard.types';
+import type { TopRestaurantItem } from '../dashboard.types';
 
 interface TopRestaurantsChartProps {
   data: TopRestaurantItem[];

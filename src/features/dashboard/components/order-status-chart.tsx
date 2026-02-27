@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import CustomPieChart from '@/components/common/charts/pie-chart';
-import { STATUS_COLORS } from '../constants/status-colors';
-import type { OrdersByStatusItem } from '../types/dashboard.types';
+import { STATUS_COLORS } from '../constant';
+import type { OrdersByStatusItem } from '../dashboard.types';
 
 interface OrdersStatusChartProps {
   data: OrdersByStatusItem[];
