@@ -41,7 +41,7 @@ const CustomBarChart = ({ title, data, loading = false }: BarChartProps) => {
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} />
               <Tooltip />
-              <Bar dataKey="value" fill={COLORS.common.green} />
+              <Bar dataKey="value" fill={COLORS.green} />
             </BarChart>
           </ResponsiveContainer>
         )}

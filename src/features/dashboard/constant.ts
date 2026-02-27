@@ -1,9 +1,9 @@
 import { COLORS } from '@/theme/colors';
 
 export const STATUS_COLORS: Record<string, string> = {
-  pending: COLORS.common.yellow,
-  confirmed: COLORS.common.lightBlue,
-  preparing: COLORS.common.darkBlue,
-  delivered: COLORS.common.green,
-  cancelled: COLORS.common.red,
+  pending: COLORS.yellow,
+  confirmed: COLORS.lightBlue,
+  preparing: COLORS.darkBlue,
+  delivered: COLORS.green,
+  cancelled: COLORS.red,
 };

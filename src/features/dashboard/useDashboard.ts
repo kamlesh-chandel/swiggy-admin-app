@@ -3,14 +3,15 @@ import { getDashboardAnalytics } from './dashboard.service';
 
 import type {
   UseDashboardReturn,
-  DashboardStats,
   OrdersByStatusItem,
   TopRestaurantItem,
   OrdersTrendItem,
+  dashboardStatsProps,
 } from './dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [dashboardStats, setDashboardStats] =
+    useState<dashboardStatsProps | null>(null);
   const [ordersByStatus, setOrdersByStatus] = useState<OrdersByStatusItem[]>(
     [],
   );
@@ -23,7 +24,7 @@ export const useDashboard = (): UseDashboardReturn => {
       try {
         const res = await getDashboardAnalytics();
 
-        setStats(res.stats);
+        setDashboardStats(res.dashboardStats);
         setOrdersByStatus(res.ordersByStatus);
         setTopRestaurants(res.topRestaurants);
         setOrdersTrend(res.ordersTrend);
@@ -38,7 +39,7 @@ export const useDashboard = (): UseDashboardReturn => {
   }, []);
 
   return {
-    stats,
+    dashboardStats,
     ordersByStatus,
     topRestaurants,
     ordersTrend,

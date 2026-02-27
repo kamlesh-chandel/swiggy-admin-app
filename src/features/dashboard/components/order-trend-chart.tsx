@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 import CustomLineChart from '@/components/common/charts/line-chart';
 
-import type { OrdersTrendChartProps } from '../dashboard.types';
+import type { OrderTrendChartProps } from '../dashboard.types';
 
 const styles = {
-  ordersTrendBox: {
+  orderTrendBox: {
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -13,9 +13,9 @@ const styles = {
   },
 };
 
-const OrdersTrendChart = ({ data, loading }: OrdersTrendChartProps) => {
+const OrderTrendChart = ({ data, loading }: OrderTrendChartProps) => {
   return (
-    <Box sx={styles.ordersTrendBox}>
+    <Box sx={styles.orderTrendBox}>
       <CustomLineChart
         title="Orders (Last 7 days)"
         data={data}
@@ -25,4 +25,4 @@ const OrdersTrendChart = ({ data, loading }: OrdersTrendChartProps) => {
   );
 };
 
-export default OrdersTrendChart;
+export default OrderTrendChart;

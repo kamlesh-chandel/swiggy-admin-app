@@ -3,7 +3,7 @@ import CustomPieChart from '@/components/common/charts/pie-chart';
 import { STATUS_COLORS } from '../constant';
 import type { OrdersByStatusItem } from '../dashboard.types';
 
-interface OrdersStatusChartProps {
+interface OrderStatusChartProps {
   data: OrdersByStatusItem[];
   loading?: boolean;
 }
@@ -18,7 +18,7 @@ const styles = {
   },
 };
 
-const OrdersStatusChart = ({ data, loading }: OrdersStatusChartProps) => {
+const OrderStatusChart = ({ data, loading }: OrderStatusChartProps) => {
   const formattedData = data.map(({ status, value }) => ({
     name: status,
     value,
@@ -36,4 +36,4 @@ const OrdersStatusChart = ({ data, loading }: OrdersStatusChartProps) => {
   );
 };
 
-export default OrdersStatusChart;
+export default OrderStatusChart;

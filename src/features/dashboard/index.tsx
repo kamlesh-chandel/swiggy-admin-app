@@ -8,12 +8,12 @@ import {
 import type { Theme } from '@mui/material';
 
 import StatCard from './components/stat-card';
-import OrdersStatusChart from './components/order-status-chart';
+import OrderStatusChart from './components/order-status-chart';
 import TopRestaurantsChart from './components/top-restaurants-chart';
-import OrdersTrendChart from './components/order-trend-chart';
+import OrderTrendChart from './components/order-trend-chart';
 import { useDashboard } from './useDashboard';
 
-import type { DashboardOverview, StatCardConfig } from './dashboard.types';
+import type { StatCardProps, StatCardConfig } from './dashboard.types';
 
 const styles = {
   heading: {
@@ -26,17 +26,14 @@ const styles = {
     height: '85%',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  chartWrapper: {
     border: (theme: Theme) => `1px solid ${theme.palette.divider}`,
     borderRadius: 2,
-    height: '100%',
   },
   gridSize: { xs: 12, md: 6 },
   gridContainer: { height: '50%', mt: 2, mb: 2 },
 };
 
-const statCardsConfig = (data: DashboardOverview): StatCardConfig[] => [
+const statCardsConfig = (data: StatCardProps): StatCardConfig[] => [
   {
     title: 'Total Orders',
     value: data.totalOrders,
@@ -60,19 +57,24 @@ const statCardsConfig = (data: DashboardOverview): StatCardConfig[] => [
 ];
 
 const Dashboard = () => {
-  const { stats, ordersByStatus, topRestaurants, ordersTrend, loading } =
-    useDashboard();
+  const {
+    dashboardStats,
+    ordersByStatus,
+    topRestaurants,
+    ordersTrend,
+    loading,
+  } = useDashboard();
 
-  if (!loading && !stats) {
+  if (!loading && !dashboardStats) {
     return (
       <Typography sx={styles.failedText}>Failed to load dashboard</Typography>
     );
   }
 
-  const cards = stats ? statCardsConfig(stats) : [];
+  const cards = dashboardStats ? statCardsConfig(dashboardStats) : [];
 
   const getStatCards = () => {
-    return (loading ? Array(4).fill(null) : cards).map((card, index) => (
+    return cards.map((card, index) => (
       <Grid key={index} size={{ xs: 6, sm: 6 }}>
         <StatCard
           title={card?.title}
@@ -98,9 +100,7 @@ const Dashboard = () => {
         </Grid>
 
         <Grid size={styles.gridSize}>
-          <Grid sx={styles.chartWrapper}>
-            <OrdersStatusChart data={ordersByStatus} loading={loading} />
-          </Grid>
+          <OrderStatusChart data={ordersByStatus} loading={loading} />
         </Grid>
       </Grid>
       <Grid container spacing={3} sx={styles.gridContainer}>
@@ -108,7 +108,7 @@ const Dashboard = () => {
           <TopRestaurantsChart data={topRestaurants} loading={loading} />
         </Grid>
         <Grid size={styles.gridSize}>
-          <OrdersTrendChart data={ordersTrend} loading={loading} />
+          <OrderTrendChart data={ordersTrend} loading={loading} />
         </Grid>
       </Grid>
     </Box>

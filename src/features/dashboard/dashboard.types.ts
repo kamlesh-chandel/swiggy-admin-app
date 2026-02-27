@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export interface DashboardOverview {
+export interface StatCardProps {
   totalOrders: number;
   totalRevenue: number;
   totalRestaurants: number;
@@ -13,7 +13,7 @@ export interface StatCardConfig {
   icon: ReactNode;
 }
 
-export interface DashboardStats {
+export interface dashboardStatsProps {
   totalOrders: number;
   totalRevenue: number;
   totalRestaurants: number;
@@ -36,14 +36,14 @@ export interface OrdersTrendItem {
 }
 
 export interface UseDashboardReturn {
-  stats: DashboardStats | null;
+  dashboardStats: dashboardStatsProps | null;
   ordersByStatus: OrdersByStatusItem[];
   topRestaurants: { name: string; revenue: number }[];
   ordersTrend: OrdersTrendItem[];
   loading: boolean;
 }
 
-export interface OrdersTrendChartProps {
+export interface OrderTrendChartProps {
   data: OrdersTrendItem[];
   loading?: boolean;
 }
