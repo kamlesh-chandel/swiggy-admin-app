@@ -6,3 +6,8 @@ export const getDashboardAnalytics = async (): Promise<UseDashboardReturn> => {
 
   return res.data;
 };
+
+export const getRestaurantsCount = async (): Promise<number> => {
+  const res = await api.get('/admin/restaurants');
+  return res.data.total;
+};

@@ -1,6 +1,7 @@
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import type { CustomPieChartProps } from './types';
 
@@ -18,11 +19,14 @@ const CustomPieChart = ({
   title,
   data,
   height = 240,
-  outerRadius = 90,
+  outerRadius,
   showLegend = true,
   loading,
 }: CustomPieChartProps) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const responsiveOuterRadius = isMobile ? 50 : outerRadius;
 
   return (
     <Card elevation={0} sx={styles.card}>
@@ -44,7 +48,7 @@ const CustomPieChart = ({
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={outerRadius}
+                outerRadius={responsiveOuterRadius}
                 label
               >
                 {data.map(({ color, name }) => (
@@ -52,7 +56,7 @@ const CustomPieChart = ({
                 ))}
               </Pie>
 
-              {showLegend && <Legend />}
+              {showLegend && <Legend wrapperStyle={{ paddingTop: 10 }} />}
             </PieChart>
           </ResponsiveContainer>
         )}

@@ -33,26 +33,34 @@ const styles = {
   gridContainer: { height: '50%', mt: 2, mb: 2 },
 };
 
-const statCardsConfig = (data: StatCardProps): StatCardConfig[] => [
+const statCardsConfig = (
+  data: StatCardProps,
+  analyticsLoading: boolean,
+  restaurantsCountLoading: boolean,
+): StatCardConfig[] => [
   {
     title: 'Total Orders',
     value: data.totalOrders,
     icon: <ReceiptLongIcon color="primary" />,
+    loading: analyticsLoading,
   },
   {
     title: 'Total Revenue',
-    value: `₹${data.totalRevenue.toLocaleString()}`,
+    value: `₹${data.totalRevenue?.toLocaleString()}`,
     icon: <CurrencyRupeeIcon color="primary" />,
-  },
-  {
-    title: 'Total Restaurants',
-    value: data.totalRestaurants,
-    icon: <RestaurantIcon color="primary" />,
+    loading: analyticsLoading,
   },
   {
     title: 'Total Customers',
     value: data.totalCustomers,
     icon: <PeopleIcon color="primary" />,
+    loading: analyticsLoading,
+  },
+  {
+    title: 'Total Restaurants',
+    value: data.totalRestaurants,
+    icon: <RestaurantIcon color="primary" />,
+    loading: restaurantsCountLoading,
   },
 ];
 
@@ -62,25 +70,22 @@ const Dashboard = () => {
     ordersByStatus,
     topRestaurants,
     ordersTrend,
-    loading,
+    analyticsLoading,
+    restaurantsCountLoading,
   } = useDashboard();
 
-  if (!loading && !dashboardStats) {
-    return (
-      <Typography sx={styles.failedText}>Failed to load dashboard</Typography>
-    );
-  }
-
-  const cards = dashboardStats ? statCardsConfig(dashboardStats) : [];
+  const cards = dashboardStats
+    ? statCardsConfig(dashboardStats, analyticsLoading, restaurantsCountLoading)
+    : [];
 
   const getStatCards = () => {
     return cards.map((card, index) => (
       <Grid key={index} size={{ xs: 6, sm: 6 }}>
         <StatCard
-          title={card?.title}
-          value={card?.value}
-          icon={card?.icon}
-          loading={loading}
+          title={card.title}
+          value={card.value}
+          icon={card.icon}
+          loading={card.loading}
         />
       </Grid>
     ));
@@ -100,15 +105,18 @@ const Dashboard = () => {
         </Grid>
 
         <Grid size={styles.gridSize}>
-          <OrderStatusChart data={ordersByStatus} loading={loading} />
+          <OrderStatusChart data={ordersByStatus} loading={analyticsLoading} />
         </Grid>
       </Grid>
       <Grid container spacing={3} sx={styles.gridContainer}>
         <Grid size={styles.gridSize}>
-          <TopRestaurantsChart data={topRestaurants} loading={loading} />
+          <TopRestaurantsChart
+            data={topRestaurants}
+            loading={analyticsLoading}
+          />
         </Grid>
         <Grid size={styles.gridSize}>
-          <OrderTrendChart data={ordersTrend} loading={loading} />
+          <OrderTrendChart data={ordersTrend} loading={analyticsLoading} />
         </Grid>
       </Grid>
     </Box>

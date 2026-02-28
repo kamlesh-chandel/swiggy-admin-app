@@ -29,7 +29,12 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
   const handleClose = () => setAnchorEl(null);
 
   const styles = {
-    toolbar: { height: 100, display: 'flex', justifyContent: 'space-between' },
+    toolbar: {
+      height: 100,
+      display: 'flex',
+      justifyContent: 'space-between',
+      mx: { sm: 0, md: 1.5 },
+    },
     menuIconBox: { display: 'flex', alignItems: 'center' },
     imageBox: {
       height: 52,
