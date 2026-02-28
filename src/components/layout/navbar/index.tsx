@@ -8,7 +8,7 @@ import {
 
 import { COLORS } from '@/theme/colors';
 import Logo from '@/assets/images/logo.png';
-import ProfileMenu from '@/components/common/profile-menu';
+import ProfileMenu from '@/components/common/menu/profile-menu';
 import { useThemeMode } from '@/context/theme/useThemeMode';
 import { useAuth } from '@/context/auth/useAuth';
 

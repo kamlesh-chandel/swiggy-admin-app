@@ -1,7 +1,7 @@
 import { Menu, Box, Avatar, Typography, Chip } from '@mui/material';
 import { COLORS } from '@/theme/colors';
 
-export interface ProfileUser {
+interface ProfileUser {
   username: string;
   email?: string;
   role?: string;

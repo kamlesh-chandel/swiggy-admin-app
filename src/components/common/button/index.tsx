@@ -5,7 +5,7 @@ import type { ButtonProps as MuiButtonProps } from '@mui/material';
 interface ButtonProps {
   type?: 'button' | 'submit';
   children: ReactNode;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   variant?: MuiButtonProps['variant'];
   fullWidth?: boolean;
   style?: object;
