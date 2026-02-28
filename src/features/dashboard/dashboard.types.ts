@@ -15,7 +15,7 @@ export interface StatCardConfig {
   error: boolean;
 }
 
-export interface dashboardStatsProps {
+export interface DashboardStatsProps {
   totalOrders: number;
   totalRevenue: number;
   totalRestaurants: number;
@@ -38,7 +38,7 @@ export interface OrdersTrendItem {
 }
 
 export interface UseDashboardReturn {
-  dashboardStats: dashboardStatsProps;
+  dashboardStats: DashboardStatsProps;
   ordersByStatus: OrdersByStatusItem[];
   topRestaurants: TopRestaurantItem[];
   ordersTrend: OrdersTrendItem[];

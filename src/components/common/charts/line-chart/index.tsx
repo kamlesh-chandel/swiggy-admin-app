@@ -1,5 +1,5 @@
 import {
-  LineChart,
+  LineChart as MuiLineChart,
   Line,
   XAxis,
   YAxis,
@@ -11,7 +11,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 import FailedState from '@/components/common/failed-state';
 import Skeleton from '@mui/material/Skeleton';
 import { COLORS } from '@/theme/colors';
-import type { CustomLineChartProps } from './types';
+import type { LineChartProps } from './types';
 
 const styles = {
   card: {
@@ -24,12 +24,7 @@ const styles = {
   },
 };
 
-const CustomLineChart = ({
-  title,
-  data,
-  loading,
-  error,
-}: CustomLineChartProps) => {
+const LineChart = ({ title, data, loading, error }: LineChartProps) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent>
@@ -45,7 +40,7 @@ const CustomLineChart = ({
           <FailedState />
         ) : (
           <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={data} margin={{ left: -5 }}>
+            <MuiLineChart data={data} margin={{ left: -5 }}>
               <XAxis dataKey="date" />
               <YAxis allowDecimals={false} />
               <Tooltip />
@@ -56,7 +51,7 @@ const CustomLineChart = ({
                 strokeWidth={3}
                 dot={{ r: 4 }}
               />
-            </LineChart>
+            </MuiLineChart>
           </ResponsiveContainer>
         )}
       </CardContent>
@@ -64,4 +59,4 @@ const CustomLineChart = ({
   );
 };
 
-export default CustomLineChart;
+export default LineChart;

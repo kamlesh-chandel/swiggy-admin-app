@@ -1,10 +1,16 @@
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
+import {
+  PieChart as MuiPieChart,
+  Pie,
+  Cell,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 import { Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import FailedState from '@/components/common/failed-state';
-import type { CustomPieChartProps } from './types';
+import type { PieChartProps } from './types';
 
 const styles = {
   card: {
@@ -16,7 +22,7 @@ const styles = {
   },
 };
 
-const CustomPieChart = ({
+const PieChart = ({
   title,
   data,
   height = 240,
@@ -24,7 +30,7 @@ const CustomPieChart = ({
   showLegend = true,
   loading,
   error,
-}: CustomPieChartProps) => {
+}: PieChartProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -45,7 +51,7 @@ const CustomPieChart = ({
           <FailedState />
         ) : (
           <ResponsiveContainer width="100%" height={height}>
-            <PieChart>
+            <MuiPieChart>
               <Pie
                 data={data}
                 dataKey="value"
@@ -61,7 +67,7 @@ const CustomPieChart = ({
               </Pie>
 
               {showLegend && <Legend wrapperStyle={{ paddingTop: 10 }} />}
-            </PieChart>
+            </MuiPieChart>
           </ResponsiveContainer>
         )}
       </CardContent>
@@ -69,4 +75,4 @@ const CustomPieChart = ({
   );
 };
 
-export default CustomPieChart;
+export default PieChart;

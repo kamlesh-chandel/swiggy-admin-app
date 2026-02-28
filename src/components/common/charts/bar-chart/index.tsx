@@ -1,5 +1,5 @@
 import {
-  BarChart,
+  BarChart as MuiBarChart,
   Bar,
   XAxis,
   YAxis,
@@ -24,12 +24,7 @@ const styles = {
   },
 };
 
-const CustomBarChart = ({
-  title,
-  data,
-  loading = false,
-  error,
-}: BarChartProps) => {
+const BarChart = ({ title, data, loading = false, error }: BarChartProps) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent>
@@ -45,12 +40,12 @@ const CustomBarChart = ({
           <FailedState />
         ) : (
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={data} layout="vertical" margin={{ left: -5 }}>
+            <MuiBarChart data={data} layout="vertical" margin={{ left: -5 }}>
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} />
               <Tooltip />
               <Bar dataKey="value" fill={COLORS.green} />
-            </BarChart>
+            </MuiBarChart>
           </ResponsiveContainer>
         )}
       </CardContent>
@@ -58,4 +53,4 @@ const CustomBarChart = ({
   );
 };
 
-export default CustomBarChart;
+export default BarChart;

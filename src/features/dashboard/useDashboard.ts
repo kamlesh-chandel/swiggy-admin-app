@@ -9,11 +9,11 @@ import type {
   OrdersByStatusItem,
   TopRestaurantItem,
   OrdersTrendItem,
-  dashboardStatsProps,
+  DashboardStatsProps,
 } from './dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
-  const [dashboardStats, setDashboardStats] = useState<dashboardStatsProps>({
+  const [dashboardStats, setDashboardStats] = useState<DashboardStatsProps>({
     totalOrders: 0,
     totalRevenue: 0,
     totalCustomers: 0,
@@ -29,11 +29,11 @@ export const useDashboard = (): UseDashboardReturn => {
   const [analyticsError, setAnalyticsError] = useState(false);
   const [restaurantsCountError, setRestaurantsCountError] = useState(false);
 
-  const hasFetched = useRef(false);
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     const fetchAnalytics = async () => {
       try {
         const analyticsData = await getDashboardAnalytics();

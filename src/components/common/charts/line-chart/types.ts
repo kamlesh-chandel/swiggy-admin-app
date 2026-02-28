@@ -3,7 +3,7 @@ export interface LineChartItem {
   orders: number;
 }
 
-export interface CustomLineChartProps {
+export interface LineChartProps {
   title?: string;
   data: LineChartItem[];
   loading?: boolean;
