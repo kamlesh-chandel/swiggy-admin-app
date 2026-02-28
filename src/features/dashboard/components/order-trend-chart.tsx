@@ -13,13 +13,14 @@ const styles = {
   },
 };
 
-const OrderTrendChart = ({ data, loading }: OrderTrendChartProps) => {
+const OrderTrendChart = ({ data, loading, error }: OrderTrendChartProps) => {
   return (
     <Box sx={styles.orderTrendBox}>
       <CustomLineChart
         title="Orders (Last 7 days)"
         data={data}
         loading={loading}
+        error={error}
       />
     </Box>
   );

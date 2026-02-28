@@ -1,5 +1,5 @@
 import {
-  BarChart,
+  BarChart as MuiBarChart,
   Bar,
   XAxis,
   YAxis,
@@ -9,6 +9,7 @@ import {
 import { Card, CardContent, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 
+import FailedState from '@/components/common/failed-state';
 import type { BarChartProps } from './types';
 import { COLORS } from '@/theme/colors';
 
@@ -23,7 +24,7 @@ const styles = {
   },
 };
 
-const CustomBarChart = ({ title, data, loading = false }: BarChartProps) => {
+const BarChart = ({ title, data, loading = false, error }: BarChartProps) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent>
@@ -35,14 +36,16 @@ const CustomBarChart = ({ title, data, loading = false }: BarChartProps) => {
 
         {loading ? (
           <Skeleton variant="rectangular" height={280} />
+        ) : error ? (
+          <FailedState />
         ) : (
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={data} layout="vertical" margin={{ left: -5 }}>
+            <MuiBarChart data={data} layout="vertical" margin={{ left: -5 }}>
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} />
               <Tooltip />
               <Bar dataKey="value" fill={COLORS.green} />
-            </BarChart>
+            </MuiBarChart>
           </ResponsiveContainer>
         )}
       </CardContent>
@@ -50,4 +53,4 @@ const CustomBarChart = ({ title, data, loading = false }: BarChartProps) => {
   );
 };
 
-export default CustomBarChart;
+export default BarChart;

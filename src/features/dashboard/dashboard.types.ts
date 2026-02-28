@@ -12,9 +12,10 @@ export interface StatCardConfig {
   value: number | string;
   icon: ReactNode;
   loading: boolean;
+  error: boolean;
 }
 
-export interface dashboardStatsProps {
+export interface DashboardStatsProps {
   totalOrders: number;
   totalRevenue: number;
   totalRestaurants: number;
@@ -37,15 +38,18 @@ export interface OrdersTrendItem {
 }
 
 export interface UseDashboardReturn {
-  dashboardStats: dashboardStatsProps;
+  dashboardStats: DashboardStatsProps;
   ordersByStatus: OrdersByStatusItem[];
   topRestaurants: TopRestaurantItem[];
   ordersTrend: OrdersTrendItem[];
   analyticsLoading: boolean;
   restaurantsCountLoading: boolean;
+  analyticsError: boolean;
+  restaurantsCountError: boolean;
 }
 
 export interface OrderTrendChartProps {
   data: OrdersTrendItem[];
   loading?: boolean;
+  error?: boolean;
 }

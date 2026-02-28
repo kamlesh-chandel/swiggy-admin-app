@@ -1,10 +1,8 @@
 import { Card, CardContent, Typography, Box, Skeleton } from '@mui/material';
 import type { Theme } from '@mui/material';
-import type { StatCardConfig } from '../dashboard.types';
 
-interface StatCardProps extends StatCardConfig {
-  loading?: boolean;
-}
+import FailedState from '@/components/common/failed-state';
+import type { StatCardConfig } from '../dashboard.types';
 
 const styles = {
   card: {
@@ -46,7 +44,7 @@ const styles = {
   },
 };
 
-const StatCard = ({ title, value, icon, loading }: StatCardProps) => {
+const StatCard = ({ title, value, icon, loading, error }: StatCardConfig) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent sx={styles.cardContent}>
@@ -62,9 +60,13 @@ const StatCard = ({ title, value, icon, loading }: StatCardProps) => {
                 {title}
               </Typography>
 
-              <Typography variant="h6" sx={styles.valueText}>
-                {value}
-              </Typography>
+              {error ? (
+                <FailedState />
+              ) : (
+                <Typography variant="h6" sx={styles.valueText}>
+                  {value}
+                </Typography>
+              )}
             </>
           )}
         </Box>

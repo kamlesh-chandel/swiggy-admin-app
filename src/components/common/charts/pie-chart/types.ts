@@ -4,11 +4,12 @@ interface PieChartItem {
   color?: string;
 }
 
-export interface CustomPieChartProps {
+export interface PieChartProps {
   title?: string;
   data: PieChartItem[];
   height?: number;
   outerRadius?: number;
   showLegend?: boolean;
   loading?: boolean;
+  error?: boolean;
 }

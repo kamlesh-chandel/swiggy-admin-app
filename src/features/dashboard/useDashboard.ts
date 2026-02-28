@@ -9,11 +9,11 @@ import type {
   OrdersByStatusItem,
   TopRestaurantItem,
   OrdersTrendItem,
-  dashboardStatsProps,
+  DashboardStatsProps,
 } from './dashboard.types';
 
 export const useDashboard = (): UseDashboardReturn => {
-  const [dashboardStats, setDashboardStats] = useState<dashboardStatsProps>({
+  const [dashboardStats, setDashboardStats] = useState<DashboardStatsProps>({
     totalOrders: 0,
     totalRevenue: 0,
     totalCustomers: 0,
@@ -26,26 +26,28 @@ export const useDashboard = (): UseDashboardReturn => {
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [restaurantsCountLoading, setRestaurantsCountLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState(false);
+  const [restaurantsCountError, setRestaurantsCountError] = useState(false);
 
-  const hasFetched = useRef(false);
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     const fetchAnalytics = async () => {
       try {
-        const res = await getDashboardAnalytics();
+        const analyticsData = await getDashboardAnalytics();
 
         setDashboardStats((prev) => ({
           ...prev,
-          ...res.dashboardStats,
+          ...analyticsData.dashboardStats,
         }));
 
-        setOrdersByStatus(res.ordersByStatus);
-        setTopRestaurants(res.topRestaurants);
-        setOrdersTrend(res.ordersTrend);
-      } catch (error) {
-        console.error('Dashboard analytics error:', error);
+        setOrdersByStatus(analyticsData.ordersByStatus);
+        setTopRestaurants(analyticsData.topRestaurants);
+        setOrdersTrend(analyticsData.ordersTrend);
+      } catch {
+        setAnalyticsError(true);
       } finally {
         setAnalyticsLoading(false);
       }
@@ -59,8 +61,8 @@ export const useDashboard = (): UseDashboardReturn => {
           ...prev,
           totalRestaurants: count,
         }));
-      } catch (error) {
-        console.error('Restaurant count error:', error);
+      } catch {
+        setRestaurantsCountError(true);
       } finally {
         setRestaurantsCountLoading(false);
       }
@@ -77,5 +79,7 @@ export const useDashboard = (): UseDashboardReturn => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
+    analyticsError,
+    restaurantsCountError,
   };
 };
