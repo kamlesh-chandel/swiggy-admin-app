@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import CustomPieChart from '@/components/common/charts/pie-chart';
+import PieChart from '@/components/common/charts/pie-chart';
 import { STATUS_COLORS } from '../constant';
 import type { OrdersByStatusItem } from '../dashboard.types';
 
@@ -28,7 +28,7 @@ const OrderStatusChart = ({ data, loading, error }: OrderStatusChartProps) => {
 
   return (
     <Box sx={styles.statusBox}>
-      <CustomPieChart
+      <PieChart
         title="Orders by Status"
         data={formattedData}
         loading={loading}
