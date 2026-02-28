@@ -6,6 +6,7 @@ import type { OrdersByStatusItem } from '../dashboard.types';
 interface OrderStatusChartProps {
   data: OrdersByStatusItem[];
   loading?: boolean;
+  error?: boolean;
 }
 
 const styles = {
@@ -18,7 +19,7 @@ const styles = {
   },
 };
 
-const OrderStatusChart = ({ data, loading }: OrderStatusChartProps) => {
+const OrderStatusChart = ({ data, loading, error }: OrderStatusChartProps) => {
   const formattedData = data.map(({ status, value }) => ({
     name: status,
     value,
@@ -31,6 +32,7 @@ const OrderStatusChart = ({ data, loading }: OrderStatusChartProps) => {
         title="Orders by Status"
         data={formattedData}
         loading={loading}
+        error={error}
       />
     </Box>
   );

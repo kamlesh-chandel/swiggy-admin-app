@@ -6,6 +6,7 @@ import type { TopRestaurantItem } from '../dashboard.types';
 interface TopRestaurantsChartProps {
   data: TopRestaurantItem[];
   loading: boolean;
+  error: boolean;
 }
 
 const styles = {
@@ -18,7 +19,11 @@ const styles = {
   },
 };
 
-const TopRestaurantsChart = ({ data, loading }: TopRestaurantsChartProps) => {
+const TopRestaurantsChart = ({
+  data,
+  loading,
+  error,
+}: TopRestaurantsChartProps) => {
   const formattedData = data.map((item) => ({
     name: item.name,
     value: item.revenue,
@@ -30,6 +35,7 @@ const TopRestaurantsChart = ({ data, loading }: TopRestaurantsChartProps) => {
         title="Top Restaurants (Revenue)"
         data={formattedData}
         loading={loading}
+        error={error}
       />
     </Box>
   );

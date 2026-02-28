@@ -7,4 +7,5 @@ export interface CustomLineChartProps {
   title?: string;
   data: LineChartItem[];
   loading?: boolean;
+  error?: boolean;
 }

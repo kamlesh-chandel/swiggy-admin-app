@@ -3,6 +3,7 @@ import { Card, CardContent, Typography, Skeleton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import FailedState from '@/components/common/failed-state';
 import type { CustomPieChartProps } from './types';
 
 const styles = {
@@ -22,6 +23,7 @@ const CustomPieChart = ({
   outerRadius,
   showLegend = true,
   loading,
+  error,
 }: CustomPieChartProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -39,6 +41,8 @@ const CustomPieChart = ({
 
         {loading ? (
           <Skeleton variant="rounded" width="100%" height={height} />
+        ) : error ? (
+          <FailedState />
         ) : (
           <ResponsiveContainer width="100%" height={height}>
             <PieChart>

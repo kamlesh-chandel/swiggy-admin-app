@@ -37,30 +37,36 @@ const statCardsConfig = (
   data: StatCardProps,
   analyticsLoading: boolean,
   restaurantsCountLoading: boolean,
+  analyticsError: boolean,
+  restaurantsCountError: boolean,
 ): StatCardConfig[] => [
   {
     title: 'Total Orders',
     value: data.totalOrders,
     icon: <ReceiptLongIcon color="primary" />,
     loading: analyticsLoading,
+    error: analyticsError,
   },
   {
     title: 'Total Revenue',
     value: `₹${data.totalRevenue?.toLocaleString()}`,
     icon: <CurrencyRupeeIcon color="primary" />,
     loading: analyticsLoading,
+    error: analyticsError,
   },
   {
     title: 'Total Customers',
     value: data.totalCustomers,
     icon: <PeopleIcon color="primary" />,
     loading: analyticsLoading,
+    error: analyticsError,
   },
   {
     title: 'Total Restaurants',
     value: data.totalRestaurants,
     icon: <RestaurantIcon color="primary" />,
     loading: restaurantsCountLoading,
+    error: restaurantsCountError,
   },
 ];
 
@@ -72,10 +78,18 @@ const Dashboard = () => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
+    analyticsError,
+    restaurantsCountError,
   } = useDashboard();
 
   const cards = dashboardStats
-    ? statCardsConfig(dashboardStats, analyticsLoading, restaurantsCountLoading)
+    ? statCardsConfig(
+        dashboardStats,
+        analyticsLoading,
+        restaurantsCountLoading,
+        analyticsError,
+        restaurantsCountError,
+      )
     : [];
 
   const getStatCards = () => {
@@ -86,6 +100,7 @@ const Dashboard = () => {
           value={card.value}
           icon={card.icon}
           loading={card.loading}
+          error={card.error}
         />
       </Grid>
     ));
@@ -105,7 +120,11 @@ const Dashboard = () => {
         </Grid>
 
         <Grid size={styles.gridSize}>
-          <OrderStatusChart data={ordersByStatus} loading={analyticsLoading} />
+          <OrderStatusChart
+            data={ordersByStatus}
+            loading={analyticsLoading}
+            error={analyticsError}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={3} sx={styles.gridContainer}>
@@ -113,10 +132,15 @@ const Dashboard = () => {
           <TopRestaurantsChart
             data={topRestaurants}
             loading={analyticsLoading}
+            error={analyticsError}
           />
         </Grid>
         <Grid size={styles.gridSize}>
-          <OrderTrendChart data={ordersTrend} loading={analyticsLoading} />
+          <OrderTrendChart
+            data={ordersTrend}
+            loading={analyticsLoading}
+            error={analyticsError}
+          />
         </Grid>
       </Grid>
     </Box>
