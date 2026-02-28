@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import CustomLineChart from '@/components/common/charts/line-chart';
+import LineChart from '@/components/common/charts/line-chart';
 
 import type { OrderTrendChartProps } from '../dashboard.types';
 
@@ -16,7 +16,7 @@ const styles = {
 const OrderTrendChart = ({ data, loading, error }: OrderTrendChartProps) => {
   return (
     <Box sx={styles.orderTrendBox}>
-      <CustomLineChart
+      <LineChart
         title="Orders (Last 7 days)"
         data={data}
         loading={loading}

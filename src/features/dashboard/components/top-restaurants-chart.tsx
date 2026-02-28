@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import CustomBarChart from '@/components/common/charts/bar-chart';
+import BarChart from '@/components/common/charts/bar-chart';
 
 import type { TopRestaurantItem } from '../dashboard.types';
 
@@ -31,7 +31,7 @@ const TopRestaurantsChart = ({
 
   return (
     <Box sx={styles.restaurantBox}>
-      <CustomBarChart
+      <BarChart
         title="Top Restaurants (Revenue)"
         data={formattedData}
         loading={loading}
