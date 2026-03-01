@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Typography, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -14,7 +14,7 @@ import { COLORS } from '@/theme/colors';
 import { useFoodItems } from './hooks/useFoodItems';
 import FoodItemFormDialog from './components/food-item-form-dialog';
 import type { FoodItem, CreateFoodItemPayload } from './food-item.types';
-import { api } from '@/lib/axios';
+import { useRestaurantName } from './hooks/useRestaurantName';
 
 const styles = {
   addButton: {
@@ -44,8 +44,8 @@ const FoodItems = () => {
     createLoading,
     updateLoading,
   } = useFoodItems(numericRestaurantId);
+  const { restaurantName } = useRestaurantName(numericRestaurantId);
 
-  const [restaurantName, setRestaurantName] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -53,20 +53,6 @@ const FoodItems = () => {
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
 
   const open = Boolean(anchorEl);
-
-  useEffect(() => {
-    if (!numericRestaurantId || isNaN(numericRestaurantId)) return;
-
-    const fetchData = async () => {
-      const { data } = await api.get(
-        `/admin/restaurants/${numericRestaurantId}`,
-      );
-
-      setRestaurantName(data.name);
-    };
-
-    fetchData();
-  }, [numericRestaurantId]);
 
   const handleClose = () => setAnchorEl(null);
 
