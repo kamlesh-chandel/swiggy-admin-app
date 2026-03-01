@@ -3,12 +3,13 @@ import { TextField } from '@mui/material';
 interface InputProps {
   label: string;
   type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fullWidth?: boolean;
   margin?: 'normal';
   error?: boolean;
   helperText?: string;
+  accept?: string;
 }
 
 const Input = ({
@@ -20,7 +21,20 @@ const Input = ({
   margin,
   error,
   helperText,
+  accept,
 }: InputProps) => {
+  if (type === 'file') {
+    return (
+      <TextField
+        fullWidth={fullWidth}
+        margin={margin}
+        type="file"
+        inputProps={{ accept }}
+        onChange={onChange}
+      />
+    );
+  }
+
   return (
     <TextField
       fullWidth={fullWidth}

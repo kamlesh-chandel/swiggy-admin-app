@@ -10,9 +10,10 @@ export interface FieldConfig<T> {
   id: string;
   name: keyof T;
   label: string;
-  type: 'text' | 'email' | 'password' | 'number';
+  type: 'text' | 'email' | 'password' | 'number' | 'file';
   required?: boolean;
   minLength?: number;
+  accept?: string;
 }
 
 interface FormProps<T> {
@@ -45,10 +46,18 @@ export const Form = <T extends { [K in keyof T]: string }>({
     const field = fields.find((f) => f.name === fieldName);
     if (!field) return '';
 
-    if (field.required && !value) {
-      const error = `${field.label} is required`;
-      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-      return error;
+    if (field.required) {
+      if (field.type === 'file') {
+        if (!value) {
+          const error = `${field.label} is required`;
+          setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+          return error;
+        }
+      } else if (!value) {
+        const error = `${field.label} is required`;
+        setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+        return error;
+      }
     }
 
     if (field.type === 'email' && value && !EMAIL_REGEX.test(value)) {
@@ -57,6 +66,8 @@ export const Form = <T extends { [K in keyof T]: string }>({
       return error;
     }
 
+    if (typeof value !== 'string') return '';
+
     if (field.minLength && value.length < field.minLength) {
       const error = `${field.label} must be at least ${field.minLength} characters`;
       setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
@@ -64,6 +75,11 @@ export const Form = <T extends { [K in keyof T]: string }>({
     }
     if (field.name === 'rating' && (Number(value) < 0 || Number(value) > 5)) {
       const error = `${field.label} must be between 1 and 5`;
+      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+      return error;
+    }
+    if (field.name === 'price' && Number(value) < 30) {
+      const error = `${field.label} must be minimum 30rs`;
       setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
       return error;
     }
@@ -79,7 +95,7 @@ export const Form = <T extends { [K in keyof T]: string }>({
     const newErrors: Record<string, string> = {};
 
     fields.forEach(({ name }) => {
-      const value = formData[name] || '';
+      const value = formData[name];
       const error = validateField(name, value);
       if (error) newErrors[name as string] = error;
     });
@@ -89,10 +105,16 @@ export const Form = <T extends { [K in keyof T]: string }>({
   };
 
   const isFormValid = () => {
-    const allRequiredFilled = fields.every(({ required, name }) => {
+    const allRequiredFilled = fields.every(({ required, name, type }) => {
       if (!required) return true;
+
       const value = formData[name];
-      return value && value.trim() !== '';
+
+      if (type === 'file') {
+        return !!value;
+      }
+
+      return typeof value === 'string' && value.trim() !== '';
     });
     const noErrors = Object.values(errors).every((error) => !error);
 
@@ -106,19 +128,41 @@ export const Form = <T extends { [K in keyof T]: string }>({
   };
 
   const getFields = () => {
-    return fields.map(({ id, label, type, name }) => (
-      <Input
-        key={id}
-        fullWidth
-        margin="normal"
-        label={label}
-        type={type}
-        value={formData[name] || ''}
-        onChange={(e) => handleChange(name, e.target.value)}
-        error={!!errors[name as string]}
-        helperText={errors[name as string] || ''}
-      />
-    ));
+    return fields.map(({ id, label, type, name, accept }) => {
+      if (type === 'file') {
+        return (
+          <Input
+            key={id}
+            fullWidth
+            margin="normal"
+            label={label}
+            type="file"
+            accept={accept}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              setFormData((prev) => ({
+                ...prev,
+                [name]: file ? (file as unknown as string) : '',
+              }));
+            }}
+          />
+        );
+      }
+
+      return (
+        <Input
+          key={id}
+          fullWidth
+          margin="normal"
+          label={label}
+          type={type}
+          value={formData[name] || ''}
+          onChange={(e) => handleChange(name, e.target.value)}
+          error={!!errors[name as string]}
+          helperText={errors[name as string] || ''}
+        />
+      );
+    });
   };
 
   return (
