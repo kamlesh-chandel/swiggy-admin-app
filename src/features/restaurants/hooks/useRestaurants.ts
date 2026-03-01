@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   getRestaurants,
   deleteRestaurant,
@@ -9,6 +9,8 @@ import type { Restaurant } from '../restaurant.types';
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const hasFetchedRef = useRef(false);
 
   const fetchData = async () => {
     try {
@@ -21,6 +23,8 @@ export const useRestaurants = () => {
   };
 
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     fetchData();
   }, []);
 
