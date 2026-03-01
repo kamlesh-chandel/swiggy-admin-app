@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { Box, Switch, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { GridColDef } from '@mui/x-data-grid';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import DataGrid from '@/components/common/data-grid';
 import Button from '@/components/common/button';
 import ActionMenu from '@/components/common/menu/action-menu';
 import Dialog from '@/components/common/dialog';
 import RestaurantDrawer from './components/restaurant-drawer';
+import RestaurantFormDialog from './components/restaurant-form-dialog';
 
 import { COLORS } from '@/theme/colors';
 import { useRestaurants } from './hooks/useRestaurants';
 import { useRestaurantDetails } from './hooks/useRestaurantDetails';
-import { toast } from 'react-toastify';
+import type { CreateRestaurantPayload, Restaurant } from './restaurant.types';
 
 const styles = {
   addButton: {
@@ -32,16 +35,31 @@ const styles = {
 };
 
 const Restaurants = () => {
-  const { data, loading, handleDelete, handleToggle } = useRestaurants();
+  const {
+    data,
+    loading,
+    handleDelete,
+    handleToggle,
+    handleCreate,
+    createLoading,
+    handleUpdate,
+    updateLoading,
+  } = useRestaurants();
+
   const { data: detailData, fetchDetails } = useRestaurantDetails();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<Restaurant | null>(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<
     number | null
   >(null);
 
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
   const handleClose = () => {
@@ -87,13 +105,85 @@ const Restaurants = () => {
     },
   ];
 
+  const handleAddRestaurant = () => {
+    setSelectedRestaurant(null);
+    setFormMode('create');
+    setFormOpen(true);
+  };
+
+  const handleOnView = () => {
+    handleClose();
+    if (selectedRestaurantId) {
+      fetchDetails(selectedRestaurantId);
+      setDrawerOpen(true);
+    }
+  };
+
+  const handleOnManageFoodItems = () => {
+    handleClose();
+    if (!selectedRestaurantId) return;
+
+    navigate(`/restaurants/${selectedRestaurantId}/food-items`);
+  };
+
+  const handleOnEdit = () => {
+    handleClose();
+
+    if (!selectedRestaurantId) return;
+    const restaurant = data.find(({ id }) => id === selectedRestaurantId);
+    if (!restaurant) return;
+
+    setSelectedRestaurant(restaurant);
+    setFormMode('edit');
+    setFormOpen(true);
+  };
+
+  const handleOnDelete = () => {
+    handleClose();
+    setDeleteOpen(true);
+  };
+
+  const handleOnConfirmDelete = async () => {
+    if (!selectedRestaurantId) return;
+    await handleDelete(selectedRestaurantId);
+    setDeleteOpen(false);
+    toast.success('Restaurant Deleted Successfully');
+  };
+
+  const getInitialValues = () => {
+    return formMode === 'edit' && selectedRestaurant
+      ? {
+          name: selectedRestaurant.name,
+          address: selectedRestaurant.address,
+          city: selectedRestaurant.city,
+          rating: String(selectedRestaurant.rating),
+        }
+      : undefined;
+  };
+
+  const handleOnSubmit = async (payload: CreateRestaurantPayload) => {
+    if (formMode === 'create') {
+      await handleCreate(payload);
+      toast.success('Restaurant Created Successfully');
+    } else if (formMode === 'edit' && selectedRestaurant) {
+      await handleUpdate(selectedRestaurant.id, payload);
+      toast.success('Restaurant Updated Successfully');
+    }
+
+    setFormOpen(false);
+  };
+
   return (
     <Box>
       <Typography variant="h5">Restaurants</Typography>
       <Box sx={{ mt: 6 }}>
         <Box mb={2} gap={2} sx={styles.buttonBox}>
-          <Button variant="contained" style={styles.addButton}>
-            Add Restaurant
+          <Button
+            variant="contained"
+            style={styles.addButton}
+            onClick={handleAddRestaurant}
+          >
+            Add
           </Button>
         </Box>
         <DataGrid rows={data} columns={columns} loading={loading} />
@@ -102,29 +192,17 @@ const Restaurants = () => {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        onDelete={() => {
-          handleClose();
-          setDeleteOpen(true);
-        }}
-        onView={() => {
-          handleClose();
-          if (selectedRestaurantId) {
-            fetchDetails(selectedRestaurantId);
-            setDrawerOpen(true);
-          }
-        }}
+        onView={handleOnView}
+        onManageFoodItems={handleOnManageFoodItems}
+        onEdit={handleOnEdit}
+        onDelete={handleOnDelete}
       />
       <Dialog
         open={deleteOpen}
         title="Delete Restaurant"
         description="Are you sure you want to delete this restaurant? This action cannot be undone."
         onClose={() => setDeleteOpen(false)}
-        onConfirm={async () => {
-          if (!selectedRestaurantId) return;
-          await handleDelete(selectedRestaurantId);
-          setDeleteOpen(false);
-          toast.success('Restaurant Deleted Successfully');
-        }}
+        onConfirm={handleOnConfirmDelete}
         confirmText="Delete"
         cancelText="Cancel"
       />
@@ -132,6 +210,14 @@ const Restaurants = () => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         data={detailData}
+      />
+      <RestaurantFormDialog
+        open={formOpen}
+        onClose={() => setFormOpen(false)}
+        mode={formMode}
+        loading={formMode === 'create' ? createLoading : updateLoading}
+        initialValues={getInitialValues()}
+        onSubmit={handleOnSubmit}
       />
     </Box>
   );

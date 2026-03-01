@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios';
-import type { Restaurant } from './restaurant.types';
+import type { CreateRestaurantPayload, Restaurant } from './restaurant.types';
 
 export const getRestaurants = async (): Promise<Restaurant[]> => {
   const response = await api.get('/admin/restaurants');
@@ -9,6 +9,24 @@ export const getRestaurants = async (): Promise<Restaurant[]> => {
 export const getRestaurantById = async (id: number) => {
   const response = await api.get(`/admin/restaurants/${id}`);
   return response.data;
+};
+
+export const createRestaurant = async (
+  payload: CreateRestaurantPayload,
+): Promise<Restaurant> => {
+  const { data } = await api.post<Restaurant>('/admin/restaurants', payload);
+  return data;
+};
+
+export const updateRestaurant = async (
+  id: number,
+  payload: CreateRestaurantPayload,
+): Promise<Restaurant> => {
+  const { data } = await api.put<Restaurant>(
+    `/admin/restaurants/${id}`,
+    payload,
+  );
+  return data;
 };
 
 export const deleteRestaurant = async (id: number) => {

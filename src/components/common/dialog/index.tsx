@@ -6,46 +6,62 @@ import {
   Button,
   Typography,
 } from '@mui/material';
+import type { ReactNode } from 'react';
 
 interface DialogProps {
   open: boolean;
   title: string;
   description?: string;
+  children?: ReactNode;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
+
+  showActions?: boolean;
 }
 
 const Dialog = ({
   open,
   title,
   description,
+  children,
   onClose,
   onConfirm,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
+  loading = false,
+  showActions = true,
 }: DialogProps) => {
   return (
     <MuiDialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>{title}</DialogTitle>
 
-      {description && (
-        <DialogContent>
-          <Typography variant="body2" color="text.secondary">
+      <DialogContent>
+        {description && (
+          <Typography variant="body2" color="text.secondary" mb={2}>
             {description}
           </Typography>
-        </DialogContent>
+        )}
+
+        {children}
+      </DialogContent>
+
+      {showActions && onConfirm && (
+        <DialogActions>
+          <Button onClick={onClose}>{cancelText}</Button>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={onConfirm}
+            disabled={loading}
+          >
+            {confirmText}
+          </Button>
+        </DialogActions>
       )}
-
-      <DialogActions>
-        <Button onClick={onClose}>{cancelText}</Button>
-
-        <Button variant="contained" color="error" onClick={onConfirm}>
-          {confirmText}
-        </Button>
-      </DialogActions>
     </MuiDialog>
   );
 };

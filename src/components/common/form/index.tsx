@@ -10,7 +10,7 @@ export interface FieldConfig<T> {
   id: string;
   name: keyof T;
   label: string;
-  type: 'text' | 'email' | 'password';
+  type: 'text' | 'email' | 'password' | 'number';
   required?: boolean;
   minLength?: number;
 }
@@ -20,6 +20,7 @@ interface FormProps<T> {
   onSubmit: (data: T) => void | Promise<void>;
   buttonText?: string;
   loading?: boolean;
+  defaultValues?: T;
 }
 
 export const Form = <T extends { [K in keyof T]: string }>({
@@ -27,8 +28,9 @@ export const Form = <T extends { [K in keyof T]: string }>({
   onSubmit,
   buttonText = 'Submit',
   loading = false,
+  defaultValues,
 }: FormProps<T>) => {
-  const [formData, setFormData] = useState<T>({} as T);
+  const [formData, setFormData] = useState<T>(defaultValues ?? ({} as T));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (name: keyof T, value: string) => {
@@ -60,7 +62,11 @@ export const Form = <T extends { [K in keyof T]: string }>({
       setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
       return error;
     }
-
+    if (field.name === 'rating' && (Number(value) < 0 || Number(value) > 5)) {
+      const error = `${field.label} must be between 1 and 5`;
+      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
+      return error;
+    }
     setErrors((prev) => ({
       ...prev,
       [fieldName as string]: '',

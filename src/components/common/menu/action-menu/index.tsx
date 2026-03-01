@@ -6,6 +6,8 @@ interface ActionMenuProps {
   onClose: () => void;
   onDelete: () => void;
   onView: () => void;
+  onEdit: () => void;
+  onManageFoodItems: () => void;
 }
 
 const ActionMenu = ({
@@ -14,14 +16,21 @@ const ActionMenu = ({
   onClose,
   onDelete,
   onView,
+  onEdit,
+  onManageFoodItems,
 }: ActionMenuProps) => {
   return (
     <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
-      <MenuItem onClick={onView}>View</MenuItem>
-      <MenuItem onClick={onClose} sx={{ color: 'orange' }}>
+      <MenuItem onClick={onView} sx={{ color: 'success.main' }}>
+        View
+      </MenuItem>
+      <MenuItem onClick={onManageFoodItems} sx={{ color: 'info.main' }}>
+        Manage Food Items
+      </MenuItem>
+      <MenuItem onClick={onEdit} sx={{ color: 'warning.main' }}>
         Edit
       </MenuItem>
-      <MenuItem onClick={onDelete} sx={{ color: 'red' }}>
+      <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
         Delete
       </MenuItem>
     </Menu>

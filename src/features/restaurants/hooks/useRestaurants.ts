@@ -3,12 +3,16 @@ import {
   getRestaurants,
   deleteRestaurant,
   toggleRestaurantStatus,
+  createRestaurant,
+  updateRestaurant,
 } from '../restaurant.service';
-import type { Restaurant } from '../restaurant.types';
+import type { Restaurant, CreateRestaurantPayload } from '../restaurant.types';
 
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -34,10 +38,34 @@ export const useRestaurants = () => {
     fetchData();
   };
 
+  const handleCreate = async (payload: CreateRestaurantPayload) => {
+    try {
+      setCreateLoading(true);
+      await createRestaurant(payload);
+      await fetchData();
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
+  const handleUpdate = async (id: number, payload: CreateRestaurantPayload) => {
+    try {
+      setUpdateLoading(true);
+      await updateRestaurant(id, payload);
+      await fetchData();
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
   return {
     data,
     loading,
     handleDelete,
     handleToggle,
+    handleCreate,
+    createLoading,
+    handleUpdate,
+    updateLoading,
   };
 };
