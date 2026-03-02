@@ -33,7 +33,7 @@ export const deleteRestaurant = async (id: number) => {
   await api.delete(`/admin/restaurants/${id}`);
 };
 
-export const toggleRestaurantStatus = async (id: number, isActive: boolean) => {
+export const updateRestaurantStatus = async (id: number, isActive: boolean) => {
   await api.patch(`/admin/restaurants/${id}/status`, {
     isActive,
   });

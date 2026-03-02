@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import {
   getRestaurants,
   deleteRestaurant,
-  toggleRestaurantStatus,
   createRestaurant,
   updateRestaurant,
+  updateRestaurantStatus,
 } from '../restaurant.service';
 import type { Restaurant, CreateRestaurantPayload } from '../restaurant.types';
 
@@ -44,7 +44,7 @@ export const useRestaurants = () => {
 
   const handleToggle = async (id: number, isActive: boolean) => {
     try {
-      await toggleRestaurantStatus(id, isActive);
+      await updateRestaurantStatus(id, isActive);
       await fetchData();
     } catch {
       setToggleError(true);
