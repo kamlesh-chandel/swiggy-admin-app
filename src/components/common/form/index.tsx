@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
-import { EMAIL_REGEX } from '@/utils/regex';
 import { COLORS } from '@/theme/colors';
 
 import Input from '../input';
 import Button from '../button';
+
+import { getErrorMessage } from './form.utils';
 
 export interface FieldConfig<T> {
   id: string;
@@ -13,7 +14,7 @@ export interface FieldConfig<T> {
   type: 'text' | 'email' | 'password' | 'number' | 'file';
   required?: boolean;
   minLength?: number;
-  accept?: string;
+  acceptFileType?: string;
 }
 
 interface FormProps<T> {
@@ -34,61 +35,26 @@ export const Form = <T extends { [K in keyof T]: string }>({
   const [formData, setFormData] = useState<T>(defaultValues ?? ({} as T));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (name: keyof T, value: string) => {
+  const handleChange = (name: keyof T, value: string | File | null) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value ?? '',
     }));
-    validateField(name, value);
+    validateField(name, value as string);
   };
 
   const validateField = (fieldName: keyof T, value: string) => {
     const field = fields.find((f) => f.name === fieldName);
     if (!field) return '';
 
-    if (field.required) {
-      if (field.type === 'file') {
-        if (!value) {
-          const error = `${field.label} is required`;
-          setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-          return error;
-        }
-      } else if (!value) {
-        const error = `${field.label} is required`;
-        setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-        return error;
-      }
-    }
+    const error = getErrorMessage(field, value);
 
-    if (field.type === 'email' && value && !EMAIL_REGEX.test(value)) {
-      const error = 'Invalid email format';
-      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-      return error;
-    }
-
-    if (typeof value !== 'string') return '';
-
-    if (field.minLength && value.length < field.minLength) {
-      const error = `${field.label} must be at least ${field.minLength} characters`;
-      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-      return error;
-    }
-    if (field.name === 'rating' && (Number(value) < 0 || Number(value) > 5)) {
-      const error = `${field.label} must be between 1 and 5`;
-      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-      return error;
-    }
-    if (field.name === 'price' && Number(value) < 30) {
-      const error = `${field.label} must be minimum 30rs`;
-      setErrors((prev) => ({ ...prev, [fieldName as string]: error }));
-      return error;
-    }
     setErrors((prev) => ({
       ...prev,
-      [fieldName as string]: '',
+      [fieldName as string]: error,
     }));
 
-    return '';
+    return error;
   };
 
   const validateAll = () => {
@@ -128,41 +94,26 @@ export const Form = <T extends { [K in keyof T]: string }>({
   };
 
   const getFields = () => {
-    return fields.map(({ id, label, type, name, accept }) => {
-      if (type === 'file') {
-        return (
-          <Input
-            key={id}
-            fullWidth
-            margin="normal"
-            label={label}
-            type="file"
-            accept={accept}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              setFormData((prev) => ({
-                ...prev,
-                [name]: file ? (file as unknown as string) : '',
-              }));
-            }}
-          />
-        );
-      }
-
-      return (
-        <Input
-          key={id}
-          fullWidth
-          margin="normal"
-          label={label}
-          type={type}
-          value={formData[name] || ''}
-          onChange={(e) => handleChange(name, e.target.value)}
-          error={!!errors[name as string]}
-          helperText={errors[name as string] || ''}
-        />
-      );
-    });
+    return fields.map(({ id, label, type, name, acceptFileType }) => (
+      <Input
+        key={id}
+        fullWidth
+        margin="normal"
+        label={label}
+        type={type}
+        value={formData[name] || ''}
+        accept={acceptFileType}
+        onChange={(event) => {
+          if (type === 'file') {
+            handleChange(name, event.target.files?.[0] ?? null);
+          } else {
+            handleChange(name, event.target.value);
+          }
+        }}
+        error={!!errors[name as string]}
+        helperText={errors[name as string] || ''}
+      />
+    ));
   };
 
   return (
