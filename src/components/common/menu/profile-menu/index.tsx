@@ -16,10 +16,10 @@ interface ProfileMenuProps {
 }
 
 const ProfileMenu = ({ anchorEl, open, onClose, user }: ProfileMenuProps) => {
-  const username = user?.username || 'User';
-  const email = user?.email || 'user@email.com';
+  const username = user?.username;
+  const email = user?.email;
   const role = user?.role || 'Superadmin';
-  const firstLetter = username.charAt(0).toUpperCase();
+  const firstLetter = username?.charAt(0).toUpperCase();
 
   const roleKey = role.toLowerCase() as keyof typeof COLORS.roles;
   const roleColor = COLORS.roles[roleKey] ?? COLORS.roles.user;

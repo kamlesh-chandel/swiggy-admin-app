@@ -36,8 +36,9 @@ const styles = {
 
 const Restaurants = () => {
   const {
-    data,
+    data: restaurantsData,
     loading,
+    error,
     handleDelete,
     handleToggle,
     handleCreate,
@@ -45,8 +46,7 @@ const Restaurants = () => {
     handleUpdate,
     updateLoading,
   } = useRestaurants();
-
-  const { data: detailData, fetchDetails } = useRestaurantDetails();
+  const { data: restaurantDetails, fetchDetails } = useRestaurantDetails();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -130,7 +130,9 @@ const Restaurants = () => {
     handleClose();
 
     if (!selectedRestaurantId) return;
-    const restaurant = data.find(({ id }) => id === selectedRestaurantId);
+    const restaurant = restaurantsData.find(
+      ({ id }) => id === selectedRestaurantId,
+    );
     if (!restaurant) return;
 
     setSelectedRestaurant(restaurant);
@@ -186,7 +188,12 @@ const Restaurants = () => {
             Add
           </Button>
         </Box>
-        <DataGrid rows={data} columns={columns} loading={loading} />
+        <DataGrid
+          rows={restaurantsData}
+          columns={columns}
+          loading={loading}
+          error={error}
+        />
       </Box>
       <ActionMenu
         anchorEl={anchorEl}
@@ -215,7 +222,7 @@ const Restaurants = () => {
       <RestaurantDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        data={detailData}
+        data={restaurantDetails}
       />
       <RestaurantFormDialog
         open={formOpen}

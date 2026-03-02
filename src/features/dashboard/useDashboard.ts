@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getDashboardAnalytics,
   getRestaurantsCount,
@@ -29,11 +29,7 @@ export const useDashboard = (): UseDashboardReturn => {
   const [analyticsError, setAnalyticsError] = useState(false);
   const [restaurantsCountError, setRestaurantsCountError] = useState(false);
 
-  const hasFetchedRef = useRef(false);
-
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
     const fetchAnalytics = async () => {
       try {
         const analyticsData = await getDashboardAnalytics();
