@@ -14,7 +14,7 @@ const styles = {
   chip: (isActive: boolean) => ({
     mt: 1,
     backgroundColor: isActive ? COLORS.green : COLORS.red,
-    color: '#fff',
+    color: COLORS.softPink,
   }),
   divider: {
     my: 3,
