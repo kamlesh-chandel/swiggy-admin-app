@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getRestaurants,
   deleteRestaurant,
@@ -9,39 +9,51 @@ import type { Restaurant } from '../restaurant.types';
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const hasFetchedRef = useRef(false);
+  const [error, setError] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
+  const [toggleError, setToggleError] = useState(false);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await getRestaurants();
-      setData(res);
+      const response = await getRestaurants();
+      setData(response);
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
     fetchData();
   }, []);
 
   const handleDelete = async (id: number) => {
-    await deleteRestaurant(id);
-    fetchData();
+    try {
+      await deleteRestaurant(id);
+      await fetchData();
+    } catch {
+      setDeleteError(true);
+    }
   };
 
   const handleToggle = async (id: number, isActive: boolean) => {
-    await toggleRestaurantStatus(id, isActive);
-    fetchData();
+    try {
+      await toggleRestaurantStatus(id, isActive);
+      await fetchData();
+    } catch {
+      setToggleError(true);
+    }
   };
 
   return {
     data,
     loading,
+    error,
     handleDelete,
+    deleteError,
     handleToggle,
+    toggleError,
   };
 };

@@ -6,6 +6,7 @@ export const COLORS = {
   green: '#22c55e',
   red: '#ef4444',
   softPink: '#f8ececff',
+  orange: 'orange',
 
   roles: {
     superadmin: {
