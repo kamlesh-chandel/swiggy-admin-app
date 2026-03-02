@@ -43,6 +43,7 @@ const Login = () => {
     card: {
       width: 400,
       borderRadius: 3,
+      m: 5,
     },
     cardContent: {
       p: 4,

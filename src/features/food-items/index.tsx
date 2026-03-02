@@ -68,7 +68,7 @@ const FoodItems = () => {
           src={`${import.meta.env.VITE_API_BASE_URL.replace(
             '/api',
             '',
-          )}${row.image.url}`}
+          )}${row.image?.url}`}
           sx={styles.image}
           variant="rounded"
         />
@@ -142,6 +142,7 @@ const FoodItems = () => {
         name: selectedItem.name,
         price: String(selectedItem.price),
         description: selectedItem.description,
+        image: selectedItem.image,
       };
     }
     return undefined;

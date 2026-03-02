@@ -5,7 +5,7 @@ import { uploadFoodItemImage } from '@/features/food-items/food-item.service';
 import type {
   CreateFoodItemPayload,
   FoodItemFormDialogProps,
-  FoodItemFormValues,
+  FoodItemValues,
 } from '@/features/food-items/food-item.types';
 
 import { FOOD_ITEM_FIELDS } from './constant';
@@ -19,14 +19,23 @@ const FoodItemFormDialog = ({
   initialValues,
   restaurantId,
 }: FoodItemFormDialogProps) => {
-  const handleSubmit = async (values: FoodItemFormValues) => {
-    const file = values.image as unknown as File;
-    let imageId: number | undefined;
+  const resolveImageId = async (image: FoodItemValues['image']) => {
+    if (!image) return undefined;
 
-    if (file instanceof File) {
-      const uploaded = await uploadFoodItemImage(file);
-      imageId = uploaded[0].id;
+    if (image instanceof File) {
+      const uploaded = await uploadFoodItemImage(image);
+      return uploaded[0]?.id;
     }
+
+    if (typeof image === 'object' && 'id' in image) {
+      return image.id;
+    }
+
+    return undefined;
+  };
+
+  const handleSubmit = async (values: FoodItemValues) => {
+    const imageId = await resolveImageId(values.image);
 
     const payload: CreateFoodItemPayload = {
       name: values.name,
@@ -45,7 +54,7 @@ const FoodItemFormDialog = ({
 
   return (
     <Dialog open={open} title={title} onClose={onClose} showActions={false}>
-      <Form<FoodItemFormValues>
+      <Form<FoodItemValues>
         fields={FOOD_ITEM_FIELDS}
         onSubmit={handleSubmit}
         buttonText={buttonText}

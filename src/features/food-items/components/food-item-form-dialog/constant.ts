@@ -1,7 +1,7 @@
 import type { FieldConfig } from '@/components/common/form';
-import type { FoodItemFormValues } from '@/features/food-items/food-item.types';
+import type { FoodItemValues } from '@/features/food-items/food-item.types';
 
-export const FOOD_ITEM_FIELDS: FieldConfig<FoodItemFormValues>[] = [
+export const FOOD_ITEM_FIELDS: FieldConfig<FoodItemValues>[] = [
   {
     id: 'name',
     name: 'name',

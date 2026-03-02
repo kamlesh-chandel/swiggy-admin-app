@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react';
 interface InputProps {
   label: string;
   type?: 'text' | 'email' | 'password' | 'number' | 'file';
-  value?: string;
+  value?: string | undefined;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   fullWidth?: boolean;
   margin?: 'normal';

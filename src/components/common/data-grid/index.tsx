@@ -11,7 +11,7 @@ interface DataGridProps<T> {
 
 function DataGrid<T>({ rows, columns, loading, error }: DataGridProps<T>) {
   return (
-    <Box sx={{ height: '100%', width: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%', overflowX: 'auto' }}>
       {error ? (
         <FailedState />
       ) : (
@@ -19,6 +19,7 @@ function DataGrid<T>({ rows, columns, loading, error }: DataGridProps<T>) {
           rows={rows}
           columns={columns}
           loading={loading}
+          sx={{ width: { xs: '250%', md: '100%' } }}
           pageSizeOptions={[10, 25, 50]}
           initialState={{
             pagination: {

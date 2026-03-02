@@ -41,11 +41,11 @@ export interface UseFoodItemsReturn {
   handleDelete: (id: number) => Promise<void>;
 }
 
-export interface FoodItemFormValues {
+export interface FoodItemValues {
   name: string;
   price: string;
   description: string;
-  image?: string;
+  image?: File | { id: number; url: string } | null;
 }
 
 export interface FoodItemFormDialogProps {
@@ -54,6 +54,6 @@ export interface FoodItemFormDialogProps {
   onSubmit: (payload: CreateFoodItemPayload) => Promise<void>;
   mode: 'create' | 'edit';
   loading: boolean;
-  initialValues?: FoodItemFormValues;
+  initialValues?: FoodItemValues;
   restaurantId: number;
 }

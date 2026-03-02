@@ -60,6 +60,7 @@ const PieChart = ({
                 cy="50%"
                 outerRadius={responsiveOuterRadius}
                 label
+                labelLine={false}
               >
                 {data.map(({ color, name }) => (
                   <Cell key={name} fill={color || theme.palette.primary.main} />

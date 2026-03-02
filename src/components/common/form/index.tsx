@@ -25,7 +25,17 @@ interface FormProps<T> {
   defaultValues?: T;
 }
 
-export const Form = <T extends { [K in keyof T]: string }>({
+const styles = {
+  currentFile: {
+    maxWidth: '90%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    color: 'primary.main',
+  },
+};
+
+export const Form = <T extends object>({
   fields,
   onSubmit,
   buttonText = 'Submit',
@@ -62,7 +72,7 @@ export const Form = <T extends { [K in keyof T]: string }>({
 
     fields.forEach(({ name }) => {
       const value = formData[name];
-      const error = validateField(name, value);
+      const error = validateField(name, value as string);
       if (error) newErrors[name as string] = error;
     });
 
@@ -93,31 +103,62 @@ export const Form = <T extends { [K in keyof T]: string }>({
     await onSubmit(formData);
   };
 
+  const getInputValue = (type: string, value: unknown): string | undefined => {
+    if (type === 'file') return undefined;
+    return typeof value === 'string' ? value : '';
+  };
+
+  function getFileName(value: unknown): string | null {
+    function isImageObject(value: unknown) {
+      return typeof value === 'object' && value !== null && 'url' in value;
+    }
+    if (!value) return null;
+    if (value instanceof File) {
+      return value.name;
+    }
+    if (isImageObject(value)) {
+      return (value as { url: string }).url.split('/').pop() || null;
+    }
+    return null;
+  }
+
+  const renderCurrentFile = (value: unknown) => {
+    return (
+      <Box mb={1} fontSize={14} sx={styles.currentFile}>
+        Current file: {getFileName(value)}
+      </Box>
+    );
+  };
+
   const getFields = () => {
-    return fields.map(({ id, label, type, name, acceptFileType }) => (
-      <Input
-        key={id}
-        fullWidth
-        margin="normal"
-        label={label}
-        type={type}
-        value={formData[name] || ''}
-        accept={acceptFileType}
-        onChange={(event) => {
-          if (type === 'file') {
-            handleChange(name, event.target.files?.[0] ?? null);
-          } else {
-            handleChange(name, event.target.value);
-          }
-        }}
-        error={!!errors[name as string]}
-        helperText={errors[name as string] || ''}
-      />
-    ));
+    return fields.map(({ id, label, type, name, acceptFileType }) => {
+      return (
+        <Box key={id}>
+          <Input
+            fullWidth
+            margin="normal"
+            label={label}
+            type={type}
+            value={getInputValue(type, formData[name])}
+            accept={acceptFileType}
+            onChange={(event) => {
+              if (type === 'file') {
+                handleChange(name, event.target.files?.[0] ?? null);
+              } else {
+                handleChange(name, event.target.value);
+              }
+            }}
+            error={!!errors[name as string]}
+            helperText={errors[name as string] || ''}
+          />
+          {type === 'file' && renderCurrentFile(formData[name])}
+        </Box>
+      );
+    });
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
       {getFields()}
 
       <Button

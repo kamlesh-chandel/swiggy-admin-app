@@ -1,4 +1,5 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { lazy, Suspense } from 'react';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import {
   ReceiptLong as ReceiptLongIcon,
   CurrencyRupee as CurrencyRupeeIcon,
@@ -7,10 +8,13 @@ import {
 } from '@mui/icons-material';
 import type { Theme } from '@mui/material';
 
-import StatCard from './components/stat-card';
-import OrderStatusChart from './components/order-status-chart';
-import TopRestaurantsChart from './components/top-restaurants-chart';
-import OrderTrendChart from './components/order-trend-chart';
+const StatCard = lazy(() => import('./components/stat-card'));
+const OrderStatusChart = lazy(() => import('./components/order-status-chart'));
+const TopRestaurantsChart = lazy(
+  () => import('./components/top-restaurants-chart'),
+);
+const OrderTrendChart = lazy(() => import('./components/order-trend-chart'));
+
 import { useDashboard } from './useDashboard';
 
 import type { StatCardProps, StatCardConfig } from './dashboard.types';
@@ -93,15 +97,18 @@ const Dashboard = () => {
     : [];
 
   const getStatCards = () => {
-    return cards.map((card, index) => (
-      <Grid key={index} size={{ xs: 6, sm: 6 }}>
-        <StatCard
-          title={card.title}
-          value={card.value}
-          icon={card.icon}
-          loading={card.loading}
-          error={card.error}
-        />
+    console.log(cards[0]);
+    return cards.map(({ title, value, icon, loading, error }) => (
+      <Grid key={title} size={{ xs: 6, sm: 6 }}>
+        <Suspense fallback={<Skeleton height={150} />}>
+          <StatCard
+            title={title}
+            value={value}
+            icon={icon}
+            loading={loading}
+            error={error}
+          />
+        </Suspense>
       </Grid>
     ));
   };
@@ -120,27 +127,33 @@ const Dashboard = () => {
         </Grid>
 
         <Grid size={styles.gridSize}>
-          <OrderStatusChart
-            data={ordersByStatus}
-            loading={analyticsLoading}
-            error={analyticsError}
-          />
+          <Suspense fallback={<Skeleton variant="rectangular" height={290} />}>
+            <OrderStatusChart
+              data={ordersByStatus}
+              loading={analyticsLoading}
+              error={analyticsError}
+            />
+          </Suspense>
         </Grid>
       </Grid>
       <Grid container spacing={3} sx={styles.gridContainer}>
         <Grid size={styles.gridSize}>
-          <TopRestaurantsChart
-            data={topRestaurants}
-            loading={analyticsLoading}
-            error={analyticsError}
-          />
+          <Suspense fallback={<Skeleton variant="rectangular" height={290} />}>
+            <TopRestaurantsChart
+              data={topRestaurants}
+              loading={analyticsLoading}
+              error={analyticsError}
+            />
+          </Suspense>
         </Grid>
         <Grid size={styles.gridSize}>
-          <OrderTrendChart
-            data={ordersTrend}
-            loading={analyticsLoading}
-            error={analyticsError}
-          />
+          <Suspense fallback={<Skeleton variant="rectangular" height={290} />}>
+            <OrderTrendChart
+              data={ordersTrend}
+              loading={analyticsLoading}
+              error={analyticsError}
+            />
+          </Suspense>
         </Grid>
       </Grid>
     </Box>
