@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   getFoodItemsByRestaurant,
   createFoodItem,
@@ -17,8 +17,6 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  const hasFetchedRef = useRef(false);
-
   const fetchFoodItems = useCallback(async () => {
     if (!restaurantId) return;
 
@@ -32,8 +30,6 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   }, [restaurantId]);
 
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
     fetchFoodItems();
   }, [fetchFoodItems]);
 
