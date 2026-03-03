@@ -44,9 +44,9 @@ const Sidebar = ({ mobileOpen, onClose }: SidebarProps) => {
       borderRadius: 2,
       '&.Mui-selected': {
         backgroundColor: COLORS.brand,
-        color: COLORS.common.softPink,
+        color: COLORS.softPink,
         '& .MuiListItemIcon-root': {
-          color: COLORS.common.softPink,
+          color: COLORS.softPink,
         },
         '&:hover': {
           backgroundColor: COLORS.brand,
