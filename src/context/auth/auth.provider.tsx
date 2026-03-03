@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const token = localStorage.getItem('token');
     return {
       user,
-      isAuthenticated: !!user && !!token,
+      isAuthenticated: !!token,
       setAuthSession,
       removeAuthSession,
     };
