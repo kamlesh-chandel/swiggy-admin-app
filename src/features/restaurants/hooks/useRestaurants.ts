@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   getRestaurants,
   deleteRestaurant,
@@ -13,7 +14,7 @@ export const useRestaurants = () => {
   const [loading, setLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
   const [deleteError, setDeleteError] = useState(false);
   const [toggleError, setToggleError] = useState(false);
 
@@ -22,8 +23,12 @@ export const useRestaurants = () => {
       setLoading(true);
       const response = await getRestaurants();
       setData(response);
-    } catch {
-      setError(true);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorStatus(error.response?.status ?? null);
+      } else {
+        setErrorStatus(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -74,7 +79,7 @@ export const useRestaurants = () => {
   return {
     data,
     loading,
-    error,
+    errorStatus,
     handleDelete,
     deleteError,
     handleToggle,

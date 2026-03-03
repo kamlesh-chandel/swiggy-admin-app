@@ -48,7 +48,7 @@ const PieChart = ({
         {loading ? (
           <Skeleton variant="rounded" width="100%" height={height} />
         ) : error ? (
-          <FailedState />
+          <FailedState error={error} height={height} />
         ) : (
           <ResponsiveContainer width="100%" height={height}>
             <MuiPieChart>

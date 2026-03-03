@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   getDashboardAnalytics,
   getRestaurantsCount,
@@ -26,14 +27,15 @@ export const useDashboard = (): UseDashboardReturn => {
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [restaurantsCountLoading, setRestaurantsCountLoading] = useState(true);
-  const [analyticsError, setAnalyticsError] = useState(false);
-  const [restaurantsCountError, setRestaurantsCountError] = useState(false);
-
+  const [analyticsErrorStatus, setAnalyticsErrorStatus] = useState<
+    number | undefined
+  >();
+  const [restaurantsCountErrorStatus, setRestaurantsCountErrorStatus] =
+    useState<number | undefined>();
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         const analyticsData = await getDashboardAnalytics();
-
         setDashboardStats((prev) => ({
           ...prev,
           ...analyticsData.dashboardStats,
@@ -42,8 +44,10 @@ export const useDashboard = (): UseDashboardReturn => {
         setOrdersByStatus(analyticsData.ordersByStatus);
         setTopRestaurants(analyticsData.topRestaurants);
         setOrdersTrend(analyticsData.ordersTrend);
-      } catch {
-        setAnalyticsError(true);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setAnalyticsErrorStatus(error.response?.status);
+        }
       } finally {
         setAnalyticsLoading(false);
       }
@@ -57,8 +61,10 @@ export const useDashboard = (): UseDashboardReturn => {
           ...prev,
           totalRestaurants: count,
         }));
-      } catch {
-        setRestaurantsCountError(true);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          setRestaurantsCountErrorStatus(error.response?.status);
+        }
       } finally {
         setRestaurantsCountLoading(false);
       }
@@ -75,7 +81,7 @@ export const useDashboard = (): UseDashboardReturn => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsError,
-    restaurantsCountError,
+    analyticsErrorStatus,
+    restaurantsCountErrorStatus,
   };
 };

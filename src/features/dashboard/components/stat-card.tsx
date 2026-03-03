@@ -61,7 +61,7 @@ const StatCard = ({ title, value, icon, loading, error }: StatCardConfig) => {
               </Typography>
 
               {error ? (
-                <FailedState />
+                <FailedState error={error} />
               ) : (
                 <Typography variant="h6" sx={styles.valueText}>
                   {value}

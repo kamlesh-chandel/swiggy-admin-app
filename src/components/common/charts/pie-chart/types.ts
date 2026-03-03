@@ -11,5 +11,5 @@ export interface PieChartProps {
   outerRadius?: number;
   showLegend?: boolean;
   loading?: boolean;
-  error?: boolean;
+  error?: number;
 }

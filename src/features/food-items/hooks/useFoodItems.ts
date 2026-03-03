@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   getFoodItemsByRestaurant,
   createFoodItem,
@@ -14,6 +15,7 @@ import type {
 export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [data, setData] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [errorStatus, setErrorStatus] = useState<number | undefined>(undefined);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
@@ -24,6 +26,12 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setLoading(true);
       const response = await getFoodItemsByRestaurant(restaurantId);
       setData(response.data);
+    } catch (error) {
+      if (!axios.isAxiosError(error)) return;
+      const status = error.response?.status;
+      if (status === 403) {
+        setErrorStatus(403);
+      }
     } finally {
       setLoading(false);
     }
@@ -61,6 +69,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   return {
     data,
     loading,
+    errorStatus,
     createLoading,
     updateLoading,
     handleCreate,

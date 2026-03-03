@@ -6,7 +6,7 @@ import type { OrdersByStatusItem } from '../dashboard.types';
 interface OrderStatusChartProps {
   data: OrdersByStatusItem[];
   loading?: boolean;
-  error?: boolean;
+  error?: number | undefined;
 }
 
 const styles = {

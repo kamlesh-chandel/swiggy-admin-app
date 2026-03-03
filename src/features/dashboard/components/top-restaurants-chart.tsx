@@ -6,7 +6,7 @@ import type { TopRestaurantItem } from '../dashboard.types';
 interface TopRestaurantsChartProps {
   data: TopRestaurantItem[];
   loading: boolean;
-  error: boolean;
+  error: number | undefined;
 }
 
 const styles = {

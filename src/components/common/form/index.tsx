@@ -33,6 +33,24 @@ const styles = {
     textOverflow: 'ellipsis',
     color: 'primary.main',
   },
+  previewContainer: {
+    width: '100%',
+    height: 150,
+    overflow: 'auto',
+    borderRadius: 2,
+    border: '1px solid #ddd',
+  },
+  previewImage: {
+    width: '100%',
+    height: 'auto',
+    objectFit: 'cover',
+  },
+  button: {
+    mt: 3,
+    height: 45,
+    backgroundColor: COLORS.brand,
+    color: COLORS.softPink,
+  },
 };
 
 export const Form = <T extends object>({
@@ -108,24 +126,34 @@ export const Form = <T extends object>({
     return typeof value === 'string' ? value : '';
   };
 
-  function getFileName(value: unknown): string | null {
-    function isImageObject(value: unknown) {
-      return typeof value === 'object' && value !== null && 'url' in value;
-    }
+  const getPreviewUrl = (value: unknown) => {
     if (!value) return null;
-    if (value instanceof File) {
-      return value.name;
-    }
-    if (isImageObject(value)) {
-      return (value as { url: string }).url.split('/').pop() || null;
-    }
-    return null;
-  }
 
-  const renderCurrentFile = (value: unknown) => {
+    if (value instanceof File) {
+      return URL.createObjectURL(value);
+    }
+
+    if (typeof value === 'object' && value !== null && 'url' in value) {
+      const image = value as { url: string };
+      const base = import.meta.env.VITE_API_BASE_URL.replace('/api', '');
+      return base + image.url;
+    }
+
+    return null;
+  };
+
+  const renderImagePreview = (value: unknown) => {
+    const previewUrl = getPreviewUrl(value);
+    if (!previewUrl) return null;
+
     return (
-      <Box mb={1} fontSize={14} sx={styles.currentFile}>
-        Current file: {getFileName(value)}
+      <Box sx={styles.previewContainer}>
+        <Box
+          component="img"
+          src={previewUrl}
+          alt="Preview"
+          sx={styles.previewImage}
+        />
       </Box>
     );
   };
@@ -151,7 +179,7 @@ export const Form = <T extends object>({
             error={!!errors[name as string]}
             helperText={errors[name as string] || ''}
           />
-          {type === 'file' && renderCurrentFile(formData[name])}
+          {type === 'file' && renderImagePreview(formData[name])}
         </Box>
       );
     });
@@ -167,7 +195,7 @@ export const Form = <T extends object>({
         fullWidth
         loading={loading}
         disabled={loading || !isFormValid()}
-        style={{ mt: 3, backgroundColor: COLORS.brand, color: COLORS.softPink }}
+        style={styles.button}
       >
         {buttonText}
       </Button>

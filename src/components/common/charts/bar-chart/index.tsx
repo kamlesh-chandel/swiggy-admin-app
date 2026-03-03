@@ -37,7 +37,7 @@ const BarChart = ({ title, data, loading = false, error }: BarChartProps) => {
         {loading ? (
           <Skeleton variant="rectangular" height={280} />
         ) : error ? (
-          <FailedState />
+          <FailedState error={error} height={280} />
         ) : (
           <ResponsiveContainer width="100%" height={280}>
             <MuiBarChart data={data} layout="vertical" margin={{ left: -5 }}>

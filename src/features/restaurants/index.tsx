@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Box, Switch, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import type { GridColDef } from '@mui/x-data-grid';
+import {
+  getGridNumericOperators,
+  type GridColDef,
+  type GridFilterOperator,
+} from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +42,7 @@ const Restaurants = () => {
   const {
     data: restaurantsData,
     loading,
-    error,
+    errorStatus,
     handleDelete,
     handleToggle,
     handleCreate,
@@ -66,16 +70,56 @@ const Restaurants = () => {
     setAnchorEl(null);
   };
 
+  const statusFilterOperators: GridFilterOperator[] = [
+    {
+      label: 'Active',
+      value: 'isActiveTrue',
+      getApplyFilterFn: () => {
+        return (value) => value === true;
+      },
+    },
+    {
+      label: 'Inactive',
+      value: 'isActiveFalse',
+      getApplyFilterFn: () => {
+        return (value) => value === false;
+      },
+    },
+  ];
+
+  const getBasicNumericOperators = () =>
+    getGridNumericOperators().filter(
+      (operator) =>
+        operator.value === '=' ||
+        operator.value === '!=' ||
+        operator.value === '>' ||
+        operator.value === '<',
+    );
+
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 1, align: 'left' },
     { field: 'address', headerName: 'Address', flex: 1 },
     { field: 'city', headerName: 'City', flex: 1 },
-    { field: 'rating', headerName: 'Rating' },
-    { field: 'totalOrders', headerName: 'Orders' },
-    { field: 'totalRevenue', headerName: 'Revenue' },
+    {
+      field: 'rating',
+      headerName: 'Rating',
+      filterOperators: getBasicNumericOperators(),
+    },
+    {
+      field: 'totalOrders',
+      headerName: 'Orders',
+      filterOperators: getBasicNumericOperators(),
+    },
+    {
+      field: 'totalRevenue',
+      headerName: 'Revenue',
+      filterOperators: getBasicNumericOperators(),
+    },
     {
       field: 'isActive',
       headerName: 'Status',
+      type: 'boolean',
+      filterOperators: statusFilterOperators,
       renderCell: ({ row }) => (
         <Switch
           sx={styles.switch}
@@ -184,6 +228,7 @@ const Restaurants = () => {
             variant="contained"
             style={styles.addButton}
             onClick={handleAddRestaurant}
+            disabled={Boolean(errorStatus)}
           >
             Add
           </Button>
@@ -192,7 +237,7 @@ const Restaurants = () => {
           rows={restaurantsData}
           columns={columns}
           loading={loading}
-          error={error}
+          error={errorStatus ?? undefined}
         />
       </Box>
       <ActionMenu

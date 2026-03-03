@@ -7,5 +7,5 @@ export interface BarChartProps {
   title?: string;
   data: BarChartItem[];
   loading?: boolean;
-  error?: boolean;
+  error?: number;
 }

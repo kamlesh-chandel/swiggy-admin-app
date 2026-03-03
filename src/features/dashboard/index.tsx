@@ -41,8 +41,8 @@ const statCardsConfig = (
   data: StatCardProps,
   analyticsLoading: boolean,
   restaurantsCountLoading: boolean,
-  analyticsError: boolean,
-  restaurantsCountError: boolean,
+  analyticsError: number | undefined,
+  restaurantsCountError: number | undefined,
 ): StatCardConfig[] => [
   {
     title: 'Total Orders',
@@ -82,8 +82,8 @@ const Dashboard = () => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsError,
-    restaurantsCountError,
+    analyticsErrorStatus,
+    restaurantsCountErrorStatus,
   } = useDashboard();
 
   const cards = dashboardStats
@@ -91,13 +91,12 @@ const Dashboard = () => {
         dashboardStats,
         analyticsLoading,
         restaurantsCountLoading,
-        analyticsError,
-        restaurantsCountError,
+        analyticsErrorStatus,
+        restaurantsCountErrorStatus,
       )
     : [];
 
   const getStatCards = () => {
-    console.log(cards[0]);
     return cards.map(({ title, value, icon, loading, error }) => (
       <Grid key={title} size={{ xs: 6, sm: 6 }}>
         <Suspense fallback={<Skeleton height={150} />}>
@@ -131,7 +130,7 @@ const Dashboard = () => {
             <OrderStatusChart
               data={ordersByStatus}
               loading={analyticsLoading}
-              error={analyticsError}
+              error={analyticsErrorStatus}
             />
           </Suspense>
         </Grid>
@@ -142,7 +141,7 @@ const Dashboard = () => {
             <TopRestaurantsChart
               data={topRestaurants}
               loading={analyticsLoading}
-              error={analyticsError}
+              error={analyticsErrorStatus}
             />
           </Suspense>
         </Grid>
@@ -151,7 +150,7 @@ const Dashboard = () => {
             <OrderTrendChart
               data={ordersTrend}
               loading={analyticsLoading}
-              error={analyticsError}
+              error={analyticsErrorStatus}
             />
           </Suspense>
         </Grid>
