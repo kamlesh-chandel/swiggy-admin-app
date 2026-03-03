@@ -24,7 +24,31 @@ const styles = {
   },
 };
 
-const BarChart = ({ title, data, loading = false, error }: BarChartProps) => {
+const BarChart = ({
+  title,
+  data,
+  loading = false,
+  errorType,
+}: BarChartProps) => {
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return (
+      <ResponsiveContainer width="100%" height={280}>
+        <MuiBarChart data={data} layout="vertical" margin={{ left: -5 }}>
+          <XAxis type="number" />
+          <YAxis dataKey="name" type="category" width={120} />
+          <Tooltip />
+          <Bar dataKey="value" fill={COLORS.green} />
+        </MuiBarChart>
+      </ResponsiveContainer>
+    );
+  };
+
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent>
@@ -33,21 +57,7 @@ const BarChart = ({ title, data, loading = false, error }: BarChartProps) => {
             {title}
           </Typography>
         )}
-
-        {loading ? (
-          <Skeleton variant="rectangular" height={280} />
-        ) : error ? (
-          <FailedState error={error} height={280} />
-        ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <MuiBarChart data={data} layout="vertical" margin={{ left: -5 }}>
-              <XAxis type="number" />
-              <YAxis dataKey="name" type="category" width={120} />
-              <Tooltip />
-              <Bar dataKey="value" fill={COLORS.green} />
-            </MuiBarChart>
-          </ResponsiveContainer>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );

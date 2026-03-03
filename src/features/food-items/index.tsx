@@ -42,7 +42,7 @@ const FoodItems = () => {
   const {
     data,
     loading,
-    errorStatus,
+    errorType,
     handleDelete,
     handleCreate,
     handleUpdate,
@@ -201,7 +201,7 @@ const FoodItems = () => {
           rows={data}
           columns={columns}
           loading={loading}
-          error={errorStatus}
+          errorType={errorType}
         />
       </Box>
 

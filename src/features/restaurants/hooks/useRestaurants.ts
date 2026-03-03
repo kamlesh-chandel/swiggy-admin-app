@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   getRestaurants,
   deleteRestaurant,
@@ -7,14 +6,18 @@ import {
   updateRestaurant,
   updateRestaurantStatus,
 } from '../restaurant.service';
+
 import type { Restaurant, CreateRestaurantPayload } from '../restaurant.types';
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/map-api-error';
 
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [errorStatus, setErrorStatus] = useState<number | null>(null);
+  const [errorType, setErrorType] = useState<ApiErrorType>(null);
   const [deleteError, setDeleteError] = useState(false);
   const [toggleError, setToggleError] = useState(false);
 
@@ -24,11 +27,7 @@ export const useRestaurants = () => {
       const response = await getRestaurants();
       setData(response);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrorStatus(error.response?.status ?? null);
-      } else {
-        setErrorStatus(null);
-      }
+      setErrorType(mapApiError(error));
     } finally {
       setLoading(false);
     }
@@ -79,7 +78,7 @@ export const useRestaurants = () => {
   return {
     data,
     loading,
-    errorStatus,
+    errorType,
     handleDelete,
     deleteError,
     handleToggle,

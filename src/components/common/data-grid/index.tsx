@@ -1,15 +1,14 @@
 import { DataGrid as MuiDataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import FailedState from '../failed-state';
+import type { AsyncStateProps } from '@/types/async-state';
 
-interface DataGridProps<T> {
+interface DataGridProps<T> extends AsyncStateProps {
   rows: T[];
   columns: GridColDef[];
-  loading?: boolean;
-  error?: number;
 }
 
-function DataGrid<T>({ rows, columns, loading, error }: DataGridProps<T>) {
+function DataGrid<T>({ rows, columns, loading, errorType }: DataGridProps<T>) {
   return (
     <Box sx={{ height: '100%', width: '100%', overflowX: 'auto' }}>
       <MuiDataGrid
@@ -24,8 +23,8 @@ function DataGrid<T>({ rows, columns, loading, error }: DataGridProps<T>) {
           },
         }}
         slots={{
-          noRowsOverlay: error
-            ? () => <FailedState error={error} height={100} />
+          noRowsOverlay: errorType
+            ? () => <FailedState height={100} errorType={errorType} />
             : undefined,
         }}
       />

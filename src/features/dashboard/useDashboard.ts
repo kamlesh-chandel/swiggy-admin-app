@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   getDashboardAnalytics,
   getRestaurantsCount,
@@ -12,6 +11,9 @@ import type {
   OrdersTrendItem,
   DashboardStatsProps,
 } from './dashboard.types';
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/map-api-error';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStatsProps>({
@@ -27,11 +29,11 @@ export const useDashboard = (): UseDashboardReturn => {
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [restaurantsCountLoading, setRestaurantsCountLoading] = useState(true);
-  const [analyticsErrorStatus, setAnalyticsErrorStatus] = useState<
-    number | undefined
-  >();
-  const [restaurantsCountErrorStatus, setRestaurantsCountErrorStatus] =
-    useState<number | undefined>();
+  const [analyticsErrorType, setAnalyticsErrorType] =
+    useState<ApiErrorType>(null);
+  const [restaurantsCountErrorType, setRestaurantsCountErrorType] =
+    useState<ApiErrorType>(null);
+
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
@@ -45,9 +47,7 @@ export const useDashboard = (): UseDashboardReturn => {
         setTopRestaurants(analyticsData.topRestaurants);
         setOrdersTrend(analyticsData.ordersTrend);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          setAnalyticsErrorStatus(error.response?.status);
-        }
+        setAnalyticsErrorType(mapApiError(error));
       } finally {
         setAnalyticsLoading(false);
       }
@@ -62,9 +62,7 @@ export const useDashboard = (): UseDashboardReturn => {
           totalRestaurants: count,
         }));
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          setRestaurantsCountErrorStatus(error.response?.status);
-        }
+        setRestaurantsCountErrorType(mapApiError(error));
       } finally {
         setRestaurantsCountLoading(false);
       }
@@ -81,7 +79,7 @@ export const useDashboard = (): UseDashboardReturn => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsErrorStatus,
-    restaurantsCountErrorStatus,
+    analyticsErrorType,
+    restaurantsCountErrorType,
   };
 };

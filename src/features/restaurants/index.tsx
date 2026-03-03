@@ -42,7 +42,7 @@ const Restaurants = () => {
   const {
     data: restaurantsData,
     loading,
-    errorStatus,
+    errorType,
     handleDelete,
     handleToggle,
     handleCreate,
@@ -228,7 +228,7 @@ const Restaurants = () => {
             variant="contained"
             style={styles.addButton}
             onClick={handleAddRestaurant}
-            disabled={Boolean(errorStatus)}
+            disabled={errorType === 'permission'}
           >
             Add
           </Button>
@@ -237,7 +237,7 @@ const Restaurants = () => {
           rows={restaurantsData}
           columns={columns}
           loading={loading}
-          error={errorStatus ?? undefined}
+          errorType={errorType}
         />
       </Box>
       <ActionMenu

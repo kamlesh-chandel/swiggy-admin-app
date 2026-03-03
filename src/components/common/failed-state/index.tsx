@@ -1,28 +1,44 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import type { ApiErrorType } from '@/types/async-state';
 
 interface FailedStateProps {
-  error?: number;
+  errorType: ApiErrorType;
   height?: number;
 }
 
 const styles = {
-  text: {
-    fontSize: { xs: 12, md: 18 },
+  container: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+  },
+  text: {
+    fontSize: { xs: 12, md: 18 },
+    mt: 2,
   },
 };
 
-const FailedState = ({ error, height }: FailedStateProps) => {
-  const message =
-    error === 403
-      ? 'You do not have permission to view this resource.'
-      : 'Failed to load data';
+const getErrorMessage = (errorType: ApiErrorType): string => {
+  switch (errorType) {
+    case 'permission':
+      return 'You do not have permission to access this resource.';
+
+    case 'server':
+      return 'Failed to load data. Please try again later.';
+
+    default:
+      return 'Something went wrong.';
+  }
+};
+
+const FailedState = ({ errorType, height = 200 }: FailedStateProps) => {
+  if (!errorType) return null;
+
   return (
-    <Typography sx={styles.text} height={height}>
-      {message}
-    </Typography>
+    <Box sx={{ ...styles.container, height }}>
+      <Typography sx={styles.text}>{getErrorMessage(errorType)}</Typography>
+    </Box>
   );
 };
 

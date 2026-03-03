@@ -2,11 +2,10 @@ import { Box } from '@mui/material';
 import BarChart from '@/components/common/charts/bar-chart';
 
 import type { TopRestaurantItem } from '../dashboard.types';
+import type { AsyncStateProps } from '@/types/async-state';
 
-interface TopRestaurantsChartProps {
+interface TopRestaurantsChartProps extends AsyncStateProps {
   data: TopRestaurantItem[];
-  loading: boolean;
-  error: number | undefined;
 }
 
 const styles = {
@@ -22,7 +21,7 @@ const styles = {
 const TopRestaurantsChart = ({
   data,
   loading,
-  error,
+  errorType,
 }: TopRestaurantsChartProps) => {
   const formattedData = data.map((item) => ({
     name: item.name,
@@ -35,7 +34,7 @@ const TopRestaurantsChart = ({
         title="Top Restaurants (Revenue)"
         data={formattedData}
         loading={loading}
-        error={error}
+        errorType={errorType}
       />
     </Box>
   );

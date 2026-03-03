@@ -1,3 +1,4 @@
+import type { AsyncStateProps, ApiErrorType } from '@/types/async-state';
 import type { ReactNode } from 'react';
 
 export interface StatCardProps {
@@ -7,12 +8,19 @@ export interface StatCardProps {
   totalCustomers: number;
 }
 
-export interface StatCardConfig {
+export interface OrdersByStatusItem {
+  status: string;
+  value: number;
+}
+
+export interface OrderStatusChartProps extends AsyncStateProps {
+  data: OrdersByStatusItem[];
+}
+
+export interface StatCardConfig extends AsyncStateProps {
   title: string;
   value: number | string;
   icon: ReactNode;
-  loading: boolean;
-  error: number | undefined;
 }
 
 export interface DashboardStatsProps {
@@ -20,11 +28,6 @@ export interface DashboardStatsProps {
   totalRevenue: number;
   totalRestaurants: number;
   totalCustomers: number;
-}
-
-export interface OrdersByStatusItem {
-  status: string;
-  value: number;
 }
 
 export interface TopRestaurantItem {
@@ -44,12 +47,10 @@ export interface UseDashboardReturn {
   ordersTrend: OrdersTrendItem[];
   analyticsLoading: boolean;
   restaurantsCountLoading: boolean;
-  analyticsErrorStatus: number | undefined;
-  restaurantsCountErrorStatus: number | undefined;
+  analyticsErrorType: ApiErrorType;
+  restaurantsCountErrorType: ApiErrorType;
 }
 
-export interface OrderTrendChartProps {
+export interface OrderTrendChartProps extends AsyncStateProps {
   data: OrdersTrendItem[];
-  loading?: boolean;
-  error?: number | undefined;
 }

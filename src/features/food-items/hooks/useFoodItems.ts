@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   getFoodItemsByRestaurant,
   createFoodItem,
@@ -11,11 +10,14 @@ import type {
   CreateFoodItemPayload,
   UseFoodItemsReturn,
 } from '../food-item.types';
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/map-api-error';
 
 export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [data, setData] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [errorStatus, setErrorStatus] = useState<number | undefined>(undefined);
+  const [errorType, setErrorType] = useState<ApiErrorType>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
@@ -27,11 +29,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       const response = await getFoodItemsByRestaurant(restaurantId);
       setData(response.data);
     } catch (error) {
-      if (!axios.isAxiosError(error)) return;
-      const status = error.response?.status;
-      if (status === 403) {
-        setErrorStatus(403);
-      }
+      setErrorType(mapApiError(error));
     } finally {
       setLoading(false);
     }
@@ -69,7 +67,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   return {
     data,
     loading,
-    errorStatus,
+    errorType,
     createLoading,
     updateLoading,
     handleCreate,
