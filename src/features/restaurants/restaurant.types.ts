@@ -35,7 +35,7 @@ export interface RestaurantDetails {
   foodItems: FoodItem[];
 }
 
-export interface CreateRestaurantPayload {
+export interface CreateRestaurantPayloadProps {
   name: string;
   address: string;
   city: string;
@@ -45,7 +45,7 @@ export interface CreateRestaurantPayload {
 export interface RestaurantFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: CreateRestaurantPayload) => Promise<void>;
+  onSubmit: (data: CreateRestaurantPayloadProps) => Promise<void>;
   loading?: boolean;
   initialValues?: RestaurantFormValues;
   mode?: 'create' | 'edit';
