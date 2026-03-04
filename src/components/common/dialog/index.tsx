@@ -18,7 +18,6 @@ interface DialogProps {
   confirmText?: string;
   cancelText?: string;
   loading?: boolean;
-
   showActions?: boolean;
 }
 

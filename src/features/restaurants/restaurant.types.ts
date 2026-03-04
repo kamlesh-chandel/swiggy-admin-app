@@ -57,3 +57,8 @@ export interface RestaurantFormValues {
   city: string;
   rating: string;
 }
+
+export interface ApiResponse<T> {
+  message: string;
+  data: T;
+}
