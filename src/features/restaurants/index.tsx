@@ -10,12 +10,15 @@ import Button from '@/components/common/button';
 import ActionMenu from '@/components/common/menu/action-menu';
 import Dialog from '@/components/common/dialog';
 import RestaurantDrawer from './components/restaurant-drawer';
-import RestaurantFormDialog from './components/restaurant-form-dialog';
+import RestaurantFormDialog from './components/form-dialog';
 
 import { COLORS } from '@/theme/colors';
 import { useRestaurants } from './hooks/useRestaurants';
 import { useRestaurantDetails } from './hooks/useRestaurantDetails';
-import type { CreateRestaurantPayload, Restaurant } from './restaurant.types';
+import type {
+  CreateRestaurantPayloadProps,
+  Restaurant,
+} from './restaurant.types';
 
 const styles = {
   addButton: {
@@ -42,9 +45,8 @@ const Restaurants = () => {
     handleDelete,
     handleToggle,
     handleCreate,
-    createLoading,
     handleUpdate,
-    updateLoading,
+    mutationLoading,
   } = useRestaurants();
   const { data: restaurantDetails, fetchDetails } = useRestaurantDetails();
 
@@ -119,7 +121,7 @@ const Restaurants = () => {
     }
   };
 
-  const handleOnManageFoodItems = () => {
+  const handleNavigateToFoodItems = () => {
     handleClose();
     if (!selectedRestaurantId) return;
 
@@ -147,9 +149,15 @@ const Restaurants = () => {
 
   const handleOnConfirmDelete = async () => {
     if (!selectedRestaurantId) return;
-    await handleDelete(selectedRestaurantId);
-    setDeleteOpen(false);
-    toast.success('Restaurant Deleted Successfully');
+
+    const response = await handleDelete(selectedRestaurantId);
+
+    if (response) {
+      toast.success('Restaurant deleted successfully');
+      setDeleteOpen(false);
+    } else {
+      toast.error('Failed to delete restaurant');
+    }
   };
 
   const getInitialValues = () => {
@@ -163,13 +171,26 @@ const Restaurants = () => {
       : undefined;
   };
 
-  const handleOnSubmit = async (payload: CreateRestaurantPayload) => {
+  const handleOnSubmit = async (payload: CreateRestaurantPayloadProps) => {
     if (formMode === 'create') {
-      await handleCreate(payload);
-      toast.success('Restaurant Created Successfully');
-    } else if (formMode === 'edit' && selectedRestaurant) {
-      await handleUpdate(selectedRestaurant.id, payload);
-      toast.success('Restaurant Updated Successfully');
+      const result = await handleCreate(payload);
+
+      if (!result) {
+        toast.error('Failed to create restaurant');
+        return;
+      }
+      toast.success('Restaurant created successfully');
+    }
+
+    if (formMode === 'edit' && selectedRestaurant) {
+      const result = await handleUpdate(selectedRestaurant.id, payload);
+
+      if (!result) {
+        toast.error('Failed to update restaurant');
+        return;
+      }
+
+      toast.success('Restaurant updated successfully');
     }
 
     setFormOpen(false);
@@ -200,7 +221,7 @@ const Restaurants = () => {
         open={open}
         onClose={handleClose}
         onView={handleOnView}
-        onManageFoodItems={handleOnManageFoodItems}
+        onManageFoodItems={handleNavigateToFoodItems}
         onEdit={handleOnEdit}
         onDelete={handleOnDelete}
       />
@@ -222,7 +243,7 @@ const Restaurants = () => {
         open={formOpen}
         onClose={() => setFormOpen(false)}
         mode={formMode}
-        loading={formMode === 'create' ? createLoading : updateLoading}
+        loading={mutationLoading}
         initialValues={getInitialValues()}
         onSubmit={handleOnSubmit}
       />
