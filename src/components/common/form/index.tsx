@@ -145,7 +145,6 @@ export const Form = <T extends object>({
   const renderImagePreview = (value: unknown) => {
     const previewUrl = getPreviewUrl(value);
     if (!previewUrl) return null;
-
     return (
       <Box sx={styles.previewContainer}>
         <Box
@@ -173,7 +172,7 @@ export const Form = <T extends object>({
               if (type === 'file') {
                 handleChange(name, event.target.files?.[0] ?? null);
               } else {
-                handleChange(name, event.target.value);
+                handleChange(name, event.target.value ?? '');
               }
             }}
             error={!!errors[name as string]}
