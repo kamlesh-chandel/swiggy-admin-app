@@ -7,19 +7,22 @@ import {
   updateRestaurantStatus,
 } from '../restaurant.service';
 
-import type { Restaurant, CreateRestaurantPayload } from '../restaurant.types';
 import type { ApiErrorType } from '@/types/async-state';
 
 import { mapApiError } from '@/utils/map-api-error';
+import type {
+  Restaurant,
+  CreateRestaurantPayloadProps,
+} from '../restaurant.types';
 
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
-  const [createLoading, setCreateLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [errorType, setErrorType] = useState<ApiErrorType>(null);
+  const [mutationLoading, setMutationLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
   const [toggleError, setToggleError] = useState(false);
+  const [updateError, setUpdateError] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -37,41 +40,71 @@ export const useRestaurants = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number): Promise<boolean> => {
     try {
       await deleteRestaurant(id);
-      await fetchData();
+
+      setData((prev) => prev.filter((restaurant) => restaurant.id !== id));
+
+      return true;
     } catch {
       setDeleteError(true);
+      return false;
     }
   };
 
   const handleToggle = async (id: number, isActive: boolean) => {
     try {
       await updateRestaurantStatus(id, isActive);
-      await fetchData();
+      setData((prev) =>
+        prev.map((restaurant) =>
+          restaurant.id === id ? { ...restaurant, isActive } : restaurant,
+        ),
+      );
     } catch {
       setToggleError(true);
     }
   };
 
-  const handleCreate = async (payload: CreateRestaurantPayload) => {
+  const handleCreate = async (
+    payload: CreateRestaurantPayloadProps,
+  ): Promise<Restaurant | null> => {
+    setMutationLoading(true);
+
     try {
-      setCreateLoading(true);
-      await createRestaurant(payload);
-      await fetchData();
+      const newRestaurant = await createRestaurant(payload);
+      setData((prev) => [newRestaurant, ...prev]);
+
+      return newRestaurant;
+    } catch (error) {
+      setErrorType(mapApiError(error));
+      return null;
     } finally {
-      setCreateLoading(false);
+      setMutationLoading(false);
     }
   };
 
-  const handleUpdate = async (id: number, payload: CreateRestaurantPayload) => {
+  const handleUpdate = async (
+    id: number,
+    payload: CreateRestaurantPayloadProps,
+  ): Promise<Restaurant | null> => {
+    setMutationLoading(true);
+
     try {
-      setUpdateLoading(true);
-      await updateRestaurant(id, payload);
-      await fetchData();
+      const updatedRestaurant = await updateRestaurant(id, payload);
+
+      setData((prev) =>
+        prev.map((restaurant) =>
+          restaurant.id === id ? updatedRestaurant : restaurant,
+        ),
+      );
+
+      return updatedRestaurant;
+    } catch {
+      setUpdateError(true);
+      return null;
     } finally {
-      setUpdateLoading(false);
+      setMutationLoading(false);
     }
   };
 
@@ -83,9 +116,9 @@ export const useRestaurants = () => {
     deleteError,
     handleToggle,
     handleCreate,
-    createLoading,
     handleUpdate,
-    updateLoading,
+    updateError,
+    mutationLoading,
     toggleError,
   };
 };
