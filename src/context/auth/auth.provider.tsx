@@ -7,11 +7,10 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const storedUser = localStorage.getItem('user');
-
-  const [user, setUser] = useState<AuthUser | null>(
-    storedUser ? JSON.parse(storedUser) : null,
-  );
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const setAuthSession = (response: AuthResponse) => {
     setUser(response.user);
@@ -26,9 +25,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const value = useMemo<AuthContextType>(() => {
+    const token = localStorage.getItem('token');
     return {
       user,
-      isAuthenticated: !!user,
+      isAuthenticated: !!token,
       setAuthSession,
       removeAuthSession,
     };

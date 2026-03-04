@@ -125,7 +125,7 @@ export const Form = <T extends { [K in keyof T]: string }>({
         fullWidth
         loading={loading}
         disabled={loading || !isFormValid()}
-        style={{ mt: 3, backgroundColor: COLORS.brand }}
+        style={{ mt: 3, backgroundColor: COLORS.brand, color: COLORS.softPink }}
       >
         {buttonText}
       </Button>
