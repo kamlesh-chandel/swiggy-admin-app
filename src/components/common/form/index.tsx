@@ -129,10 +129,12 @@ export const Form = <T extends object>({
   const getPreviewUrl = (value: unknown) => {
     if (!value) return null;
 
+    //if selecting new File in food item image input, then Url will created by URL.createObjectURL(value)
     if (value instanceof File) {
       return URL.createObjectURL(value);
     }
 
+    //in the edit food item mode, url will be taken from default value
     if (typeof value === 'object' && value !== null && 'url' in value) {
       const image = value as { url: string };
       const base = import.meta.env.VITE_API_BASE_URL.replace('/api', '');

@@ -4,7 +4,7 @@ import { getRestaurantById } from '../restaurant.service';
 import type { RestaurantDetails } from '../restaurant.types';
 import type { ApiErrorType } from '@/types/async-state';
 
-import { mapApiError } from '@/utils/map-api-error';
+import { mapApiError } from '@/utils/api';
 
 export const useRestaurantDetails = () => {
   const [data, setData] = useState<RestaurantDetails | null>(null);

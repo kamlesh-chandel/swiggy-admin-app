@@ -9,7 +9,7 @@ import {
 
 import type { ApiErrorType } from '@/types/async-state';
 
-import { mapApiError } from '@/utils/map-api-error';
+import { mapApiError } from '@/utils/api';
 import type {
   Restaurant,
   CreateRestaurantPayloadProps,
