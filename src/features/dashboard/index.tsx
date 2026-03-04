@@ -97,7 +97,6 @@ const Dashboard = () => {
     : [];
 
   const getStatCards = () => {
-    console.log(cards[0]);
     return cards.map(({ title, value, icon, loading, error }) => (
       <Grid key={title} size={{ xs: 6, sm: 6 }}>
         <Suspense fallback={<Skeleton height={150} />}>

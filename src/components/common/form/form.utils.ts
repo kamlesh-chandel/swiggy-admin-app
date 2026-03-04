@@ -27,3 +27,26 @@ export const getErrorMessage = <T>(
 
   return '';
 };
+
+const isImageObject = (value: unknown) => {
+  return typeof value === 'object' && value !== null && 'url' in value;
+};
+
+export const getFileName = (value: unknown): string | null => {
+  if (!value) return null;
+  if (value instanceof File) {
+    return value.name;
+  }
+  if (isImageObject(value)) {
+    return (value as { url: string }).url.split('/').pop() || null;
+  }
+  return null;
+};
+
+export const getInputValue = (
+  type: string,
+  value: unknown,
+): string | undefined => {
+  if (type === 'file') return undefined;
+  return typeof value === 'string' ? value : '';
+};

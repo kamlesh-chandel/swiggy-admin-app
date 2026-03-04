@@ -24,15 +24,15 @@ const Input = ({
   helperText,
   accept,
 }: InputProps) => {
-  const isTypeFile = type === 'file';
+  const isFileType = type === 'file';
 
   return (
     <TextField
       fullWidth={fullWidth}
       margin={margin}
-      label={isTypeFile ? undefined : label}
+      label={isFileType ? undefined : label}
       type={type}
-      value={isTypeFile ? undefined : value}
+      value={isFileType ? undefined : value}
       onChange={onChange}
       error={error}
       helperText={helperText}

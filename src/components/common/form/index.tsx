@@ -5,7 +5,7 @@ import { COLORS } from '@/theme/colors';
 import Input from '../input';
 import Button from '../button';
 
-import { getErrorMessage } from './form.utils';
+import { getErrorMessage, getFileName, getInputValue } from './form.utils';
 
 export interface FieldConfig<T> {
   id: string;
@@ -103,25 +103,6 @@ export const Form = <T extends object>({
     await onSubmit(formData);
   };
 
-  const getInputValue = (type: string, value: unknown): string | undefined => {
-    if (type === 'file') return undefined;
-    return typeof value === 'string' ? value : '';
-  };
-
-  function getFileName(value: unknown): string | null {
-    function isImageObject(value: unknown) {
-      return typeof value === 'object' && value !== null && 'url' in value;
-    }
-    if (!value) return null;
-    if (value instanceof File) {
-      return value.name;
-    }
-    if (isImageObject(value)) {
-      return (value as { url: string }).url.split('/').pop() || null;
-    }
-    return null;
-  }
-
   const renderCurrentFile = (value: unknown) => {
     return (
       <Box mb={1} fontSize={14} sx={styles.currentFile}>
@@ -145,7 +126,7 @@ export const Form = <T extends object>({
               if (type === 'file') {
                 handleChange(name, event.target.files?.[0] ?? null);
               } else {
-                handleChange(name, event.target.value);
+                handleChange(name, event.target.value ?? '');
               }
             }}
             error={!!errors[name as string]}
