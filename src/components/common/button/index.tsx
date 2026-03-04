@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
-import { CircularProgress, Button as MuiButton } from '@mui/material';
+import { Button as MuiButton } from '@mui/material';
 import type { ButtonProps as MuiButtonProps } from '@mui/material';
+import Loader from '../loader';
 
 interface ButtonProps {
   type?: 'button' | 'submit';
   children: ReactNode;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   variant?: MuiButtonProps['variant'];
   fullWidth?: boolean;
   style?: object;
@@ -35,7 +36,7 @@ const Button = ({
       color={color}
       disabled={disabled || loading}
     >
-      {loading ? <CircularProgress size={20} color="inherit" /> : children}
+      {loading ? <Loader /> : children}
     </MuiButton>
   );
 };
