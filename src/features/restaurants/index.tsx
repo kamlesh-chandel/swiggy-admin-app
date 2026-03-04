@@ -196,8 +196,8 @@ const Restaurants = () => {
 
     const response = await handleDelete(selectedRestaurantId);
 
-    if (response) {
-      toast.success('Restaurant deleted successfully');
+    if (response?.status === 200) {
+      toast.success(response.data.message);
       setDeleteOpen(false);
     } else {
       toast.error('Failed to delete restaurant');
@@ -217,27 +217,26 @@ const Restaurants = () => {
 
   const handleOnSubmit = async (payload: CreateRestaurantPayloadProps) => {
     if (formMode === 'create') {
-      const result = await handleCreate(payload);
+      const response = await handleCreate(payload);
 
-      if (!result) {
+      if (response?.status === 201) {
+        toast.success(response.data.message);
+        setFormOpen(false);
+      } else {
         toast.error('Failed to create restaurant');
-        return;
       }
-      toast.success('Restaurant created successfully');
     }
 
     if (formMode === 'edit' && selectedRestaurant) {
-      const result = await handleUpdate(selectedRestaurant.id, payload);
+      const response = await handleUpdate(selectedRestaurant.id, payload);
 
-      if (!result) {
+      if (response?.status === 200) {
+        toast.success(response.data.message);
+        setFormOpen(false);
+      } else {
         toast.error('Failed to update restaurant');
-        return;
       }
-
-      toast.success('Restaurant updated successfully');
     }
-
-    setFormOpen(false);
   };
 
   return (

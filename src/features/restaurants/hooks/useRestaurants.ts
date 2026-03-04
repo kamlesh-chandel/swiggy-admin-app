@@ -40,16 +40,18 @@ export const useRestaurants = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number): Promise<boolean> => {
+  const handleDelete = async (id: number) => {
     try {
-      await deleteRestaurant(id);
+      const response = await deleteRestaurant(id);
 
-      setData((prev) => prev.filter((restaurant) => restaurant.id !== id));
+      if (response.status === 200) {
+        setData((prev) => prev.filter((restaurant) => restaurant.id !== id));
+      }
 
-      return true;
+      return response;
     } catch {
       setDeleteError(true);
-      return false;
+      return null;
     }
   };
 
@@ -66,16 +68,17 @@ export const useRestaurants = () => {
     }
   };
 
-  const handleCreate = async (
-    payload: CreateRestaurantPayloadProps,
-  ): Promise<Restaurant | null> => {
+  const handleCreate = async (payload: CreateRestaurantPayloadProps) => {
     setMutationLoading(true);
 
     try {
-      const newRestaurant = await createRestaurant(payload);
-      setData((prev) => [newRestaurant, ...prev]);
+      const response = await createRestaurant(payload);
 
-      return newRestaurant;
+      if (response.status === 201) {
+        setData((prev) => [response.data.data, ...prev]);
+      }
+
+      return response;
     } catch (error) {
       setErrorType(mapApiError(error));
       return null;
@@ -87,19 +90,21 @@ export const useRestaurants = () => {
   const handleUpdate = async (
     id: number,
     payload: CreateRestaurantPayloadProps,
-  ): Promise<Restaurant | null> => {
+  ) => {
     setMutationLoading(true);
 
     try {
-      const updatedRestaurant = await updateRestaurant(id, payload);
+      const response = await updateRestaurant(id, payload);
 
-      setData((prev) =>
-        prev.map((restaurant) =>
-          restaurant.id === id ? updatedRestaurant : restaurant,
-        ),
-      );
+      if (response.status === 200) {
+        setData((prev) =>
+          prev.map((restaurant) =>
+            restaurant.id === id ? response.data.data : restaurant,
+          ),
+        );
+      }
 
-      return updatedRestaurant;
+      return response;
     } catch {
       setUpdateError(true);
       return null;

@@ -16,6 +16,8 @@ const RestaurantFormDialog = ({
   mode = 'create',
 }: RestaurantFormDialogProps) => {
   const handleSubmit = async (data: RestaurantFormValues) => {
+    if (!data.rating) return;
+
     await onSubmit({
       ...data,
       rating: Number(data.rating),
