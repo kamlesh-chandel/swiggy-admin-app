@@ -17,6 +17,7 @@ import Loader from '@/components/common/loader';
 import Login from '@/features/auth/pages/login';
 const Dashboard = lazy(() => import('@/features/dashboard'));
 const Restaurants = lazy(() => import('@/features/restaurants'));
+const FoodItems = lazy(() => import('@/features/food-items'));
 
 const Routes = () => {
   return (
@@ -41,6 +42,14 @@ const Routes = () => {
               element={
                 <Suspense fallback={<Loader fullScreen />}>
                   <Restaurants />
+                </Suspense>
+              }
+            />
+            <Route
+              path={ROUTES.FOOD_ITEMS}
+              element={
+                <Suspense fallback={<Loader fullScreen />}>
+                  <FoodItems />
                 </Suspense>
               }
             />

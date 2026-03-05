@@ -2,17 +2,23 @@ import { useState } from 'react';
 import { Box, Switch, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { GridColDef } from '@mui/x-data-grid';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import DataGrid from '@/components/common/data-grid';
 import Button from '@/components/common/button';
 import ActionMenu from '@/components/common/menu/action-menu';
 import Dialog from '@/components/common/dialog';
 import RestaurantDrawer from './components/restaurant-drawer';
+import RestaurantFormDialog from './components/form-dialog';
 
 import { COLORS } from '@/theme/colors';
 import { useRestaurants } from './hooks/useRestaurants';
 import { useRestaurantDetails } from './hooks/useRestaurantDetails';
-import { toast } from 'react-toastify';
+import type {
+  CreateRestaurantPayloadProps,
+  Restaurant,
+} from './restaurant.types';
 
 const styles = {
   addButton: {
@@ -38,16 +44,24 @@ const Restaurants = () => {
     error,
     handleDelete,
     handleToggle,
+    handleCreate,
+    handleUpdate,
+    mutationLoading,
   } = useRestaurants();
   const { data: restaurantDetails, fetchDetails } = useRestaurantDetails();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<Restaurant | null>(null);
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<
     number | null
   >(null);
 
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
   const handleClose = () => {
@@ -93,13 +107,105 @@ const Restaurants = () => {
     },
   ];
 
+  const handleAddRestaurant = () => {
+    setSelectedRestaurant(null);
+    setFormMode('create');
+    setFormOpen(true);
+  };
+
+  const handleOnView = () => {
+    handleClose();
+    if (selectedRestaurantId) {
+      fetchDetails(selectedRestaurantId);
+      setDrawerOpen(true);
+    }
+  };
+
+  const handleNavigateToFoodItems = () => {
+    handleClose();
+    if (!selectedRestaurantId) return;
+
+    navigate(`/restaurants/${selectedRestaurantId}/food-items`);
+  };
+
+  const handleOnEdit = () => {
+    handleClose();
+
+    if (!selectedRestaurantId) return;
+    const restaurant = restaurantsData.find(
+      ({ id }) => id === selectedRestaurantId,
+    );
+    if (!restaurant) return;
+
+    setSelectedRestaurant(restaurant);
+    setFormMode('edit');
+    setFormOpen(true);
+  };
+
+  const handleOnDelete = () => {
+    handleClose();
+    setDeleteOpen(true);
+  };
+
+  const handleOnConfirmDelete = async () => {
+    if (!selectedRestaurantId) return;
+
+    const response = await handleDelete(selectedRestaurantId);
+
+    if (response?.status === 200) {
+      toast.success(response.data.message);
+      setDeleteOpen(false);
+    } else {
+      toast.error('Failed to delete restaurant');
+    }
+  };
+
+  const getInitialValues = () => {
+    return formMode === 'edit' && selectedRestaurant
+      ? {
+          name: selectedRestaurant.name,
+          address: selectedRestaurant.address,
+          city: selectedRestaurant.city,
+          rating: String(selectedRestaurant.rating),
+        }
+      : undefined;
+  };
+
+  const handleOnSubmit = async (payload: CreateRestaurantPayloadProps) => {
+    if (formMode === 'create') {
+      const response = await handleCreate(payload);
+
+      if (response?.status === 201) {
+        toast.success(response.data.message);
+        setFormOpen(false);
+      } else {
+        toast.error('Failed to create restaurant');
+      }
+    }
+
+    if (formMode === 'edit' && selectedRestaurant) {
+      const response = await handleUpdate(selectedRestaurant.id, payload);
+
+      if (response?.status === 200) {
+        toast.success(response.data.message);
+        setFormOpen(false);
+      } else {
+        toast.error('Failed to update restaurant');
+      }
+    }
+  };
+
   return (
     <Box>
       <Typography variant="h5">Restaurants</Typography>
       <Box sx={{ mt: 6 }}>
         <Box mb={2} gap={2} sx={styles.buttonBox}>
-          <Button variant="contained" style={styles.addButton}>
-            Add Restaurant
+          <Button
+            variant="contained"
+            style={styles.addButton}
+            onClick={handleAddRestaurant}
+          >
+            Add
           </Button>
         </Box>
         <DataGrid
@@ -113,29 +219,17 @@ const Restaurants = () => {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        onDelete={() => {
-          handleClose();
-          setDeleteOpen(true);
-        }}
-        onView={() => {
-          handleClose();
-          if (selectedRestaurantId) {
-            fetchDetails(selectedRestaurantId);
-            setDrawerOpen(true);
-          }
-        }}
+        onView={handleOnView}
+        onManageFoodItems={handleNavigateToFoodItems}
+        onEdit={handleOnEdit}
+        onDelete={handleOnDelete}
       />
       <Dialog
         open={deleteOpen}
         title="Delete Restaurant"
         description="Are you sure you want to delete this restaurant? This action cannot be undone."
         onClose={() => setDeleteOpen(false)}
-        onConfirm={async () => {
-          if (!selectedRestaurantId) return;
-          await handleDelete(selectedRestaurantId);
-          setDeleteOpen(false);
-          toast.success('Restaurant Deleted Successfully');
-        }}
+        onConfirm={handleOnConfirmDelete}
         confirmText="Delete"
         cancelText="Cancel"
       />
@@ -143,6 +237,14 @@ const Restaurants = () => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         data={restaurantDetails}
+      />
+      <RestaurantFormDialog
+        open={formOpen}
+        onClose={() => setFormOpen(false)}
+        mode={formMode}
+        loading={mutationLoading}
+        initialValues={getInitialValues()}
+        onSubmit={handleOnSubmit}
       />
     </Box>
   );

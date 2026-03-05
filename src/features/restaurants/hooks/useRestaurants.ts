@@ -2,16 +2,23 @@ import { useEffect, useState } from 'react';
 import {
   getRestaurants,
   deleteRestaurant,
+  createRestaurant,
+  updateRestaurant,
   updateRestaurantStatus,
 } from '../restaurant.service';
-import type { Restaurant } from '../restaurant.types';
+import type {
+  Restaurant,
+  CreateRestaurantPayloadProps,
+} from '../restaurant.types';
 
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
+  const [mutationLoading, setMutationLoading] = useState(false);
   const [error, setError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
   const [toggleError, setToggleError] = useState(false);
+  const [updateError, setUpdateError] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -31,19 +38,74 @@ export const useRestaurants = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteRestaurant(id);
-      await fetchData();
+      const response = await deleteRestaurant(id);
+
+      if (response.status === 200) {
+        setData((prev) => prev.filter((restaurant) => restaurant.id !== id));
+      }
+
+      return response;
     } catch {
       setDeleteError(true);
+      return null;
     }
   };
 
   const handleToggle = async (id: number, isActive: boolean) => {
     try {
       await updateRestaurantStatus(id, isActive);
-      await fetchData();
+      setData((prev) =>
+        prev.map((restaurant) =>
+          restaurant.id === id ? { ...restaurant, isActive } : restaurant,
+        ),
+      );
     } catch {
       setToggleError(true);
+    }
+  };
+
+  const handleCreate = async (payload: CreateRestaurantPayloadProps) => {
+    setMutationLoading(true);
+
+    try {
+      const response = await createRestaurant(payload);
+
+      if (response.status === 201) {
+        setData((prev) => [response.data.data, ...prev]);
+      }
+
+      return response;
+    } catch {
+      setError(true);
+      return null;
+    } finally {
+      setMutationLoading(false);
+    }
+  };
+
+  const handleUpdate = async (
+    id: number,
+    payload: CreateRestaurantPayloadProps,
+  ) => {
+    setMutationLoading(true);
+
+    try {
+      const response = await updateRestaurant(id, payload);
+
+      if (response.status === 200) {
+        setData((prev) =>
+          prev.map((restaurant) =>
+            restaurant.id === id ? response.data.data : restaurant,
+          ),
+        );
+      }
+
+      return response;
+    } catch {
+      setUpdateError(true);
+      return null;
+    } finally {
+      setMutationLoading(false);
     }
   };
 
@@ -54,6 +116,10 @@ export const useRestaurants = () => {
     handleDelete,
     deleteError,
     handleToggle,
+    handleCreate,
+    handleUpdate,
+    updateError,
+    mutationLoading,
     toggleError,
   };
 };

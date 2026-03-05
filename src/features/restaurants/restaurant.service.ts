@@ -1,5 +1,9 @@
 import { api } from '@/lib/axios';
-import type { Restaurant } from './restaurant.types';
+import type {
+  CreateRestaurantPayloadProps,
+  Restaurant,
+  ApiResponse,
+} from './restaurant.types';
 
 export const getRestaurants = async (): Promise<Restaurant[]> => {
   const response = await api.get('/admin/restaurants');
@@ -11,12 +15,23 @@ export const getRestaurantById = async (id: number) => {
   return response.data;
 };
 
+export const createRestaurant = async (
+  payload: CreateRestaurantPayloadProps,
+) => {
+  return api.post<ApiResponse<Restaurant>>('/admin/restaurants', payload);
+};
+
+export const updateRestaurant = async (
+  id: number,
+  payload: CreateRestaurantPayloadProps,
+) => {
+  return api.put<ApiResponse<Restaurant>>(`/admin/restaurants/${id}`, payload);
+};
+
 export const deleteRestaurant = async (id: number) => {
-  await api.delete(`/admin/restaurants/${id}`);
+  return api.delete<ApiResponse<{ id: number }>>(`/admin/restaurants/${id}`);
 };
 
 export const updateRestaurantStatus = async (id: number, isActive: boolean) => {
-  await api.patch(`/admin/restaurants/${id}/status`, {
-    isActive,
-  });
+  return api.patch(`/admin/restaurants/${id}/status`, { isActive });
 };

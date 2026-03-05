@@ -34,3 +34,31 @@ export interface RestaurantDetails {
   analytics: RestaurantAnalytics;
   foodItems: FoodItem[];
 }
+
+export interface CreateRestaurantPayloadProps {
+  name: string;
+  address: string;
+  city: string;
+  rating: number;
+}
+
+export interface RestaurantFormDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (data: CreateRestaurantPayloadProps) => Promise<void>;
+  loading?: boolean;
+  initialValues?: RestaurantFormValues;
+  mode?: 'create' | 'edit';
+}
+
+export interface RestaurantFormValues {
+  name: string;
+  address: string;
+  city: string;
+  rating: string;
+}
+
+export interface ApiResponse<T> {
+  message: string;
+  data: T;
+}
