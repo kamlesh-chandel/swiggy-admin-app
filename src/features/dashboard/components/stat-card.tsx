@@ -8,7 +8,7 @@ import type { StatCardConfig } from '../dashboard.types';
 const styles = {
   card: {
     border: (theme: Theme) => `1px solid ${theme.palette.divider}`,
-    height: { xs: 120, sm: 140 },
+    height: { xs: 120, md: 140 },
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -18,7 +18,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    px: { xs: 2, sm: 3 },
+    px: { xs: 2, md: 3 },
     gap: 2,
   },
   textWrapper: {
@@ -33,15 +33,15 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: { xs: 20, sm: 28, md: 50 },
-    height: { xs: 20, sm: 28, md: 50 },
+    width: { xs: 20, md: 50 },
+    height: { xs: 20, md: 50 },
     borderRadius: 2,
     bgcolor: 'background.default',
     flexShrink: 0,
   },
   iconSkelaton: {
-    width: { xs: 20, sm: 28, md: 50 },
-    height: { xs: 20, sm: 28, md: 50 },
+    width: { xs: 20, md: 50 },
+    height: { xs: 20, md: 50 },
   },
 };
 

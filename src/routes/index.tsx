@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  Routes as RouterRoutes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { BrowserRouter, Routes as RouterRoutes, Route } from 'react-router-dom';
 
 import PublicRoute from './PublicRoute';
 import ProtectedRoute from './ProtectedRoute';
@@ -16,6 +11,7 @@ import Login from '@/features/auth/pages/login';
 import Dashboard from '@/features/dashboard';
 import Restaurants from '@/features/restaurants';
 import FoodItems from '@/features/food-items';
+import NotFound from '@/features/not-found';
 
 const Routes = () => {
   return (
@@ -33,7 +29,7 @@ const Routes = () => {
           </Route>
         </Route>
 
-        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+        <Route path="*" element={<NotFound />} />
       </RouterRoutes>
     </BrowserRouter>
   );
