@@ -76,7 +76,7 @@ const Sidebar = ({ mobileOpen, onClose }: SidebarProps) => {
       <List>
         {SIDEBAR_LINKS.map(({ label, icon, path }) => {
           const Icon = icon;
-          const active = location.pathname === path;
+          const active = location.pathname.startsWith(path);
 
           return (
             <ListItemButton

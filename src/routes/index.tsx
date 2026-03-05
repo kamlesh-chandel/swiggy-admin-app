@@ -1,4 +1,3 @@
-import { lazy, Suspense } from 'react';
 import {
   BrowserRouter,
   Routes as RouterRoutes,
@@ -12,12 +11,11 @@ import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from '@/constants/routes';
 
 import Layout from '@/components/layout';
-import Loader from '@/components/common/loader';
 
 import Login from '@/features/auth/pages/login';
-const Dashboard = lazy(() => import('@/features/dashboard'));
-const Restaurants = lazy(() => import('@/features/restaurants'));
-const FoodItems = lazy(() => import('@/features/food-items'));
+import Dashboard from '@/features/dashboard';
+import Restaurants from '@/features/restaurants';
+import FoodItems from '@/features/food-items';
 
 const Routes = () => {
   return (
@@ -29,30 +27,9 @@ const Routes = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route
-              path={ROUTES.DASHBOARD}
-              element={
-                <Suspense fallback={<Loader fullScreen />}>
-                  <Dashboard />
-                </Suspense>
-              }
-            />
-            <Route
-              path={ROUTES.RESTAURANTS}
-              element={
-                <Suspense fallback={<Loader fullScreen />}>
-                  <Restaurants />
-                </Suspense>
-              }
-            />
-            <Route
-              path={ROUTES.FOOD_ITEMS}
-              element={
-                <Suspense fallback={<Loader fullScreen />}>
-                  <FoodItems />
-                </Suspense>
-              }
-            />
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.RESTAURANTS} element={<Restaurants />} />
+            <Route path={ROUTES.FOOD_ITEMS} element={<FoodItems />} />
           </Route>
         </Route>
 

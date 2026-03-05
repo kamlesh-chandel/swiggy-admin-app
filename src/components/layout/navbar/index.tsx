@@ -33,20 +33,17 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
       height: 100,
       display: 'flex',
       justifyContent: 'space-between',
-      mx: { sm: 0, md: 1.5 },
     },
     menuIconBox: { display: 'flex', alignItems: 'center' },
     imageBox: {
       height: 52,
       width: 'auto',
       borderRadius: 1,
-      ml: { xs: 1, md: 5 },
     },
     iconBox: {
       display: 'flex',
       alignItems: 'center',
       gap: { xs: 3, md: 5 },
-      marginRight: { xs: 1, md: 5 },
     },
     avatar: {
       width: 32,
@@ -70,6 +67,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
           height: 80,
+          width: '100%',
         }}
       >
         <Toolbar sx={styles.toolbar}>

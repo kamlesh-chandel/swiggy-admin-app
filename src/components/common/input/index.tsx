@@ -1,14 +1,16 @@
 import { TextField } from '@mui/material';
+import type { ChangeEvent } from 'react';
 
 interface InputProps {
   label: string;
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: 'text' | 'email' | 'password' | 'number' | 'file';
+  value?: string | undefined;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   fullWidth?: boolean;
   margin?: 'normal';
   error?: boolean;
   helperText?: string;
+  accept?: string;
 }
 
 const Input = ({
@@ -20,17 +22,29 @@ const Input = ({
   margin,
   error,
   helperText,
+  accept,
 }: InputProps) => {
+  const isFileType = type === 'file';
+
   return (
     <TextField
       fullWidth={fullWidth}
       margin={margin}
-      label={label}
+      label={isFileType ? undefined : label}
       type={type}
-      value={value}
+      value={isFileType ? undefined : value}
       onChange={onChange}
       error={error}
       helperText={helperText}
+      slotProps={
+        type === 'file'
+          ? {
+              htmlInput: {
+                accept,
+              },
+            }
+          : undefined
+      }
     />
   );
 };

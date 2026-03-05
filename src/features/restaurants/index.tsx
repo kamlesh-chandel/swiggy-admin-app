@@ -219,10 +219,16 @@ const Restaurants = () => {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        onView={handleOnView}
-        onManageFoodItems={handleNavigateToFoodItems}
-        onEdit={handleOnEdit}
-        onDelete={handleOnDelete}
+        actions={[
+          { label: 'View', onClick: handleOnView, color: 'success.main' },
+          {
+            label: 'Manage Food Items',
+            onClick: handleNavigateToFoodItems,
+            color: 'info.main',
+          },
+          { label: 'Edit', onClick: handleOnEdit, color: 'warning.main' },
+          { label: 'Delete', onClick: handleOnDelete, color: 'error.main' },
+        ]}
       />
       <Dialog
         open={deleteOpen}

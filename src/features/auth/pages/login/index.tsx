@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -24,9 +25,13 @@ const Login = () => {
       setAuthSession(response);
 
       navigate(ROUTES.DASHBOARD);
-      toast.success('Login successful');
-    } catch {
-      toast.error('Invalid email or password');
+      toast.success(response.message);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.error?.message || 'Login failed');
+      } else {
+        toast.error('Something went wrong');
+      }
     } finally {
       setLoading(false);
     }
@@ -43,6 +48,7 @@ const Login = () => {
     card: {
       width: 400,
       borderRadius: 3,
+      m: 5,
     },
     cardContent: {
       p: 4,
