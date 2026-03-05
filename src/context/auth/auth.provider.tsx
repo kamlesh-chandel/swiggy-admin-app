@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const setAuthSession = (response: AuthResponse) => {
     setUser(response.user);
     localStorage.setItem('user', JSON.stringify(response.user));
-    localStorage.setItem('token', response.jwt);
   };
 
   const removeAuthSession = () => {

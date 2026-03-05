@@ -114,7 +114,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        user={user}
+        user={user!}
       />
     </>
   );

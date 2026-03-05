@@ -25,7 +25,6 @@ const Login = () => {
 
       const user = await getCurrentUser();
       setAuthSession({
-        jwt: response.jwt,
         user,
       });
 
@@ -33,7 +32,7 @@ const Login = () => {
       toast.success(response.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.error?.message || 'Login failed');
+        toast.error(error.response?.data?.message || 'Login failed');
       } else {
         toast.error('Something went wrong');
       }

@@ -62,9 +62,6 @@ const Restaurants = () => {
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
-  const [selectedRestaurantId, setSelectedRestaurantId] = useState<
-    number | null
-  >(null);
 
   const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
@@ -145,7 +142,7 @@ const Restaurants = () => {
       renderCell: ({ row }) => (
         <Button
           onClick={(e) => {
-            setSelectedRestaurantId(row.id);
+            setSelectedRestaurant(row);
             setAnchorEl(e.currentTarget);
           }}
         >
@@ -163,29 +160,21 @@ const Restaurants = () => {
 
   const handleOnView = () => {
     handleClose();
-    if (selectedRestaurantId) {
-      fetchDetails(selectedRestaurantId);
+    if (selectedRestaurant) {
+      fetchDetails(selectedRestaurant.id);
       setDrawerOpen(true);
     }
   };
 
   const handleNavigateToFoodItems = () => {
     handleClose();
-    if (!selectedRestaurantId) return;
+    if (!selectedRestaurant) return;
 
-    navigate(`/restaurants/${selectedRestaurantId}/food-items`);
+    navigate(`/restaurants/${selectedRestaurant.id}/food-items`);
   };
 
   const handleOnEdit = () => {
     handleClose();
-
-    if (!selectedRestaurantId) return;
-    const restaurant = restaurantsData.find(
-      ({ id }) => id === selectedRestaurantId,
-    );
-    if (!restaurant) return;
-
-    setSelectedRestaurant(restaurant);
     setFormMode('edit');
     setFormOpen(true);
   };
@@ -196,9 +185,9 @@ const Restaurants = () => {
   };
 
   const handleOnConfirmDelete = async () => {
-    if (!selectedRestaurantId) return;
+    if (!selectedRestaurant) return;
 
-    const response = await handleDelete(selectedRestaurantId);
+    const response = await handleDelete(selectedRestaurant.id);
 
     if (response?.status === 200) {
       toast.success(response.data.message);
@@ -289,8 +278,8 @@ const Restaurants = () => {
       />
       <Dialog
         open={deleteOpen}
-        title="Delete Restaurant"
-        description="Are you sure you want to delete this restaurant? This action cannot be undone."
+        title={`Delete Restaurant ${selectedRestaurant?.name}`}
+        description={`Are you sure you want to delete this restaurant (${selectedRestaurant?.name})? This action cannot be undone.`}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleOnConfirmDelete}
         confirmText="Delete"

@@ -19,7 +19,7 @@ export interface FieldConfig<T> {
 
 interface FormProps<T> {
   fields: FieldConfig<T>[];
-  onSubmit: (data: T) => void | Promise<void>;
+  onSubmit: (data: T) => void;
   buttonText?: string;
   loading?: boolean;
   defaultValues?: T;
@@ -72,7 +72,7 @@ export const Form = <T extends object>({
   };
 
   const validateField = (fieldName: keyof T, value: string) => {
-    const field = fields.find((f) => f.name === fieldName);
+    const field = fields.find((field) => field.name === fieldName);
     if (!field) return '';
 
     const error = getErrorMessage(field, value);
@@ -83,19 +83,6 @@ export const Form = <T extends object>({
     }));
 
     return error;
-  };
-
-  const validateAll = () => {
-    const newErrors: Record<string, string> = {};
-
-    fields.forEach(({ name }) => {
-      const value = formData[name];
-      const error = validateField(name, value as string);
-      if (error) newErrors[name as string] = error;
-    });
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const isFormValid = () => {
@@ -117,7 +104,6 @@ export const Form = <T extends object>({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateAll()) return;
     await onSubmit(formData);
   };
 

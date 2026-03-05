@@ -14,6 +14,5 @@ export const loginRequest = async (email: string, password: string) => {
   localStorage.setItem('token', response.data.jwt);
   return {
     message: 'Login Successfull',
-    jwt: response.data.jwt,
   };
 };
