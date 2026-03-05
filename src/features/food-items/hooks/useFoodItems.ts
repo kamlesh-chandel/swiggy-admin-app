@@ -44,6 +44,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setCreateLoading(true);
       await createFoodItem(payload);
       await fetchFoodItems();
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setCreateLoading(false);
     }
@@ -54,14 +56,20 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setUpdateLoading(true);
       await updateFoodItem(id, payload);
       await fetchFoodItems();
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setUpdateLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteFoodItem(id);
-    await fetchFoodItems();
+    try {
+      await deleteFoodItem(id);
+      await fetchFoodItems();
+    } catch (error) {
+      setErrorType(mapApiError(error));
+    }
   };
 
   return {

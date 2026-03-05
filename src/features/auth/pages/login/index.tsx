@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -20,19 +21,22 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const jwtToken = await loginRequest(email, password);
+      const response = await loginRequest(email, password);
 
       const user = await getCurrentUser();
       setAuthSession({
-        jwt: jwtToken,
+        jwt: response.jwt,
         user,
       });
 
       navigate(ROUTES.DASHBOARD);
-
-      toast.success('Login successful');
-    } catch {
-      toast.error('Invalid email or password');
+      toast.success(response.message);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.error?.message || 'Login failed');
+      } else {
+        toast.error('Something went wrong');
+      }
     } finally {
       setLoading(false);
     }

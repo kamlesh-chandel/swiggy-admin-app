@@ -11,9 +11,9 @@ export const loginRequest = async (email: string, password: string) => {
     identifier: email,
     password,
   });
-
-  const jwtToken = response.data.jwt;
-  localStorage.setItem('token', jwtToken);
-
-  return jwtToken;
+  localStorage.setItem('token', response.data.jwt);
+  return {
+    message: 'Login Successfull',
+    jwt: response.data.jwt,
+  };
 };
