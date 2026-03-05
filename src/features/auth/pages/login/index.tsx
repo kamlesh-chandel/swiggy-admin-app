@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Form } from '@/components/common/form';
-import { loginRequest } from '@/services/auth.service';
+import { getCurrentUser, loginRequest } from '@/services/auth.service';
 import { useAuth } from '@/context/auth/useAuth';
 import type { LoginFormType } from './login.types';
 import { ROUTES } from '@/constants/routes';
@@ -20,10 +20,16 @@ const Login = () => {
     try {
       setLoading(true);
 
-      const response = await loginRequest(email, password);
-      setAuthSession(response);
+      const jwtToken = await loginRequest(email, password);
+
+      const user = await getCurrentUser();
+      setAuthSession({
+        jwt: jwtToken,
+        user,
+      });
 
       navigate(ROUTES.DASHBOARD);
+
       toast.success('Login successful');
     } catch {
       toast.error('Invalid email or password');

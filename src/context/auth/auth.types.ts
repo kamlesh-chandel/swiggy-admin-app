@@ -1,14 +1,7 @@
 export interface AuthUser {
-  id: number;
   username: string;
   email: string;
-  blocked: boolean;
-  confirmed: boolean;
-  provider: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  documentId: string;
+  role: 'super_admin' | 'admin';
 }
 
 export interface AuthResponse {

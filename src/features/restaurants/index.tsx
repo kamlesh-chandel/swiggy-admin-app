@@ -15,6 +15,7 @@ import ActionMenu from '@/components/common/menu/action-menu';
 import Dialog from '@/components/common/dialog';
 import RestaurantDrawer from './components/restaurant-drawer';
 import RestaurantFormDialog from './components/form-dialog';
+import { useAuth } from '@/context/auth/useAuth';
 
 import { COLORS } from '@/theme/colors';
 import { useRestaurants } from './hooks/useRestaurants';
@@ -64,6 +65,9 @@ const Restaurants = () => {
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<
     number | null
   >(null);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -272,7 +276,15 @@ const Restaurants = () => {
             color: 'info.main',
           },
           { label: 'Edit', onClick: handleOnEdit, color: 'warning.main' },
-          { label: 'Delete', onClick: handleOnDelete, color: 'error.main' },
+          {
+            label: 'Delete',
+            onClick: handleOnDelete,
+            color: 'error.main',
+            disabled: isAdmin,
+            tooltip: isAdmin
+              ? 'You do not have permission to delete Restaurant'
+              : '',
+          },
         ]}
       />
       <Dialog
