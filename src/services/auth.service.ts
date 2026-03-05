@@ -5,5 +5,9 @@ export const loginRequest = async (email: string, password: string) => {
     identifier: email,
     password,
   });
-  return response.data;
+  return {
+    message: 'Login Successfull',
+    jwt: response.data.jwt,
+    user: response.data.user,
+  };
 };
