@@ -34,6 +34,7 @@ export interface CreateFoodItemPayload {
 export interface UseFoodItemsReturn {
   data: FoodItem[];
   loading: boolean;
+  error: boolean;
   createLoading: boolean;
   updateLoading: boolean;
   handleCreate: (payload: CreateFoodItemPayload) => Promise<void>;

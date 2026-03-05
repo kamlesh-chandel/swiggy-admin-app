@@ -14,6 +14,7 @@ import type {
 export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [data, setData] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
@@ -24,6 +25,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setLoading(true);
       const response = await getFoodItemsByRestaurant(restaurantId);
       setData(response.data);
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -38,6 +41,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setCreateLoading(true);
       await createFoodItem(payload);
       await fetchFoodItems();
+    } catch {
+      setError(true);
     } finally {
       setCreateLoading(false);
     }
@@ -48,19 +53,26 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setUpdateLoading(true);
       await updateFoodItem(id, payload);
       await fetchFoodItems();
+    } catch {
+      setError(true);
     } finally {
       setUpdateLoading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteFoodItem(id);
-    await fetchFoodItems();
+    try {
+      await deleteFoodItem(id);
+      await fetchFoodItems();
+    } catch {
+      setError(true);
+    }
   };
 
   return {
     data,
     loading,
+    error,
     createLoading,
     updateLoading,
     handleCreate,
