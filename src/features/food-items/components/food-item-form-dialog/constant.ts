@@ -30,7 +30,6 @@ export const FOOD_ITEM_FIELDS: FieldConfig<FoodItemValues>[] = [
     name: 'image',
     label: 'Upload Image',
     type: 'file',
-    required: true,
     acceptFileType: 'image/*',
   },
 ];

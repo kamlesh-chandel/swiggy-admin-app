@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Form } from '@/components/common/form';
-import { getCurrentUser, loginRequest } from '@/services/auth.service';
+import { getCurrentUser, loginRequest } from '@/features/login/auth.service';
 import { useAuth } from '@/context/auth/useAuth';
 import type { LoginFormType } from './login.types';
 import { ROUTES } from '@/constants/routes';
