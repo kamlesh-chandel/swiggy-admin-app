@@ -7,7 +7,7 @@ import { ROUTES } from '@/constants/routes';
 
 import Layout from '@/components/layout';
 
-import Login from '@/features/auth/pages/login';
+import Login from '@/features/login';
 import Dashboard from '@/features/dashboard';
 import Restaurants from '@/features/restaurants';
 import FoodItems from '@/features/food-items';
