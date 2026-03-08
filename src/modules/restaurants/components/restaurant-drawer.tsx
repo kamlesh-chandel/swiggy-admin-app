@@ -1,7 +1,7 @@
 import { Box, Typography, Divider, Chip, Stack } from '@mui/material';
 
-import Drawer from '@/components/common/drawer.tsx';
-import type { RestaurantDetails } from '@/features/restaurants/restaurant.types';
+import Drawer from '@/components/common/drawer';
+import type { RestaurantDetails } from '@/modules/restaurants/restaurant.types';
 import { COLORS } from '@/theme/colors';
 
 interface RestaurantDrawerProps {

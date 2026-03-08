@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Button as MuiButton } from '@mui/material';
 import type { ButtonProps as MuiButtonProps } from '@mui/material';
-import Loader from '../loader';
+import Loader from './loader';
 
 interface ButtonProps {
   type?: 'button' | 'submit';
