@@ -1,6 +1,6 @@
 import { DataGrid as MuiDataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
-import FailedState from '../failed-state';
+import FailedState from './failed-state';
 import type { AsyncStateProps } from '@/types/async-state';
 
 interface DataGridProps<T> extends AsyncStateProps {

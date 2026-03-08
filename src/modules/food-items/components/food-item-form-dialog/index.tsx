@@ -1,12 +1,12 @@
 import Dialog from '@/components/common/dialog';
 import { Form } from '@/components/common/form';
 
-import { uploadFoodItemImage } from '@/features/food-items/food-item.service';
+import { uploadFoodItemImage } from '@/modules/food-items/food-item.service';
 import type {
   CreateFoodItemPayload,
   FoodItemFormDialogProps,
   FoodItemValues,
-} from '@/features/food-items/food-item.types';
+} from '@/modules/food-items/food-item.types';
 
 import { FOOD_ITEM_FIELDS } from './constant';
 
