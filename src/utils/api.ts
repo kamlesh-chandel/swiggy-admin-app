@@ -1,20 +1,14 @@
 import axios from 'axios';
-import type { ApiErrorType } from '@/types/async-state';
+import type { ApiError } from '@/types/async-state';
 
-export const mapApiError = (error: unknown): ApiErrorType => {
+export const getApiErrorMessage = (error: unknown): ApiError => {
   if (axios.isAxiosError(error)) {
-    const errorCode = error.response?.data?.errorCode;
-
-    if (errorCode === 'PERMISSION_DENIED') {
-      return 'permission';
-    }
-
     if (!error.response) {
-      return 'network';
+      return 'Network error. Please check your internet connection.';
     }
 
-    return 'server';
+    return error.response.data?.message || 'Something went wrong';
   }
 
-  return 'server';
+  return 'Something went wrong';
 };

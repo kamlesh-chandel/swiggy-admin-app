@@ -1,4 +1,4 @@
-import type { AsyncStateProps, ApiErrorType } from '@/types/async-state';
+import type { AsyncStateProps, ApiError } from '@/types/async-state';
 import type { ReactNode } from 'react';
 
 export interface StatCardProps {
@@ -47,8 +47,8 @@ export interface UseDashboardReturn {
   ordersTrend: OrdersTrendItem[];
   analyticsLoading: boolean;
   restaurantsCountLoading: boolean;
-  analyticsErrorType: ApiErrorType;
-  restaurantsCountErrorType: ApiErrorType;
+  analyticsError: ApiError;
+  restaurantsCountError: ApiError;
 }
 
 export interface OrderTrendChartProps extends AsyncStateProps {

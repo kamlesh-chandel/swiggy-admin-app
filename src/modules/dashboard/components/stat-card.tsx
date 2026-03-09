@@ -45,13 +45,7 @@ const styles = {
   },
 };
 
-const StatCard = ({
-  title,
-  value,
-  icon,
-  loading,
-  errorType,
-}: StatCardConfig) => {
+const StatCard = ({ title, value, icon, loading, error }: StatCardConfig) => {
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent sx={styles.cardContent}>
@@ -67,8 +61,8 @@ const StatCard = ({
                 {title}
               </Typography>
 
-              {errorType ? (
-                <FailedState errorType={errorType} height={30} />
+              {error ? (
+                <FailedState error={error} height={30} />
               ) : (
                 <Typography variant="h6" sx={styles.valueText}>
                   {value}

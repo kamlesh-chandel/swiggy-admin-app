@@ -10,14 +10,14 @@ import type {
   CreateFoodItemPayload,
   UseFoodItemsReturn,
 } from '../food-item.types';
-import type { ApiErrorType } from '@/types/async-state';
+import type { ApiError } from '@/types/async-state';
 
-import { mapApiError } from '@/utils/api';
+import { getApiErrorMessage } from '@/utils/api';
 
 export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [data, setData] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [errorType, setErrorType] = useState<ApiErrorType>(null);
+  const [error, setError] = useState<ApiError>();
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
@@ -29,7 +29,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       const response = await getFoodItemsByRestaurant(restaurantId);
       setData(response.data);
     } catch (error) {
-      setErrorType(mapApiError(error));
+      setError(getApiErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       await createFoodItem(payload);
       await fetchFoodItems();
     } catch (error) {
-      setErrorType(mapApiError(error));
+      setError(getApiErrorMessage(error));
     } finally {
       setCreateLoading(false);
     }
@@ -57,7 +57,7 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       await updateFoodItem(id, payload);
       await fetchFoodItems();
     } catch (error) {
-      setErrorType(mapApiError(error));
+      setError(getApiErrorMessage(error));
     } finally {
       setUpdateLoading(false);
     }
@@ -68,14 +68,14 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       await deleteFoodItem(id);
       await fetchFoodItems();
     } catch (error) {
-      setErrorType(mapApiError(error));
+      setError(getApiErrorMessage(error));
     }
   };
 
   return {
     data,
     loading,
-    errorType,
+    error,
     createLoading,
     updateLoading,
     handleCreate,

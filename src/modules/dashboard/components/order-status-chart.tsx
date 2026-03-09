@@ -22,11 +22,7 @@ const styles = {
   },
 };
 
-const OrderStatusChart = ({
-  data,
-  loading,
-  errorType,
-}: OrderStatusChartProps) => {
+const OrderStatusChart = ({ data, loading, error }: OrderStatusChartProps) => {
   const formattedData = data.map(({ status, value }) => ({
     name: status,
     value,
@@ -37,8 +33,8 @@ const OrderStatusChart = ({
     if (loading) {
       return <Skeleton variant="rectangular" height={280} />;
     }
-    if (errorType) {
-      return <FailedState height={280} errorType={errorType} />;
+    if (error) {
+      return <FailedState height={280} error={error} />;
     }
     return <PieChart data={formattedData} />;
   };

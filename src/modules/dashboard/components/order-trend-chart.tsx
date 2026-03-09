@@ -22,17 +22,13 @@ const styles = {
   },
 };
 
-const OrderTrendChart = ({
-  data,
-  loading,
-  errorType,
-}: OrderTrendChartProps) => {
+const OrderTrendChart = ({ data, loading, error }: OrderTrendChartProps) => {
   const renderContent = () => {
     if (loading) {
       return <Skeleton variant="rectangular" height={280} />;
     }
-    if (errorType) {
-      return <FailedState height={280} errorType={errorType} />;
+    if (error) {
+      return <FailedState height={280} error={error} />;
     }
     return <LineChart data={data} />;
   };

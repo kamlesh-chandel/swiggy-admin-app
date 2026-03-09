@@ -30,7 +30,7 @@ const styles = {
 const TopRestaurantsChart = ({
   data,
   loading,
-  errorType,
+  error,
 }: TopRestaurantsChartProps) => {
   const formattedData = data.map((item) => ({
     name: item.name,
@@ -41,8 +41,8 @@ const TopRestaurantsChart = ({
     if (loading) {
       return <Skeleton variant="rectangular" height={280} />;
     }
-    if (errorType) {
-      return <FailedState height={280} errorType={errorType} />;
+    if (error) {
+      return <FailedState height={280} error={error} />;
     }
     return <BarChart data={formattedData} />;
   };
