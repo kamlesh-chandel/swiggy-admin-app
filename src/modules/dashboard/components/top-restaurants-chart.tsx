@@ -1,8 +1,9 @@
-import { Box } from '@mui/material';
+import { Card, CardContent, Skeleton, Typography } from '@mui/material';
 import BarChart from '@/components/common/charts/bar-chart';
 
 import type { TopRestaurantItem } from '../dashboard.types';
 import type { AsyncStateProps } from '@/types/async-state';
+import FailedState from '@/components/common/failed-state';
 
 interface TopRestaurantsChartProps extends AsyncStateProps {
   data: TopRestaurantItem[];
@@ -16,6 +17,14 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  card: {
+    height: '100%',
+    width: '100%',
+    pr: { sm: 5, md: 10 },
+  },
+  title: {
+    mb: { xs: 2, md: 5 },
+  },
 };
 
 const TopRestaurantsChart = ({
@@ -28,15 +37,25 @@ const TopRestaurantsChart = ({
     value: item.revenue,
   }));
 
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return <BarChart data={formattedData} />;
+  };
+
   return (
-    <Box sx={styles.restaurantBox}>
-      <BarChart
-        title="Top Restaurants (Revenue)"
-        data={formattedData}
-        loading={loading}
-        errorType={errorType}
-      />
-    </Box>
+    <Card elevation={0} sx={styles.card}>
+      <CardContent>
+        <Typography variant="h6" sx={styles.title}>
+          Top Restaurants (Revenue)
+        </Typography>
+        {renderContent()}
+      </CardContent>
+    </Card>
   );
 };
 

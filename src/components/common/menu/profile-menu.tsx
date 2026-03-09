@@ -1,28 +1,19 @@
 import { Menu, Box, Avatar, Typography, Chip } from '@mui/material';
 import { COLORS } from '@/theme/colors';
-
-interface ProfileUser {
-  username: string;
-  email?: string;
-  role?: string;
-}
+import type { AuthUser } from '@/context/auth/auth.types';
 
 interface ProfileMenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
   onClose: () => void;
-  user: ProfileUser | null;
+  user: AuthUser;
   onProfileClick?: () => void;
 }
 
 const ProfileMenu = ({ anchorEl, open, onClose, user }: ProfileMenuProps) => {
-  const username = user?.username;
-  const email = user?.email;
-  const role = user?.role || 'Superadmin';
+  const { username, email, role } = user;
   const firstLetter = username?.charAt(0).toUpperCase();
-
-  const roleKey = role.toLowerCase() as keyof typeof COLORS.roles;
-  const roleColor = COLORS.roles[roleKey] ?? COLORS.roles.user;
+  const roleColor = COLORS.roles[role];
 
   const styles = {
     menu: {
