@@ -23,6 +23,7 @@ import type {
   CreateRestaurantPayloadProps,
   Restaurant,
 } from './restaurant.types';
+import { useAuth } from '@/context/auth/useAuth';
 
 const styles = {
   addButton: {
@@ -61,6 +62,9 @@ const Restaurants = () => {
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -261,7 +265,15 @@ const Restaurants = () => {
             color: 'info.main',
           },
           { label: 'Edit', onClick: handleOnEdit, color: 'warning.main' },
-          { label: 'Delete', onClick: handleOnDelete, color: 'error.main' },
+          {
+            label: 'Delete',
+            onClick: handleOnDelete,
+            color: 'error.main',
+            disabled: isAdmin,
+            tooltip: isAdmin
+              ? 'You do not have permission to delete Restaurant'
+              : '',
+          },
         ]}
       />
       <Dialog

@@ -19,6 +19,7 @@ import { useFoodItems } from './hooks/useFoodItems';
 import FoodItemFormDialog from './components/food-item-form-dialog';
 import type { FoodItem, CreateFoodItemPayload } from './food-item.types';
 import { useRestaurantName } from './hooks/useRestaurantName';
+import { useAuth } from '@/context/auth/useAuth';
 
 const styles = {
   addButton: {
@@ -56,6 +57,9 @@ const FoodItems = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
 
   const open = Boolean(anchorEl);
 
@@ -211,7 +215,15 @@ const FoodItems = () => {
         onClose={handleClose}
         actions={[
           { label: 'Edit', onClick: handleOnEdit, color: 'warning.main' },
-          { label: 'Delete', onClick: handleOnDelete, color: 'error.main' },
+          {
+            label: 'Delete',
+            onClick: handleOnDelete,
+            color: 'error.main',
+            disabled: isAdmin,
+            tooltip: isAdmin
+              ? 'You do not have permission to delete Food Item'
+              : '',
+          },
         ]}
       />
 
