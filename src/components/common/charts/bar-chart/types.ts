@@ -5,4 +5,5 @@ export interface BarChartItem {
 
 export interface BarChartProps {
   data: BarChartItem[];
+  height?: number;
 }
