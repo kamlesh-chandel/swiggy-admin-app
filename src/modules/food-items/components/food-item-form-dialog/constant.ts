@@ -1,5 +1,5 @@
 import type { FieldConfig } from '@/components/common/form';
-import type { FoodItemValues } from '@/features/food-items/food-item.types';
+import type { FoodItemValues } from '@/modules/food-items/food-item.types';
 
 export const FOOD_ITEM_FIELDS: FieldConfig<FoodItemValues>[] = [
   {
@@ -30,7 +30,6 @@ export const FOOD_ITEM_FIELDS: FieldConfig<FoodItemValues>[] = [
     name: 'image',
     label: 'Upload Image',
     type: 'file',
-    required: true,
     acceptFileType: 'image/*',
   },
 ];

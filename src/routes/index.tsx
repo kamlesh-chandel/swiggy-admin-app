@@ -7,11 +7,11 @@ import { ROUTES } from '@/constants/routes';
 
 import Layout from '@/components/layout';
 
-import Login from '@/features/auth/pages/login';
-import Dashboard from '@/features/dashboard';
-import Restaurants from '@/features/restaurants';
-import FoodItems from '@/features/food-items';
-import NotFound from '@/features/not-found';
+import Login from '@/modules/login';
+import Dashboard from '@/modules/dashboard';
+import Restaurants from '@/modules/restaurants';
+import FoodItems from '@/modules/food-items';
+import NotFound from '@/modules/not-found';
 
 const Routes = () => {
   return (
