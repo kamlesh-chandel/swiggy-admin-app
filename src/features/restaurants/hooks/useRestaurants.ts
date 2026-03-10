@@ -6,6 +6,10 @@ import {
   updateRestaurant,
   updateRestaurantStatus,
 } from '../restaurant.service';
+
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/api';
 import type {
   Restaurant,
   CreateRestaurantPayloadProps,
@@ -14,8 +18,8 @@ import type {
 export const useRestaurants = () => {
   const [data, setData] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(false);
+  const [errorType, setErrorType] = useState<ApiErrorType>(null);
   const [mutationLoading, setMutationLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
   const [toggleError, setToggleError] = useState(false);
   const [updateError, setUpdateError] = useState(false);
@@ -25,8 +29,8 @@ export const useRestaurants = () => {
       setLoading(true);
       const response = await getRestaurants();
       setData(response);
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setLoading(false);
     }
@@ -75,8 +79,8 @@ export const useRestaurants = () => {
       }
 
       return response;
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
       return null;
     } finally {
       setMutationLoading(false);
@@ -112,7 +116,7 @@ export const useRestaurants = () => {
   return {
     data,
     loading,
-    error,
+    errorType,
     handleDelete,
     deleteError,
     handleToggle,

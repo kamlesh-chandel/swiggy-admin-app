@@ -24,7 +24,32 @@ const styles = {
   },
 };
 
-const LineChart = ({ title, data, loading, error }: LineChartProps) => {
+const LineChart = ({ title, data, loading, errorType }: LineChartProps) => {
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return (
+      <ResponsiveContainer width="100%" height={280}>
+        <MuiLineChart data={data} margin={{ left: -5 }}>
+          <XAxis dataKey="date" />
+          <YAxis allowDecimals={false} />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="orders"
+            stroke={COLORS.brand}
+            strokeWidth={3}
+            dot={{ r: 4 }}
+          />
+        </MuiLineChart>
+      </ResponsiveContainer>
+    );
+  };
+
   return (
     <Card elevation={0} sx={styles.card}>
       <CardContent>
@@ -33,27 +58,7 @@ const LineChart = ({ title, data, loading, error }: LineChartProps) => {
             {title}
           </Typography>
         )}
-
-        {loading ? (
-          <Skeleton variant="rectangular" height={280} />
-        ) : error ? (
-          <FailedState />
-        ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <MuiLineChart data={data} margin={{ left: -5 }}>
-              <XAxis dataKey="date" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="orders"
-                stroke={COLORS.brand}
-                strokeWidth={3}
-                dot={{ r: 4 }}
-              />
-            </MuiLineChart>
-          </ResponsiveContainer>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );

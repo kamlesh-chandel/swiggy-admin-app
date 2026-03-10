@@ -29,12 +29,43 @@ const PieChart = ({
   outerRadius,
   showLegend = true,
   loading,
-  error,
+  errorType,
 }: PieChartProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const responsiveOuterRadius = isMobile ? 50 : outerRadius;
+
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return (
+      <ResponsiveContainer width="100%" height={height}>
+        <MuiPieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={responsiveOuterRadius}
+            label
+            labelLine={false}
+          >
+            {data.map(({ color, name }) => (
+              <Cell key={name} fill={color || theme.palette.primary.main} />
+            ))}
+          </Pie>
+
+          {showLegend && <Legend wrapperStyle={{ paddingTop: 10 }} />}
+        </MuiPieChart>
+      </ResponsiveContainer>
+    );
+  };
 
   return (
     <Card elevation={0} sx={styles.card}>
@@ -44,33 +75,7 @@ const PieChart = ({
             {title}
           </Typography>
         )}
-
-        {loading ? (
-          <Skeleton variant="rounded" width="100%" height={height} />
-        ) : error ? (
-          <FailedState />
-        ) : (
-          <ResponsiveContainer width="100%" height={height}>
-            <MuiPieChart>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={responsiveOuterRadius}
-                label
-                labelLine={false}
-              >
-                {data.map(({ color, name }) => (
-                  <Cell key={name} fill={color || theme.palette.primary.main} />
-                ))}
-              </Pie>
-
-              {showLegend && <Legend wrapperStyle={{ paddingTop: 10 }} />}
-            </MuiPieChart>
-          </ResponsiveContainer>
-        )}
+        {renderContent()}
       </CardContent>
     </Card>
   );

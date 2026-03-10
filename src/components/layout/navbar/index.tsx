@@ -36,8 +36,8 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
     },
     menuIconBox: { display: 'flex', alignItems: 'center' },
     imageBox: {
-      height: 52,
-      width: 'auto',
+      height: 45,
+      width: 45,
       borderRadius: 1,
     },
     iconBox: {
@@ -46,8 +46,8 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
       gap: { xs: 3, md: 5 },
     },
     avatar: {
-      width: 32,
-      height: 32,
+      width: 40,
+      height: 40,
       ':hover': {
         backgroundColor: COLORS.brand,
       },
@@ -56,6 +56,14 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
       ':hover': {
         backgroundColor: COLORS.brand,
       },
+    },
+    iconButton: {
+      width: 45,
+      height: 45,
+    },
+    themeIcon: {
+      width: '100%',
+      height: '100%',
     },
   };
 
@@ -89,11 +97,14 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
           </Box>
 
           <Box sx={styles.iconBox}>
-            <IconButton onClick={toggleTheme} sx={styles.toggleTheme}>
-              {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+            <IconButton onClick={toggleTheme} sx={styles.iconButton}>
+              {mode === 'dark' ? (
+                <LightModeIcon sx={styles.themeIcon} />
+              ) : (
+                <DarkModeIcon sx={styles.themeIcon} />
+              )}
             </IconButton>
-
-            <Avatar onClick={handleAvatarClick} sx={styles.toggleTheme}>
+            <Avatar onClick={handleAvatarClick} sx={styles.avatar}>
               {user?.username?.charAt(0).toUpperCase()}
             </Avatar>
           </Box>

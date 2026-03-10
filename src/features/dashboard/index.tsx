@@ -18,6 +18,7 @@ const OrderTrendChart = lazy(() => import('./components/order-trend-chart'));
 import { useDashboard } from './useDashboard';
 
 import type { StatCardProps, StatCardConfig } from './dashboard.types';
+import type { ApiErrorType } from '@/types/async-state';
 
 const styles = {
   heading: {
@@ -41,36 +42,36 @@ const statCardsConfig = (
   data: StatCardProps,
   analyticsLoading: boolean,
   restaurantsCountLoading: boolean,
-  analyticsError: boolean,
-  restaurantsCountError: boolean,
+  analyticsErrorType: ApiErrorType,
+  restaurantsCountErrorType: ApiErrorType,
 ): StatCardConfig[] => [
   {
     title: 'Total Orders',
     value: data.totalOrders,
     icon: <ReceiptLongIcon color="primary" />,
     loading: analyticsLoading,
-    error: analyticsError,
+    errorType: analyticsErrorType,
   },
   {
     title: 'Total Revenue',
     value: `₹${data.totalRevenue?.toLocaleString()}`,
     icon: <CurrencyRupeeIcon color="primary" />,
     loading: analyticsLoading,
-    error: analyticsError,
+    errorType: analyticsErrorType,
   },
   {
     title: 'Total Customers',
     value: data.totalCustomers,
     icon: <PeopleIcon color="primary" />,
     loading: analyticsLoading,
-    error: analyticsError,
+    errorType: analyticsErrorType,
   },
   {
     title: 'Total Restaurants',
     value: data.totalRestaurants,
     icon: <RestaurantIcon color="primary" />,
     loading: restaurantsCountLoading,
-    error: restaurantsCountError,
+    errorType: restaurantsCountErrorType,
   },
 ];
 
@@ -82,8 +83,8 @@ const Dashboard = () => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsError,
-    restaurantsCountError,
+    analyticsErrorType,
+    restaurantsCountErrorType,
   } = useDashboard();
 
   const cards = dashboardStats
@@ -91,13 +92,13 @@ const Dashboard = () => {
         dashboardStats,
         analyticsLoading,
         restaurantsCountLoading,
-        analyticsError,
-        restaurantsCountError,
+        analyticsErrorType,
+        restaurantsCountErrorType,
       )
     : [];
 
   const getStatCards = () => {
-    return cards.map(({ title, value, icon, loading, error }) => (
+    return cards.map(({ title, value, icon, loading, errorType }) => (
       <Grid key={title} size={{ xs: 6, sm: 6 }}>
         <Suspense fallback={<Skeleton height={150} />}>
           <StatCard
@@ -105,7 +106,7 @@ const Dashboard = () => {
             value={value}
             icon={icon}
             loading={loading}
-            error={error}
+            errorType={errorType}
           />
         </Suspense>
       </Grid>
@@ -130,7 +131,7 @@ const Dashboard = () => {
             <OrderStatusChart
               data={ordersByStatus}
               loading={analyticsLoading}
-              error={analyticsError}
+              errorType={analyticsErrorType}
             />
           </Suspense>
         </Grid>
@@ -141,7 +142,7 @@ const Dashboard = () => {
             <TopRestaurantsChart
               data={topRestaurants}
               loading={analyticsLoading}
-              error={analyticsError}
+              errorType={analyticsErrorType}
             />
           </Suspense>
         </Grid>
@@ -150,7 +151,7 @@ const Dashboard = () => {
             <OrderTrendChart
               data={ordersTrend}
               loading={analyticsLoading}
-              error={analyticsError}
+              errorType={analyticsErrorType}
             />
           </Suspense>
         </Grid>

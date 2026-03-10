@@ -1,13 +1,8 @@
 import { Box } from '@mui/material';
 import PieChart from '@/components/common/charts/pie-chart';
 import { STATUS_COLORS } from '../constant';
-import type { OrdersByStatusItem } from '../dashboard.types';
 
-interface OrderStatusChartProps {
-  data: OrdersByStatusItem[];
-  loading?: boolean;
-  error?: boolean;
-}
+import type { OrderStatusChartProps } from '../dashboard.types';
 
 const styles = {
   statusBox: {
@@ -19,7 +14,11 @@ const styles = {
   },
 };
 
-const OrderStatusChart = ({ data, loading, error }: OrderStatusChartProps) => {
+const OrderStatusChart = ({
+  data,
+  loading,
+  errorType,
+}: OrderStatusChartProps) => {
   const formattedData = data.map(({ status, value }) => ({
     name: status,
     value,
@@ -32,7 +31,7 @@ const OrderStatusChart = ({ data, loading, error }: OrderStatusChartProps) => {
         title="Orders by Status"
         data={formattedData}
         loading={loading}
-        error={error}
+        errorType={errorType}
       />
     </Box>
   );

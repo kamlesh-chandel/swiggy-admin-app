@@ -10,11 +10,14 @@ import type {
   CreateFoodItemPayload,
   UseFoodItemsReturn,
 } from '../food-item.types';
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/api';
 
 export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
   const [data, setData] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [errorType, setErrorType] = useState<ApiErrorType>(null);
   const [createLoading, setCreateLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
 
@@ -25,8 +28,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setLoading(true);
       const response = await getFoodItemsByRestaurant(restaurantId);
       setData(response.data);
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setLoading(false);
     }
@@ -41,8 +44,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setCreateLoading(true);
       await createFoodItem(payload);
       await fetchFoodItems();
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setCreateLoading(false);
     }
@@ -53,8 +56,8 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
       setUpdateLoading(true);
       await updateFoodItem(id, payload);
       await fetchFoodItems();
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
     } finally {
       setUpdateLoading(false);
     }
@@ -64,15 +67,15 @@ export const useFoodItems = (restaurantId: number): UseFoodItemsReturn => {
     try {
       await deleteFoodItem(id);
       await fetchFoodItems();
-    } catch {
-      setError(true);
+    } catch (error) {
+      setErrorType(mapApiError(error));
     }
   };
 
   return {
     data,
     loading,
-    error,
+    errorType,
     createLoading,
     updateLoading,
     handleCreate,

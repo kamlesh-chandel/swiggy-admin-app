@@ -11,6 +11,9 @@ import type {
   OrdersTrendItem,
   DashboardStatsProps,
 } from './dashboard.types';
+import type { ApiErrorType } from '@/types/async-state';
+
+import { mapApiError } from '@/utils/api';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStatsProps>({
@@ -26,14 +29,15 @@ export const useDashboard = (): UseDashboardReturn => {
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [restaurantsCountLoading, setRestaurantsCountLoading] = useState(true);
-  const [analyticsError, setAnalyticsError] = useState(false);
-  const [restaurantsCountError, setRestaurantsCountError] = useState(false);
+  const [analyticsErrorType, setAnalyticsErrorType] =
+    useState<ApiErrorType>(null);
+  const [restaurantsCountErrorType, setRestaurantsCountErrorType] =
+    useState<ApiErrorType>(null);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         const analyticsData = await getDashboardAnalytics();
-
         setDashboardStats((prev) => ({
           ...prev,
           ...analyticsData.dashboardStats,
@@ -42,8 +46,8 @@ export const useDashboard = (): UseDashboardReturn => {
         setOrdersByStatus(analyticsData.ordersByStatus);
         setTopRestaurants(analyticsData.topRestaurants);
         setOrdersTrend(analyticsData.ordersTrend);
-      } catch {
-        setAnalyticsError(true);
+      } catch (error) {
+        setAnalyticsErrorType(mapApiError(error));
       } finally {
         setAnalyticsLoading(false);
       }
@@ -57,8 +61,8 @@ export const useDashboard = (): UseDashboardReturn => {
           ...prev,
           totalRestaurants: count,
         }));
-      } catch {
-        setRestaurantsCountError(true);
+      } catch (error) {
+        setRestaurantsCountErrorType(mapApiError(error));
       } finally {
         setRestaurantsCountLoading(false);
       }
@@ -75,7 +79,7 @@ export const useDashboard = (): UseDashboardReturn => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsError,
-    restaurantsCountError,
+    analyticsErrorType,
+    restaurantsCountErrorType,
   };
 };

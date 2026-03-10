@@ -51,7 +51,7 @@ const Login = () => {
       m: 5,
     },
     cardContent: {
-      p: 4,
+      px: 3,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

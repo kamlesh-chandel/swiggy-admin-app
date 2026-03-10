@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Box, Typography, Avatar } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import type { GridColDef } from '@mui/x-data-grid';
+import {
+  getGridDateOperators,
+  getGridNumericOperators,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 
@@ -38,6 +42,7 @@ const FoodItems = () => {
   const {
     data,
     loading,
+    errorType,
     handleDelete,
     handleCreate,
     handleUpdate,
@@ -79,6 +84,13 @@ const FoodItems = () => {
       field: 'price',
       headerName: 'Price',
       flex: 1,
+      filterOperators: getGridNumericOperators().filter(
+        (operator) =>
+          operator.value === '=' ||
+          operator.value === '!=' ||
+          operator.value === '>' ||
+          operator.value === '<',
+      ),
       renderCell: ({ row }) => `₹ ${row.price}`,
     },
     {
@@ -91,7 +103,15 @@ const FoodItems = () => {
       field: 'createdAt',
       headerName: 'Created At',
       flex: 1,
-      renderCell: ({ row }) => new Date(row.createdAt).toLocaleDateString(),
+      type: 'date',
+      valueGetter: (params) => new Date(params),
+      filterOperators: getGridDateOperators().filter(
+        (operator) =>
+          operator.value === 'is' ||
+          operator.value === 'not' ||
+          operator.value === 'after' ||
+          operator.value === 'before',
+      ),
     },
     {
       field: 'actions',
@@ -177,7 +197,12 @@ const FoodItems = () => {
           </Button>
         </Box>
 
-        <DataGrid rows={data} columns={columns} loading={loading} />
+        <DataGrid
+          rows={data}
+          columns={columns}
+          loading={loading}
+          errorType={errorType}
+        />
       </Box>
 
       <ActionMenu
