@@ -1,7 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
 import LineChart from '@/components/common/charts/line-chart';
 
 import type { OrderTrendChartProps } from '../dashboard.types';
+import FailedState from '@/components/common/failed-state';
 
 const styles = {
   orderTrendBox: {
@@ -11,6 +12,14 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  card: {
+    height: '100%',
+    width: '100%',
+    pr: { xs: 0, md: 5 },
+  },
+  title: {
+    mb: 5,
+  },
 };
 
 const OrderTrendChart = ({
@@ -18,14 +27,26 @@ const OrderTrendChart = ({
   loading,
   errorType,
 }: OrderTrendChartProps) => {
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return <LineChart data={data} />;
+  };
+
   return (
     <Box sx={styles.orderTrendBox}>
-      <LineChart
-        title="Orders (Last 7 days)"
-        data={data}
-        loading={loading}
-        errorType={errorType}
-      />
+      <Card elevation={0} sx={styles.card}>
+        <CardContent>
+          <Typography variant="h6" sx={styles.title}>
+            Orders (Last 7 days)
+          </Typography>
+          {renderContent()}
+        </CardContent>
+      </Card>
     </Box>
   );
 };

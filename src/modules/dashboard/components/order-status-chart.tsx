@@ -1,8 +1,9 @@
-import { Box } from '@mui/material';
+import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
 import PieChart from '@/components/common/charts/pie-chart';
 import { STATUS_COLORS } from '../constant';
 
 import type { OrderStatusChartProps } from '../dashboard.types';
+import FailedState from '@/components/common/failed-state';
 
 const styles = {
   statusBox: {
@@ -11,6 +12,13 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  card: {
+    height: 300,
+    width: 735,
+  },
+  title: {
+    mb: 1,
   },
 };
 
@@ -25,14 +33,26 @@ const OrderStatusChart = ({
     color: STATUS_COLORS[status],
   }));
 
+  const renderContent = () => {
+    if (loading) {
+      return <Skeleton variant="rectangular" height={280} />;
+    }
+    if (errorType) {
+      return <FailedState height={280} errorType={errorType} />;
+    }
+    return <PieChart data={formattedData} />;
+  };
+
   return (
     <Box sx={styles.statusBox}>
-      <PieChart
-        title="Orders by Status"
-        data={formattedData}
-        loading={loading}
-        errorType={errorType}
-      />
+      <Card elevation={0} sx={styles.card}>
+        <CardContent>
+          <Typography variant="h6" sx={styles.title}>
+            Orders by Status
+          </Typography>
+          {renderContent()}
+        </CardContent>
+      </Card>
     </Box>
   );
 };

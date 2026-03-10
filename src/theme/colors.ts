@@ -9,7 +9,7 @@ export const COLORS = {
   orange: 'orange',
 
   roles: {
-    superadmin: {
+    super_admin: {
       bg: '#fee2e2',
       text: '#dc2626',
     },
