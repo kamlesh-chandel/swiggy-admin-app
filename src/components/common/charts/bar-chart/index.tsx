@@ -10,9 +10,9 @@ import {
 import type { BarChartProps } from './types';
 import { COLORS } from '@/theme/colors';
 
-const BarChart = ({ data }: BarChartProps) => {
+const BarChart = ({ data, height = 280 }: BarChartProps) => {
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height={height}>
       <RechartsBarChart data={data} layout="vertical" margin={{ left: -5 }}>
         <XAxis type="number" />
         <YAxis dataKey="name" type="category" width={120} />

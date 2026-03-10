@@ -5,4 +5,5 @@ export interface LineChartItem {
 
 export interface LineChartProps {
   data: LineChartItem[];
+  height?: number;
 }

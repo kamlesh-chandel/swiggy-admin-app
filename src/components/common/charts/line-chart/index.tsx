@@ -10,9 +10,9 @@ import {
 import { COLORS } from '@/theme/colors';
 import type { LineChartProps } from './types';
 
-const LineChart = ({ data }: LineChartProps) => {
+const LineChart = ({ data, height = 280 }: LineChartProps) => {
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height={height}>
       <MuiLineChart data={data} margin={{ left: -5 }}>
         <XAxis dataKey="date" />
         <YAxis allowDecimals={false} />
