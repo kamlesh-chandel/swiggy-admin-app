@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Form } from '@/components/common/form';
-import { loginRequest } from '@/services/auth.service';
+import { getCurrentUser, loginRequest } from '@/services/auth.service';
 import { useAuth } from '@/context/auth/useAuth';
 import type { LoginFormType } from './login.types';
 import { ROUTES } from '@/constants/routes';
@@ -22,13 +22,17 @@ const Login = () => {
       setLoading(true);
 
       const response = await loginRequest(email, password);
-      setAuthSession(response);
+
+      const user = await getCurrentUser();
+      setAuthSession({
+        user,
+      });
 
       navigate(ROUTES.DASHBOARD);
       toast.success(response.message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.error?.message || 'Login failed');
+        toast.error(error.response?.data?.message || 'Login failed');
       } else {
         toast.error('Something went wrong');
       }

@@ -45,7 +45,7 @@ export interface CreateRestaurantPayloadProps {
 export interface RestaurantFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: CreateRestaurantPayloadProps) => Promise<void>;
+  onSubmit: (data: CreateRestaurantPayloadProps) => void;
   loading?: boolean;
   initialValues?: RestaurantFormValues;
   mode?: 'create' | 'edit';
