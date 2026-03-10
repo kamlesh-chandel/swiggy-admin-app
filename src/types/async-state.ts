@@ -1,6 +1,6 @@
-export type ApiErrorType = 'permission' | 'network' | 'server' | null;
+export type ApiError = string | undefined;
 
 export interface AsyncStateProps {
   loading?: boolean;
-  errorType?: ApiErrorType;
+  error?: ApiError;
 }

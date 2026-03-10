@@ -46,7 +46,7 @@ const Restaurants = () => {
   const {
     data: restaurantsData,
     loading,
-    errorType,
+    error,
     handleDelete,
     handleToggle,
     handleCreate,
@@ -241,7 +241,9 @@ const Restaurants = () => {
             variant="contained"
             style={styles.addButton}
             onClick={handleAddRestaurant}
-            disabled={errorType === 'permission'}
+            disabled={
+              error === 'You do not have permission to access this resource'
+            }
           >
             Add
           </Button>
@@ -250,7 +252,7 @@ const Restaurants = () => {
           rows={restaurantsData}
           columns={columns}
           loading={loading}
-          errorType={errorType}
+          error={error}
         />
       </Box>
       <ActionMenu

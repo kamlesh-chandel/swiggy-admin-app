@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/axios';
-import { mapApiError } from '@/utils/api';
-import type { ApiErrorType } from '@/types/async-state';
+import { getApiErrorMessage } from '@/utils/api';
+import type { ApiError } from '@/types/async-state';
 
 export const useRestaurantName = (restaurantId?: number) => {
   const [restaurantName, setRestaurantName] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [errorType, setErrorType] = useState<ApiErrorType>(null);
+  const [error, setError] = useState<ApiError>();
 
   useEffect(() => {
     if (!restaurantId || isNaN(restaurantId)) return;
@@ -17,7 +17,7 @@ export const useRestaurantName = (restaurantId?: number) => {
         const { data } = await api.get(`/admin/restaurants/${restaurantId}`);
         setRestaurantName(data.name);
       } catch (error) {
-        setErrorType(mapApiError(error));
+        setError(getApiErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -26,5 +26,5 @@ export const useRestaurantName = (restaurantId?: number) => {
     fetchRestaurant();
   }, [restaurantId]);
 
-  return { restaurantName, loading, errorType };
+  return { restaurantName, loading, error };
 };

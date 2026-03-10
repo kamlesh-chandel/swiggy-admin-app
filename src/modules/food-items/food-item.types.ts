@@ -1,4 +1,4 @@
-import type { ApiErrorType } from '@/types/async-state';
+import type { ApiError } from '@/types/async-state';
 
 export interface FoodItemImage {
   id: number;
@@ -36,7 +36,7 @@ export interface CreateFoodItemPayload {
 export interface UseFoodItemsReturn {
   data: FoodItem[];
   loading: boolean;
-  errorType: ApiErrorType;
+  error: ApiError;
   createLoading: boolean;
   updateLoading: boolean;
   handleCreate: (payload: CreateFoodItemPayload) => Promise<void>;

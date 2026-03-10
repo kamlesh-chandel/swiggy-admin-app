@@ -8,7 +8,7 @@ interface DataGridProps<T> extends AsyncStateProps {
   columns: GridColDef[];
 }
 
-function DataGrid<T>({ rows, columns, loading, errorType }: DataGridProps<T>) {
+function DataGrid<T>({ rows, columns, loading, error }: DataGridProps<T>) {
   return (
     <Box sx={{ height: '100%', width: '100%', overflowX: 'auto' }}>
       <MuiDataGrid
@@ -23,8 +23,8 @@ function DataGrid<T>({ rows, columns, loading, errorType }: DataGridProps<T>) {
           },
         }}
         slots={{
-          noRowsOverlay: errorType
-            ? () => <FailedState height={100} errorType={errorType} />
+          noRowsOverlay: error
+            ? () => <FailedState height={100} error={error} />
             : undefined,
         }}
       />

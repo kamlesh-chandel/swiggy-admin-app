@@ -11,9 +11,9 @@ import type {
   OrdersTrendItem,
   DashboardStatsProps,
 } from './dashboard.types';
-import type { ApiErrorType } from '@/types/async-state';
+import type { ApiError } from '@/types/async-state';
 
-import { mapApiError } from '@/utils/api';
+import { getApiErrorMessage } from '@/utils/api';
 
 export const useDashboard = (): UseDashboardReturn => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStatsProps>({
@@ -29,10 +29,9 @@ export const useDashboard = (): UseDashboardReturn => {
   const [ordersTrend, setOrdersTrend] = useState<OrdersTrendItem[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [restaurantsCountLoading, setRestaurantsCountLoading] = useState(true);
-  const [analyticsErrorType, setAnalyticsErrorType] =
-    useState<ApiErrorType>(null);
-  const [restaurantsCountErrorType, setRestaurantsCountErrorType] =
-    useState<ApiErrorType>(null);
+  const [analyticsError, setAnalyticsError] = useState<ApiError>();
+  const [restaurantsCountError, setRestaurantsCountError] =
+    useState<ApiError>();
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -47,7 +46,7 @@ export const useDashboard = (): UseDashboardReturn => {
         setTopRestaurants(analyticsData.topRestaurants);
         setOrdersTrend(analyticsData.ordersTrend);
       } catch (error) {
-        setAnalyticsErrorType(mapApiError(error));
+        setAnalyticsError(getApiErrorMessage(error));
       } finally {
         setAnalyticsLoading(false);
       }
@@ -62,7 +61,7 @@ export const useDashboard = (): UseDashboardReturn => {
           totalRestaurants: count,
         }));
       } catch (error) {
-        setRestaurantsCountErrorType(mapApiError(error));
+        setRestaurantsCountError(getApiErrorMessage(error));
       } finally {
         setRestaurantsCountLoading(false);
       }
@@ -79,7 +78,7 @@ export const useDashboard = (): UseDashboardReturn => {
     ordersTrend,
     analyticsLoading,
     restaurantsCountLoading,
-    analyticsErrorType,
-    restaurantsCountErrorType,
+    analyticsError,
+    restaurantsCountError,
   };
 };
