@@ -18,7 +18,7 @@ export const getErrorMessage = <T>(
   }
 
   if (field.name === 'rating' && (Number(value) < 0 || Number(value) > 5)) {
-    return `${field.label} must be between 1 and 5`;
+    return `${field.label} must be between 0 and 5`;
   }
 
   if (field.name === 'price' && Number(value) < 30) {
