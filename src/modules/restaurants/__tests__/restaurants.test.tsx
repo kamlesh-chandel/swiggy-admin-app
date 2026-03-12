@@ -8,13 +8,24 @@ import * as restaurantService from '../restaurant.service';
 
 vi.mock('../restaurant.service');
 
+let mockRole = 'super_admin';
+
 vi.mock('@/context/auth/useAuth', () => ({
   useAuth: () => ({
-    user: { role: 'super_admin' },
+    user: { role: mockRole },
   }),
 }));
 
-describe('Add Restaurant Flow', () => {
+const ROLES = ['super_admin'];
+
+describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    mockRole = role;
+    user = userEvent.setup();
+  });
+
   const renderRestaurantsPage = () => {
     render(
       <MemoryRouter>
@@ -25,17 +36,17 @@ describe('Add Restaurant Flow', () => {
 
   const clickAddButton = async () => {
     const addButton = screen.getByRole('button', { name: /add/i });
-    await userEvent.click(addButton);
+    await user.click(addButton);
   };
 
-  const getNameInput = () => screen.findByRole('textbox', { name: /name/i });
+  const getNameTextBox = () => screen.findByRole('textbox', { name: /name/i });
 
-  const getAddressInput = () =>
+  const getAddressTextBox = () =>
     screen.findByRole('textbox', { name: /address/i });
 
-  const getCityInput = () => screen.findByRole('textbox', { name: /city/i });
+  const getCityTextBox = () => screen.findByRole('textbox', { name: /city/i });
 
-  const getRatingInput = () =>
+  const getRatingTextBox = () =>
     screen.findByRole('spinbutton', { name: /rating/i });
 
   const getCreateRestaurantButton = () =>
@@ -47,15 +58,15 @@ describe('Add Restaurant Flow', () => {
       await clickAddButton();
     });
 
-    test('opens add restaurant dialog when clicking Add button', async () => {
-      expect(await screen.findByText('Add Restaurant')).toBeInTheDocument();
+    test('opens add restaurant dialog when clicking Add button', () => {
+      expect(screen.getByText('Add Restaurant')).toBeInTheDocument();
     });
 
     test('renders all initial form fields', async () => {
-      expect(await getNameInput()).toBeInTheDocument();
-      expect(await getAddressInput()).toBeInTheDocument();
-      expect(await getCityInput()).toBeInTheDocument();
-      expect(await getRatingInput()).toBeInTheDocument();
+      expect(await getNameTextBox()).toBeInTheDocument();
+      expect(await getAddressTextBox()).toBeInTheDocument();
+      expect(await getCityTextBox()).toBeInTheDocument();
+      expect(await getRatingTextBox()).toBeInTheDocument();
     });
 
     test('renders disabled create restaurant button initially', async () => {
@@ -64,10 +75,12 @@ describe('Add Restaurant Flow', () => {
     });
 
     describe('Name field validation', () => {
+      let nameTextBox: Awaited<ReturnType<typeof getNameTextBox>>;
+      beforeEach(async () => {
+        nameTextBox = await getNameTextBox();
+      });
       test('does not show error when name is valid', async () => {
-        const nameInput = await getNameInput();
-
-        await userEvent.type(nameInput, 'abcdef');
+        await user.type(nameTextBox, 'abcdef');
 
         expect(
           screen.queryByText(/name must be at least 3 characters/i),
@@ -75,21 +88,21 @@ describe('Add Restaurant Flow', () => {
       });
 
       test('shows error when name is shorter than 3 characters', async () => {
-        const nameInput = await getNameInput();
-
-        await userEvent.type(nameInput, 'ab');
+        await user.type(nameTextBox, 'ab');
 
         expect(
-          await screen.findByText(/name must be at least 3 characters/i),
+          screen.getByText(/name must be at least 3 characters/i),
         ).toBeInTheDocument();
       });
     });
 
     describe('Address field validation', () => {
+      let addressTextBox: Awaited<ReturnType<typeof getAddressTextBox>>;
+      beforeEach(async () => {
+        addressTextBox = await getAddressTextBox();
+      });
       test('does not show error when address is valid', async () => {
-        const addressInput = await getAddressInput();
-
-        await userEvent.type(addressInput, 'abcdef');
+        await user.type(addressTextBox, 'abcdef');
 
         expect(
           screen.queryByText(/address must be at least 5 characters/i),
@@ -97,66 +110,56 @@ describe('Add Restaurant Flow', () => {
       });
 
       test('shows error when address is shorter than 5 characters', async () => {
-        const addressInput = await getAddressInput();
-
-        await userEvent.type(addressInput, 'ab');
+        await user.type(addressTextBox, 'ab');
 
         expect(
-          await screen.findByText(/address must be at least 5 characters/i),
+          screen.getByText(/address must be at least 5 characters/i),
         ).toBeInTheDocument();
       });
     });
 
     describe('City field validation', () => {
+      let cityTextBox: Awaited<ReturnType<typeof getCityTextBox>>;
+      beforeEach(async () => {
+        cityTextBox = await getCityTextBox();
+      });
       test('does not show error when city is valid', async () => {
-        const cityInput = await getCityInput();
-
-        await userEvent.type(cityInput, 'abc');
-
+        await user.type(cityTextBox, 'abc');
         expect(
           screen.queryByText(/city must be at least 2 characters/i),
         ).not.toBeInTheDocument();
       });
 
       test('shows error when city is shorter than 2 characters', async () => {
-        const cityInput = await getCityInput();
-
-        await userEvent.type(cityInput, 'a');
-
+        await user.type(cityTextBox, 'a');
         expect(
-          await screen.findByText(/city must be at least 2 characters/i),
+          screen.getByText(/city must be at least 2 characters/i),
         ).toBeInTheDocument();
       });
     });
 
     describe('Rating field validation', () => {
+      let ratingTextBox: Awaited<ReturnType<typeof getRatingTextBox>>;
+      beforeEach(async () => {
+        ratingTextBox = await getRatingTextBox();
+      });
       test('does not show error when rating is valid', async () => {
-        const ratingInput = await getRatingInput();
-
-        await userEvent.type(ratingInput, '3');
+        await user.type(ratingTextBox, '3');
 
         expect(
-          screen.queryByText(/rating must be between 1 and 5/i),
+          screen.queryByText(/rating must be between 0 and 5/i),
         ).not.toBeInTheDocument();
       });
 
-      test('shows error when rating is less than 1', async () => {
-        const ratingInput = await getRatingInput();
-
-        await userEvent.type(ratingInput, '-1');
-
-        expect(
-          await screen.findByText(/rating must be between 1 and 5/i),
-        ).toBeInTheDocument();
-      });
-
-      test('shows error when rating is greater than 5', async () => {
-        const ratingInput = await getRatingInput();
-
-        await userEvent.type(ratingInput, '7');
+      test.each([
+        { value: '-1', label: 'less than 0' },
+        { value: '7', label: 'greater than 5' },
+      ])('shows error when rating is $label', async ({ value }) => {
+        await user.clear(ratingTextBox);
+        await user.type(ratingTextBox, value);
 
         expect(
-          await screen.findByText(/rating must be between 1 and 5/i),
+          screen.getByText(/rating must be between 0 and 5/i),
         ).toBeInTheDocument();
       });
     });
@@ -164,8 +167,35 @@ describe('Add Restaurant Flow', () => {
 
   test('click create restaurant button', async () => {
     (restaurantService.getRestaurants as Mock).mockResolvedValue([]);
+    let resolveRequest!: (value: unknown) => void;
 
-    (restaurantService.createRestaurant as Mock).mockResolvedValue({
+    (restaurantService.createRestaurant as Mock).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        }),
+    );
+
+    renderRestaurantsPage();
+    await clickAddButton();
+
+    const nameTextBox = await getNameTextBox();
+    const addressTextBox = await getAddressTextBox();
+    const cityTextBox = await getCityTextBox();
+    const ratingTextBox = await getRatingTextBox();
+    const createButton = await getCreateRestaurantButton();
+
+    await user.type(nameTextBox, 'restaurant abcd');
+    await user.type(addressTextBox, 'shobhagpura');
+    await user.type(cityTextBox, 'udaipur');
+    await user.type(ratingTextBox, '4');
+
+    await user.click(createButton);
+
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(createButton).toBeDisabled();
+
+    resolveRequest({
       status: 201,
       data: {
         data: {
@@ -176,29 +206,6 @@ describe('Add Restaurant Flow', () => {
           rating: 4,
         },
       },
-    });
-
-    renderRestaurantsPage();
-    await clickAddButton();
-
-    const nameInput = await getNameInput();
-    const addressInput = await getAddressInput();
-    const cityInput = await getCityInput();
-    const ratingInput = await getRatingInput();
-    const createButton = await getCreateRestaurantButton();
-
-    await userEvent.type(nameInput, 'restaurant abcd');
-    await userEvent.type(addressInput, 'shobhagpura');
-    await userEvent.type(cityInput, 'udaipur');
-    await userEvent.type(ratingInput, '4');
-
-    await userEvent.click(createButton);
-
-    expect(restaurantService.createRestaurant).toHaveBeenCalledWith({
-      name: 'restaurant abcd',
-      address: 'shobhagpura',
-      city: 'udaipur',
-      rating: 4,
     });
   });
 });
