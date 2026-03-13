@@ -2,17 +2,48 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Restaurants from '../index';
-import { type Mock } from 'vitest';
-
-import * as restaurantService from '../restaurant.service';
 
 vi.mock('../restaurant.service');
 
 let mockRole = 'super_admin';
-
 vi.mock('@/context/auth/useAuth', () => ({
   useAuth: () => ({
     user: { role: mockRole },
+  }),
+}));
+
+const mockHandleCreate = vi.fn();
+const mockHandleToggle = vi.fn();
+const mockHandleDelete = vi.fn();
+
+vi.mock('../hooks/useRestaurants', () => ({
+  useRestaurants: () => ({
+    data: [
+      {
+        id: 1,
+        name: 'Pizza Hub',
+        address: 'Udaipur',
+        city: 'Udaipur',
+        rating: 4,
+        totalOrders: 10,
+        totalRevenue: 1000,
+        isActive: true,
+      },
+    ],
+    loading: false,
+    error: null,
+    handleDelete: mockHandleDelete,
+    handleToggle: mockHandleToggle,
+    handleCreate: mockHandleCreate,
+    handleUpdate: vi.fn(),
+    mutationLoading: false,
+  }),
+}));
+
+vi.mock('../hooks/useRestaurantDetails', () => ({
+  useRestaurantDetails: () => ({
+    data: null,
+    fetchDetails: vi.fn(),
   }),
 }));
 
@@ -166,15 +197,12 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   });
 
   test('click create restaurant button', async () => {
-    (restaurantService.getRestaurants as Mock).mockResolvedValue([]);
-    let resolveRequest!: (value: unknown) => void;
-
-    (restaurantService.createRestaurant as Mock).mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolveRequest = resolve;
-        }),
-    );
+    mockHandleCreate.mockResolvedValue({
+      status: 201,
+      data: {
+        message: 'Restaurant created successfully',
+      },
+    });
 
     renderRestaurantsPage();
     await clickAddButton();
@@ -192,20 +220,88 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
 
     await user.click(createButton);
 
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    expect(createButton).toBeDisabled();
-
-    resolveRequest({
-      status: 201,
-      data: {
-        data: {
-          id: 1,
-          name: 'restaurant abcd',
-          address: 'shobhagpura',
-          city: 'udaipur',
-          rating: 4,
-        },
-      },
+    expect(mockHandleCreate).toHaveBeenCalledWith({
+      name: 'restaurant abcd',
+      address: 'shobhagpura',
+      city: 'udaipur',
+      rating: 4,
     });
+  });
+
+  test('toggles restaurant status when clicks on switch input', async () => {
+    renderRestaurantsPage();
+
+    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
+    const switchInput = row?.querySelector('input[type="checkbox"]');
+    expect(switchInput).toBeInTheDocument();
+
+    await user.click(switchInput!);
+
+    expect(mockHandleToggle).toHaveBeenCalledWith(1, false);
+  });
+
+  test('opens action menu when clicks on action button', async () => {
+    renderRestaurantsPage();
+
+    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
+    const actionButton = row?.querySelector('button');
+
+    await user.click(actionButton!);
+
+    expect(screen.getByText(/view/i)).toBeInTheDocument();
+  });
+
+  test('opens restaurant drawer when clicks on view', async () => {
+    renderRestaurantsPage();
+
+    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
+    const actionButton = row?.querySelector('button');
+
+    await user.click(actionButton!);
+
+    const viewButton = await screen.findByText(/view/i);
+    await user.click(viewButton);
+
+    expect(await screen.findByText(/address/i)).toBeInTheDocument();
+  });
+
+  test('deletes restaurant when clicks on delete', async () => {
+    mockHandleDelete.mockResolvedValue({
+      status: 200,
+      data: { message: 'Deleted' },
+    });
+
+    renderRestaurantsPage();
+
+    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
+    const actionButton = row?.querySelector('button');
+
+    await user.click(actionButton!);
+
+    const deleteButton = await screen.findByText(/delete/i);
+    await user.click(deleteButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /delete/i,
+    });
+
+    await user.click(confirmButton);
+
+    expect(mockHandleDelete).toHaveBeenCalledWith(1);
+  });
+
+  test('opens edit restaurant dialog when clicks on edit', async () => {
+    renderRestaurantsPage();
+
+    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
+    const actionButton = row?.querySelector('button');
+
+    await user.click(actionButton!);
+
+    const editButton = await screen.findByText(/edit/i);
+
+    await user.click(editButton);
+
+    expect(await screen.findByText(/edit restaurant/i)).toBeInTheDocument();
   });
 });
