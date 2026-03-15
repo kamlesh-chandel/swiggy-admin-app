@@ -2,6 +2,8 @@ import { TextField } from '@mui/material';
 import type { ChangeEvent } from 'react';
 
 interface InputProps {
+  id?: string;
+  name?: string;
   label: string;
   type?: 'text' | 'email' | 'password' | 'number' | 'file';
   value?: string | undefined;
@@ -14,6 +16,8 @@ interface InputProps {
 }
 
 const Input = ({
+  id,
+  name,
   label,
   type = 'text',
   value,
@@ -28,6 +32,8 @@ const Input = ({
 
   return (
     <TextField
+      id={id}
+      name={name}
       fullWidth={fullWidth}
       margin={margin}
       label={isFileType ? undefined : label}
