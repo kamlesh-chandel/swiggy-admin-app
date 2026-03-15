@@ -15,40 +15,41 @@ describe('Input Component', () => {
 
   const getInputTextBox = () => screen.getByRole('textbox');
 
+  test('passes id and name props to input element', () => {
+    renderInput({ id: 'name-input', name: 'name' });
+
+    const input = screen.getByRole('textbox');
+
+    expect(input).toHaveAttribute('id', 'name-input');
+    expect(input).toHaveAttribute('name', 'name');
+  });
+
   test('renders input with label', () => {
     renderInput();
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
   });
 
-  test('allows user to type in input', async () => {
-    renderInput();
+  test('displays provided value', () => {
+    renderInput({ value: 'abc', onChange: vi.fn() });
 
-    const inputBox = getInputTextBox();
-
-    await user.type(inputBox, 'abc');
-
-    expect(inputBox).toHaveValue('abc');
+    expect(getInputTextBox()).toHaveValue('abc');
   });
 
-  test('calls onChange when typing', async () => {
+  test('calls onChange with correct event when typing', async () => {
     const handleChange = vi.fn();
 
     renderInput({ onChange: handleChange });
 
-    const inputBox = getInputTextBox();
+    await user.type(getInputTextBox(), 'a');
 
-    await user.type(inputBox, 'a');
-
-    expect(handleChange).toHaveBeenCalled();
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange.mock.calls[0][0].target.value).toBe('a');
   });
 
-  test('shows error message when error and helperText are provided', () => {
-    renderInput({
-      error: true,
-      helperText: 'Error message',
-    });
-
+  test('shows error with helper text', () => {
+    renderInput({ error: true, helperText: 'Error message' });
     expect(screen.getByText(/error message/i)).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
   });
 
   test('renders number input when type is number', () => {
@@ -57,11 +58,12 @@ describe('Input Component', () => {
     expect(screen.getByRole('spinbutton')).toBeInTheDocument();
   });
 
-  test('renders file input when type is file', () => {
-    renderInput({ type: 'file' });
-
-    const inputBox = screen.getByDisplayValue('');
-
-    expect(inputBox).toHaveAttribute('type', 'file');
+  test('renders file input with correct type', () => {
+    renderInput({ type: 'file', accept: 'image/' });
+    const fileInput = document.querySelector(
+      'input[type="file"]',
+    ) as HTMLElement;
+    expect(fileInput).toBeInTheDocument();
+    expect(fileInput).toHaveAttribute('accept', 'image/');
   });
 });

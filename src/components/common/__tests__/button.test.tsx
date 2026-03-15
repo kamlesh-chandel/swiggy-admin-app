@@ -33,27 +33,24 @@ describe('Button Component', () => {
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  test('does not call onClick when button is disabled', () => {
+  test('button is disabled when disabled or loading', () => {
     const handleClick = vi.fn();
 
     renderButton({ onClick: handleClick, disabled: true });
 
-    const button = getButton();
+    let button = getButton();
 
     expect(button).toBeDisabled();
-    expect(handleClick).not.toHaveBeenCalled();
+
+    renderButton({ onClick: handleClick, loading: true });
+
+    button = getButton();
+
+    expect(button).toBeDisabled();
   });
 
   test('shows loader when loading is true', () => {
     renderButton({ loading: true });
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-  });
-
-  test('disables button when loading is true', () => {
-    renderButton({ loading: true });
-
-    const button = screen.getByRole('button');
-
-    expect(button).toBeDisabled();
   });
 });

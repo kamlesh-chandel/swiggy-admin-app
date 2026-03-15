@@ -298,7 +298,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
 
     await user.click(actionButton!);
 
-    const editButton = await screen.findByText(/edit/i);
+    const editButton = await screen.findByRole('menuitem', { name: /edit/i });
 
     await user.click(editButton);
 
