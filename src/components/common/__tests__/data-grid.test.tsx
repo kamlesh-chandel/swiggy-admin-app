@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import DataGrid from '../data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 
@@ -27,13 +27,14 @@ describe('DataGrid Component', () => {
 
   test('renders rows in the table', () => {
     renderGrid();
-    expect(screen.getByText('Pizza Hub')).toBeInTheDocument();
+    const row = screen.getByRole('row', { name: /pizza hub/i });
+    expect(within(row).getByText('Pizza Hub')).toBeInTheDocument();
   });
 
   test('shows loading state', () => {
     renderGrid({ loading: true });
-
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    const grid = screen.getByRole('grid');
+    expect(within(grid).getByRole('progressbar')).toBeInTheDocument();
   });
 
   test('shows failed state when error exists and no rows', () => {
@@ -45,7 +46,7 @@ describe('DataGrid Component', () => {
         error="Something went wrong"
       />,
     );
-
-    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+    const grid = screen.getByRole('grid');
+    expect(within(grid).getByText(/something went wrong/i)).toBeInTheDocument();
   });
 });

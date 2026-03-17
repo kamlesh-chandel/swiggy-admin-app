@@ -43,7 +43,7 @@ describe('Dialog Component', () => {
     expect(screen.getByText(/test description/i)).toBeInTheDocument();
   });
 
-  test('renders children content', () => {
+  test('renders content children', () => {
     renderDialog();
 
     expect(screen.getByText(/dialog content/i)).toBeInTheDocument();
@@ -52,11 +52,8 @@ describe('Dialog Component', () => {
   test('calls onClose when cancel button is clicked', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
-
     renderDialog({ onClose, onConfirm });
-
     await user.click(getCancelButton());
-
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
@@ -70,10 +67,24 @@ describe('Dialog Component', () => {
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  test('disables confirm button when loading is true', () => {
-    renderDialog({ onConfirm: vi.fn(), loading: true });
+  describe('Disable confirm button', () => {
+    test('when loading prop is true', () => {
+      renderDialog({
+        loading: true,
+        onConfirm: vi.fn(),
+      });
 
-    expect(getConfirmButton()).toBeDisabled();
+      expect(getConfirmButton()).toBeDisabled();
+    });
+
+    test('confirm button is enabled when loading is false', () => {
+      renderDialog({
+        loading: false,
+        onConfirm: vi.fn(),
+      });
+
+      expect(getConfirmButton()).toBeEnabled();
+    });
   });
 
   test('does not render actions when showActions is false', () => {

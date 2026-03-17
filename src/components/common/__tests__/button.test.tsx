@@ -13,44 +13,38 @@ describe('Button Component', () => {
     render(<Button {...props}>Submit</Button>);
   };
 
-  const getButton = () => screen.getByRole('button', { name: /submit/i });
+  const getButtonByRole = () => screen.getByRole('button', { name: /submit/i });
 
-  test('renders button text', () => {
+  test('renders button with children text', () => {
     renderButton();
-
-    const button = getButton();
-
+    const button = getButtonByRole();
     expect(button).toBeInTheDocument();
+    expect(button).toHaveTextContent('Submit');
   });
 
   test('calls onClick handler when clicked', async () => {
     const handleClick = vi.fn();
     renderButton({ onClick: handleClick });
-
-    const button = getButton();
-    await user.click(button);
-
+    await user.click(getButtonByRole());
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  test('button is disabled when disabled or loading', () => {
-    const handleClick = vi.fn();
+  describe('Button should be disabled', () => {
+    test('when disabled prop is true', () => {
+      const handleClick = vi.fn();
+      renderButton({ onClick: handleClick, disabled: true });
+      expect(getButtonByRole()).toBeDisabled();
+    });
 
-    renderButton({ onClick: handleClick, disabled: true });
+    test('when loading prop is true', () => {
+      const handleClick = vi.fn();
+      renderButton({ onClick: handleClick, loading: true });
+      expect(screen.getByRole('button')).toBeDisabled();
+    });
 
-    let button = getButton();
-
-    expect(button).toBeDisabled();
-
-    renderButton({ onClick: handleClick, loading: true });
-
-    button = getButton();
-
-    expect(button).toBeDisabled();
-  });
-
-  test('shows loader when loading is true', () => {
-    renderButton({ loading: true });
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    test('shows loader when loading prop is true', () => {
+      renderButton({ loading: true });
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    });
   });
 });

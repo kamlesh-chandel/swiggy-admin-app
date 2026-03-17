@@ -55,19 +55,37 @@ describe('Form Component', () => {
     expect(getEmailTextBox()).toBeInTheDocument();
   });
 
-  test('submit button is disabled initially', () => {
-    renderForm();
+  describe('disable submit button', () => {
+    test('initially when no default values are provided', () => {
+      renderForm();
+      expect(getSubmitButton()).toBeDisabled();
+    });
+    test('when loading is true', () => {
+      renderForm({ loading: true });
 
-    expect(getSubmitButton()).toBeDisabled();
+      expect(getSubmitButton()).toBeDisabled();
+    });
   });
 
-  test('enables submit button when required fields are valid', async () => {
-    renderForm();
+  describe('enable submit button', () => {
+    test('when valid default values are provided', () => {
+      renderForm({
+        defaultValues: {
+          name: 'Default Name',
+          email: 'default@test.com',
+        },
+      });
 
-    await user.type(getNameTextBox(), 'abc');
-    await user.type(getEmailTextBox(), 'abc@test.com');
+      expect(getSubmitButton()).toBeEnabled();
+    });
+    test('when required fields are valid', async () => {
+      renderForm();
 
-    expect(getSubmitButton()).toBeEnabled();
+      await user.type(getNameTextBox(), 'abc');
+      await user.type(getEmailTextBox(), 'abc@test.com');
+
+      expect(getSubmitButton()).toBeEnabled();
+    });
   });
 
   describe('Name field validation', () => {
@@ -93,11 +111,9 @@ describe('Form Component', () => {
   });
 
   describe('Email field validation', () => {
-    test('does not show error when email is valid', async () => {
+    test('does not show error when email format is valid', async () => {
       renderForm();
-
       await user.type(getEmailTextBox(), 'abc@test.com');
-
       expect(
         screen.queryByText(/invalid email format/i),
       ).not.toBeInTheDocument();
@@ -105,9 +121,7 @@ describe('Form Component', () => {
 
     test('shows error when email format is invalid', async () => {
       renderForm();
-
       await user.type(getEmailTextBox(), 'invalid-email');
-
       expect(screen.getByText(/invalid email format/i)).toBeInTheDocument();
     });
   });
@@ -124,12 +138,6 @@ describe('Form Component', () => {
       name: 'abc',
       email: 'abc@test.com',
     });
-  });
-
-  test('disables submit button when loading is true', () => {
-    renderForm({ loading: true });
-
-    expect(getSubmitButton()).toBeDisabled();
   });
 
   test('renders default values correctly', () => {
