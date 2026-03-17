@@ -25,7 +25,7 @@ const Dialog = ({
   open,
   title,
   description,
-  children,
+  children: contentChildren,
   onClose,
   onConfirm,
   confirmText = 'Confirm',
@@ -44,7 +44,7 @@ const Dialog = ({
           </Typography>
         )}
 
-        {children}
+        {contentChildren}
       </DialogContent>
 
       {showActions && onConfirm && (
