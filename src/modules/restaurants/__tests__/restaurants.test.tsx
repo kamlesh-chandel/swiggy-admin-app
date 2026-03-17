@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Restaurants from '../index';
@@ -243,21 +243,25 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   test('opens action menu when clicks on action button', async () => {
     renderRestaurantsPage();
 
-    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
-    const actionButton = row?.querySelector('button');
+    const row = screen
+      .getByText('Pizza Hub')
+      .closest('[role="row"]') as HTMLElement;
+    const actionButton = within(row!).getByRole('button');
 
-    await user.click(actionButton!);
+    await user.click(actionButton);
 
-    expect(screen.getByText(/view/i)).toBeInTheDocument();
+    expect(await screen.findByText(/view/i)).toBeInTheDocument();
   });
 
   test('opens restaurant drawer when clicks on view', async () => {
     renderRestaurantsPage();
 
-    const row = screen.getByText('Pizza Hub').closest('[role="row"]');
-    const actionButton = row?.querySelector('button');
+    const row = screen
+      .getByText('Pizza Hub')
+      .closest('[role="row"]') as HTMLElement;
+    const actionButton = within(row!).getByRole('button');
 
-    await user.click(actionButton!);
+    await user.click(actionButton);
 
     const viewButton = await screen.findByText(/view/i);
     await user.click(viewButton);
