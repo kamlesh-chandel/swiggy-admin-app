@@ -31,14 +31,12 @@ describe('Button Component', () => {
 
   describe('Button should be disabled', () => {
     test('when disabled prop is true', () => {
-      const handleClick = vi.fn();
-      renderButton({ onClick: handleClick, disabled: true });
+      renderButton({ disabled: true });
       expect(getButtonByRole()).toBeDisabled();
     });
 
     test('when loading prop is true', () => {
-      const handleClick = vi.fn();
-      renderButton({ onClick: handleClick, loading: true });
+      renderButton({ loading: true });
       expect(screen.getByRole('button')).toBeDisabled();
     });
 
