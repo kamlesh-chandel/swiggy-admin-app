@@ -30,7 +30,7 @@ describe('Input Component', () => {
   });
 
   test('displays provided value', () => {
-    renderInput({ value: 'abc', onChange: vi.fn() });
+    renderInput({ value: 'abc' });
 
     expect(getInputTextBox()).toHaveValue('abc');
   });
@@ -43,7 +43,9 @@ describe('Input Component', () => {
     await user.type(getInputTextBox(), 'a');
 
     expect(handleChange).toHaveBeenCalledTimes(1);
-    expect(handleChange.mock.calls[0][0].target.value).toBe('a');
+
+    const event = handleChange.mock.calls[0][0];
+    expect(event.target.value).toBe('a');
   });
 
   test('shows error with helper text', () => {

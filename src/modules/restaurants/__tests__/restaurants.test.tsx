@@ -47,7 +47,7 @@ vi.mock('../hooks/useRestaurantDetails', () => ({
   }),
 }));
 
-const ROLES = ['super_admin'];
+const ROLES = ['super_admin', 'admin'];
 
 describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   let user: ReturnType<typeof userEvent.setup>;
@@ -55,6 +55,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   beforeEach(() => {
     mockRole = role;
     user = userEvent.setup();
+    vi.clearAllMocks();
   });
 
   const renderRestaurantsPage = () => {
@@ -106,7 +107,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
     });
 
     describe('Name field validation', () => {
-      let nameTextBox: Awaited<ReturnType<typeof getNameTextBox>>;
+      let nameTextBox: HTMLElement;
       beforeEach(async () => {
         nameTextBox = await getNameTextBox();
       });
@@ -128,7 +129,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
     });
 
     describe('Address field validation', () => {
-      let addressTextBox: Awaited<ReturnType<typeof getAddressTextBox>>;
+      let addressTextBox: HTMLElement;
       beforeEach(async () => {
         addressTextBox = await getAddressTextBox();
       });
@@ -150,7 +151,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
     });
 
     describe('City field validation', () => {
-      let cityTextBox: Awaited<ReturnType<typeof getCityTextBox>>;
+      let cityTextBox: HTMLElement;
       beforeEach(async () => {
         cityTextBox = await getCityTextBox();
       });
@@ -170,7 +171,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
     });
 
     describe('Rating field validation', () => {
-      let ratingTextBox: Awaited<ReturnType<typeof getRatingTextBox>>;
+      let ratingTextBox: HTMLElement;
       beforeEach(async () => {
         ratingTextBox = await getRatingTextBox();
       });
@@ -250,7 +251,9 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
 
     await user.click(actionButton);
 
-    expect(await screen.findByText(/view/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole('menuitem', { name: /view/i }),
+    ).toBeInTheDocument();
   });
 
   test('opens restaurant drawer when clicks on view', async () => {
@@ -263,7 +266,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
 
     await user.click(actionButton);
 
-    const viewButton = await screen.findByText(/view/i);
+    const viewButton = await screen.findByRole('menuitem', { name: /view/i });
     await user.click(viewButton);
 
     expect(await screen.findByText(/address/i)).toBeInTheDocument();
@@ -282,16 +285,23 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
 
     await user.click(actionButton!);
 
-    const deleteButton = await screen.findByText(/delete/i);
-    await user.click(deleteButton);
-
-    const confirmButton = await screen.findByRole('button', {
+    const deleteButton = await screen.findByRole('menuitem', {
       name: /delete/i,
     });
 
-    await user.click(confirmButton);
+    if (role === 'admin') {
+      expect(deleteButton).toHaveAttribute('aria-disabled', 'true');
+    } else {
+      await user.click(deleteButton);
 
-    expect(mockHandleDelete).toHaveBeenCalledWith(1);
+      const confirmButton = await screen.findByRole('button', {
+        name: /delete/i,
+      });
+
+      await user.click(confirmButton);
+
+      expect(mockHandleDelete).toHaveBeenCalledWith(1);
+    }
   });
 
   test('opens edit restaurant dialog when clicks on edit', async () => {

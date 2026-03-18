@@ -16,12 +16,7 @@ describe('DataGrid Component', () => {
 
   const renderGrid = (props = {}) => {
     render(
-      <DataGrid<TestRow>
-        rows={rows}
-        columns={columns}
-        loading={false}
-        {...props}
-      />,
+      <DataGrid rows={rows} columns={columns} loading={false} {...props} />,
     );
   };
 
@@ -37,9 +32,9 @@ describe('DataGrid Component', () => {
     expect(within(grid).getByRole('progressbar')).toBeInTheDocument();
   });
 
-  test('shows failed state when error exists and no rows', () => {
+  test('shows failed state when error exists', () => {
     render(
-      <DataGrid<TestRow>
+      <DataGrid
         rows={[]}
         columns={columns}
         loading={false}
