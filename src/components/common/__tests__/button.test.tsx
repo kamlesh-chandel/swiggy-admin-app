@@ -4,7 +4,7 @@ import Button from '../button';
 
 describe('Button Component', () => {
   let user: ReturnType<typeof userEvent.setup>;
-
+  console.log('hello');
   beforeEach(() => {
     user = userEvent.setup();
   });
