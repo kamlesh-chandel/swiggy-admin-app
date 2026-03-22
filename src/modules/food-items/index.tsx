@@ -233,7 +233,7 @@ const FoodItems = () => {
         description="Are you sure you want to delete this food item? This action cannot be undone."
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
-        confirmText="Delete"
+        confirmText="confirm"
         cancelText="Cancel"
       />
 

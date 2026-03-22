@@ -141,6 +141,7 @@ const Restaurants = () => {
       filterable: false,
       renderCell: ({ row }) => (
         <Button
+          data-testid={`action-btn-${row.id}`}
           onClick={(e) => {
             setSelectedRestaurant(row);
             setAnchorEl(e.currentTarget);
@@ -238,6 +239,7 @@ const Restaurants = () => {
       <Box sx={{ mt: 6 }}>
         <Box mb={2} gap={2} sx={styles.buttonBox}>
           <Button
+            data-testid={'add-restaurant-button'}
             variant="contained"
             style={styles.addButton}
             onClick={handleAddRestaurant}
@@ -249,6 +251,7 @@ const Restaurants = () => {
           </Button>
         </Box>
         <DataGrid
+          data-testid={'restaurant-data-grid'}
           rows={restaurantsData}
           columns={columns}
           loading={loading}
@@ -256,6 +259,7 @@ const Restaurants = () => {
         />
       </Box>
       <ActionMenu
+        data-testid={'restaurant-action-menu'}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -279,20 +283,23 @@ const Restaurants = () => {
         ]}
       />
       <Dialog
+        data-testid={'restaurant-delete-dialog'}
         open={deleteOpen}
         title={`Delete Restaurant ${selectedRestaurant?.name}`}
         description={`Are you sure you want to delete this restaurant (${selectedRestaurant?.name})? This action cannot be undone.`}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleOnConfirmDelete}
-        confirmText="Delete"
+        confirmText="confirm"
         cancelText="Cancel"
       />
       <RestaurantDrawer
+        data-testid={'restaurant-detail-drawer'}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         data={restaurantDetails}
       />
       <RestaurantFormDialog
+        data-testid={'restaurant-form-dialog'}
         open={formOpen}
         onClose={() => setFormOpen(false)}
         mode={formMode}
