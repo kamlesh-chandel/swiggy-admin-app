@@ -47,7 +47,7 @@ const Dialog = ({
         {contentChildren}
       </DialogContent>
 
-      {showActions && onConfirm && (
+      {showActions && (
         <DialogActions>
           <Button onClick={onClose}>{cancelText}</Button>
 
