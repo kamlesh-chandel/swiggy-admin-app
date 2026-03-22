@@ -293,7 +293,6 @@ const Restaurants = () => {
         cancelText="Cancel"
       />
       <RestaurantDrawer
-        data-testid={'restaurant-detail-drawer'}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         data={restaurantDetails}
