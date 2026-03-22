@@ -55,6 +55,18 @@ describe('Form Component', () => {
     expect(getEmailTextBox()).toBeInTheDocument();
   });
 
+  test('renders default values correctly', () => {
+    renderForm({
+      defaultValues: {
+        name: 'Default Name',
+        email: 'default@test.com',
+      },
+    });
+
+    expect(getNameTextBox()).toHaveValue('Default Name');
+    expect(getEmailTextBox()).toHaveValue('default@test.com');
+  });
+
   describe('disable submit button', () => {
     test('initially when no default values are provided', () => {
       renderForm();
@@ -62,7 +74,6 @@ describe('Form Component', () => {
     });
     test('when loading is true', () => {
       renderForm({ loading: true });
-
       expect(getSubmitButton()).toBeDisabled();
     });
   });
@@ -138,17 +149,5 @@ describe('Form Component', () => {
       name: 'abc',
       email: 'abc@test.com',
     });
-  });
-
-  test('renders default values correctly', () => {
-    renderForm({
-      defaultValues: {
-        name: 'Default Name',
-        email: 'default@test.com',
-      },
-    });
-
-    expect(getNameTextBox()).toHaveValue('Default Name');
-    expect(getEmailTextBox()).toHaveValue('default@test.com');
   });
 });

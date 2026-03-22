@@ -66,7 +66,11 @@ const RestaurantDrawer = ({ open, onClose, data }: RestaurantDrawerProps) => {
   };
 
   return (
-    <Drawer open={open} onClose={onClose}>
+    <Drawer
+      open={open}
+      onClose={onClose}
+      data-testid={'restaurant-detail-drawer'}
+    >
       <Typography variant="h6">{data.name}</Typography>
 
       <Chip

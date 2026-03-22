@@ -15,7 +15,7 @@ describe('Button Component', () => {
 
   const getButtonByRole = () => screen.getByRole('button', { name: /submit/i });
 
-  test('renders button with children text', () => {
+  test('renders button with children', () => {
     renderButton();
     const button = getButtonByRole();
     expect(button).toBeInTheDocument();
@@ -38,10 +38,6 @@ describe('Button Component', () => {
     test('when loading prop is true', () => {
       renderButton({ loading: true });
       expect(screen.getByRole('button')).toBeDisabled();
-    });
-
-    test('shows loader when loading prop is true', () => {
-      renderButton({ loading: true });
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
   });
