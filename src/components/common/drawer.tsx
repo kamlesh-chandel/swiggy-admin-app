@@ -1,7 +1,11 @@
-import { Drawer as MuiDrawer, Box } from '@mui/material';
+import {
+  Drawer as MuiDrawer,
+  Box,
+  type DrawerProps as MuiDrawerProps,
+} from '@mui/material';
 import type { ReactNode } from 'react';
 
-interface DrawerProps {
+interface DrawerProps extends MuiDrawerProps {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
@@ -9,12 +13,13 @@ interface DrawerProps {
 
 const NAVBAR_HEIGHT = 80;
 
-const Drawer = ({ open, onClose, children }: DrawerProps) => {
+const Drawer = ({ open, onClose, children, ...rest }: DrawerProps) => {
   return (
     <MuiDrawer
       anchor="right"
       open={open}
       onClose={onClose}
+      {...rest}
       PaperProps={{
         sx: {
           top: `${NAVBAR_HEIGHT}px`,
