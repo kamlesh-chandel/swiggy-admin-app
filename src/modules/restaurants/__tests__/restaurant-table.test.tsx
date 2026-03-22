@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Restaurants from '../index';
+import { toast } from 'react-toastify';
 
 vi.mock('../restaurant.service');
 
@@ -11,6 +12,12 @@ vi.mock('@/context/auth/useAuth', () => ({
   useAuth: () => ({
     user: { role: mockRole },
   }),
+}));
+
+vi.mock('react-toastify', () => ({
+  toast: {
+    success: vi.fn(),
+  },
 }));
 
 const mockHandleToggle = vi.fn();
@@ -57,10 +64,20 @@ describe.each(ROLES)('Restaurant Actions (%s)', (role) => {
     );
   };
 
-  //get table also
+  const getRow = () => {
+    const grid = screen.getByRole('grid');
+    return within(grid)
+      .getByText('Pizza Hub')
+      .closest('[role="row"]') as HTMLElement;
+  };
 
-  const getRow = () =>
-    screen.getByText('Pizza Hub').closest('[role="row"]') as HTMLElement;
+  const getActionDialog = async () => {
+    const actionButton = await within(row).findByTestId('action-btn');
+    await user.click(actionButton);
+
+    const actionDialog = await screen.findByTestId('restaurant-action-menu');
+    return actionDialog;
+  };
 
   let row: HTMLElement;
   beforeEach(() => {
@@ -76,50 +93,55 @@ describe.each(ROLES)('Restaurant Actions (%s)', (role) => {
     await user.click(switchButton);
 
     expect(mockHandleToggle).toHaveBeenCalledWith(1, false);
+    expect(toast.success).toHaveBeenCalledWith('Status Changed Successfully');
   });
 
   test('opens restaurant drawer when clicks on view', async () => {
-    const actionButton = within(row).getByRole('button');
-    await user.click(actionButton);
-    const viewButton = await screen.findByRole('menuitem', { name: /view/i });
+    const actionDialog = await getActionDialog();
+    const viewButton = within(actionDialog).getByRole('menuitem', {
+      name: /view/i,
+    });
     await user.click(viewButton);
 
     expect(await screen.findByText(/address/i)).toBeInTheDocument();
   });
 
-  //change delete to confirm
-  test('delete restaurant when clicks on delete', async () => {
+  test('handles delete action based on user role', async () => {
     mockHandleDelete.mockResolvedValue({
       status: 200,
-      data: { message: 'Deleted' },
+      data: { message: 'Restaurant deleted successfully' },
     });
 
-    const actionButton = row?.querySelector('button');
-    await user.click(actionButton!);
-    const deleteButton = await screen.findByRole('menuitem', {
+    const actionDialog = await getActionDialog();
+    const deleteButton = within(actionDialog).getByRole('menuitem', {
       name: /delete/i,
     });
 
     if (role === 'admin') {
       expect(deleteButton).toHaveAttribute('aria-disabled', 'true');
     } else {
-      //check enable button
+      expect(deleteButton).not.toHaveAttribute('aria-disabled', 'true');
       await user.click(deleteButton);
       const confirmButton = await screen.findByRole('button', {
-        name: /delete/i,
+        name: /confirm/i,
       });
       await user.click(confirmButton);
 
       expect(mockHandleDelete).toHaveBeenCalledWith(1);
+      expect(toast.success).toHaveBeenCalledWith(
+        'Restaurant deleted successfully',
+      );
     }
   });
 
   test('opens edit dialog when clicks on edit', async () => {
-    const actionButton = row?.querySelector('button');
-    await user.click(actionButton!);
-    const editButton = await screen.findByRole('menuitem', { name: /edit/i });
+    const actionDialog = await getActionDialog();
+    const editButton = within(actionDialog).getByRole('menuitem', {
+      name: /edit/i,
+    });
     await user.click(editButton);
-    //use test id
-    expect(await screen.findByText(/edit restaurant/i)).toBeInTheDocument();
+    expect(
+      await screen.findByTestId('restaurant-edit-dialog'),
+    ).toBeInTheDocument();
   });
 });

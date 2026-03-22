@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Restaurants from '../index';
+import { toast } from 'react-toastify';
 
 vi.mock('../restaurant.service');
 
@@ -10,6 +11,12 @@ vi.mock('@/context/auth/useAuth', () => ({
   useAuth: () => ({
     user: { role: mockRole },
   }),
+}));
+
+vi.mock('react-toastify', () => ({
+  toast: {
+    success: vi.fn(),
+  },
 }));
 
 const mockHandleCreate = vi.fn();
@@ -37,7 +44,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   let user: ReturnType<typeof userEvent.setup>;
 
   const clickAddButton = async () => {
-    const addButton = screen.getByRole('button', { name: /add/i });
+    const addButton = screen.getByTestId('add-restaurant-button');
     await user.click(addButton);
   };
 
@@ -69,20 +76,18 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   const getCreateRestaurantButton = () =>
     screen.findByRole('button', { name: /create restaurant/i });
 
-  test('opens add restaurant dialog when clicking Add button', () => {
-    expect(screen.getByText('Add Restaurant')).toBeInTheDocument();
+  test('opens add restaurant dialog on Add button click', async () => {
+    expect(
+      await screen.findByTestId('restaurant-add-dialog'),
+    ).toBeInTheDocument();
   });
 
-  test('renders all initial form fields', async () => {
-    //check empty
-    expect(await getNameTextBox()).toBeInTheDocument();
-    expect(await getAddressTextBox()).toBeInTheDocument();
-    expect(await getCityTextBox()).toBeInTheDocument();
-    expect(await getRatingTextBox()).toBeInTheDocument();
-  });
+  test('renders empty form fields and disables create button initially', async () => {
+    expect(await getNameTextBox()).toHaveValue('');
+    expect(await getAddressTextBox()).toHaveValue('');
+    expect(await getCityTextBox()).toHaveValue('');
+    expect(await getRatingTextBox()).toHaveValue(null);
 
-  test('renders disabled create restaurant button initially', async () => {
-    //combine
     const button = await getCreateRestaurantButton();
     expect(button).toBeDisabled();
   });
@@ -204,5 +209,8 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
       city: 'udaipur',
       rating: 4,
     });
+    expect(toast.success).toHaveBeenCalledWith(
+      'Restaurant created successfully',
+    );
   });
 });
