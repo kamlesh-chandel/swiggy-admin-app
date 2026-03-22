@@ -8,11 +8,6 @@ describe('Loader Component', () => {
 
   const getLoader = () => screen.getByRole('progressbar');
 
-  test('renders loader', () => {
-    renderLoader();
-    expect(getLoader()).toBeInTheDocument();
-  });
-
   test('renders loader with custom size', () => {
     renderLoader({ size: 50 });
     expect(getLoader()).toBeInTheDocument();

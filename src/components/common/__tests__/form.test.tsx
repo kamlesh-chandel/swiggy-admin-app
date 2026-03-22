@@ -62,7 +62,6 @@ describe('Form Component', () => {
     });
     test('when loading is true', () => {
       renderForm({ loading: true });
-
       expect(getSubmitButton()).toBeDisabled();
     });
   });

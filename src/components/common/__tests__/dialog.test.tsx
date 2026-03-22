@@ -16,11 +16,7 @@ describe('Dialog Component', () => {
       onClose: vi.fn(),
     };
 
-    render(
-      <Dialog {...defaultProps} {...props}>
-        Dialog Content
-      </Dialog>,
-    );
+    render(<Dialog {...defaultProps} {...props}></Dialog>);
   };
 
   const getTitle = () => screen.getByText(/test dialog/i);
@@ -28,7 +24,7 @@ describe('Dialog Component', () => {
   const getConfirmButton = () =>
     screen.getByRole('button', { name: /confirm/i });
 
-  test('renders dialog title when open is true', () => {
+  test('renders dialog default title', () => {
     renderDialog();
     expect(getTitle()).toBeInTheDocument();
   });
@@ -44,8 +40,7 @@ describe('Dialog Component', () => {
   });
 
   test('renders content children', () => {
-    renderDialog();
-
+    renderDialog({ children: 'dialog content' });
     expect(screen.getByText(/dialog content/i)).toBeInTheDocument();
   });
 
@@ -59,15 +54,12 @@ describe('Dialog Component', () => {
 
   test('calls onConfirm when confirm button is clicked', async () => {
     const onConfirm = vi.fn();
-
     renderDialog({ onConfirm });
-
     await user.click(getConfirmButton());
-
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  describe('Disable confirm button', () => {
+  describe('confirm button', () => {
     test('when loading prop is true', () => {
       renderDialog({
         loading: true,
@@ -77,7 +69,7 @@ describe('Dialog Component', () => {
       expect(getConfirmButton()).toBeDisabled();
     });
 
-    test('confirm button is enabled when loading is false', () => {
+    test('enable when loading is false', () => {
       renderDialog({
         loading: false,
         onConfirm: vi.fn(),
@@ -87,7 +79,7 @@ describe('Dialog Component', () => {
     });
   });
 
-  test('does not render actions when showActions is false', () => {
+  test('does not render dialog actions when showActions is false', () => {
     renderDialog({ showActions: false });
 
     expect(
