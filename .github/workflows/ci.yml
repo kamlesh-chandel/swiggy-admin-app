@@ -2,6 +2,8 @@ name: CI Pipeline
 
 on:
   push:
+    branches:
+      - dev
   pull_request:
 
 jobs:
@@ -23,13 +25,13 @@ jobs:
           version: 9
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Type check
-        run: pnpm typecheck
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
 
       - name: Run tests
         run: pnpm test
