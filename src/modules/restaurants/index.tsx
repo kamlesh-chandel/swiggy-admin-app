@@ -141,7 +141,7 @@ const Restaurants = () => {
       filterable: false,
       renderCell: ({ row }) => (
         <Button
-          data-testid={`action-btn-${row.id}`}
+          data-testid={'action-btn'}
           onClick={(e) => {
             setSelectedRestaurant(row);
             setAnchorEl(e.currentTarget);
