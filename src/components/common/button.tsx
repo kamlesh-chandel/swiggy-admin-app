@@ -3,7 +3,7 @@ import { Button as MuiButton } from '@mui/material';
 import type { ButtonProps as MuiButtonProps } from '@mui/material';
 import Loader from './loader';
 
-interface ButtonProps {
+interface ButtonProps extends MuiButtonProps {
   type?: 'button' | 'submit';
   children: ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -25,6 +25,7 @@ const Button = ({
   color,
   disabled = false,
   loading = false,
+  ...rest
 }: ButtonProps) => {
   return (
     <MuiButton
@@ -35,6 +36,7 @@ const Button = ({
       onClick={onClick}
       color={color}
       disabled={disabled || loading}
+      {...rest}
     >
       {loading ? <Loader /> : children}
     </MuiButton>

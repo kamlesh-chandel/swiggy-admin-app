@@ -1,4 +1,4 @@
-import { Menu, MenuItem, Tooltip } from '@mui/material';
+import { Menu, MenuItem, Tooltip, type MenuProps } from '@mui/material';
 
 interface ActionItem {
   label: string;
@@ -8,16 +8,22 @@ interface ActionItem {
   tooltip?: string;
 }
 
-interface ActionMenuProps {
+interface ActionMenuProps extends MenuProps {
   anchorEl: HTMLElement | null;
   open: boolean;
   onClose: () => void;
   actions: ActionItem[];
 }
 
-const ActionMenu = ({ anchorEl, open, onClose, actions }: ActionMenuProps) => {
+const ActionMenu = ({
+  anchorEl,
+  open,
+  onClose,
+  actions,
+  ...rest
+}: ActionMenuProps) => {
   return (
-    <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
+    <Menu anchorEl={anchorEl} open={open} onClose={onClose} {...rest}>
       {actions.map(({ label, onClick, color, disabled, tooltip }) => {
         const item = (
           <MenuItem

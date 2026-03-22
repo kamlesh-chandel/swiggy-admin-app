@@ -7,8 +7,9 @@ import {
   Typography,
 } from '@mui/material';
 import type { ReactNode } from 'react';
+import type { DialogProps as MuiDialogProps } from '@mui/material';
 
-interface DialogProps {
+interface DialogProps extends MuiDialogProps {
   open: boolean;
   title: string;
   description?: string;
@@ -32,9 +33,10 @@ const Dialog = ({
   cancelText = 'Cancel',
   loading = false,
   showActions = true,
+  ...rest
 }: DialogProps) => {
   return (
-    <MuiDialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <MuiDialog open={open} onClose={onClose} maxWidth="xs" fullWidth {...rest}>
       <DialogTitle>{title}</DialogTitle>
 
       <DialogContent>

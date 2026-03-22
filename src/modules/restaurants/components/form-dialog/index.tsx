@@ -29,9 +29,18 @@ const RestaurantFormDialog = ({
   const isEditMode = mode === 'edit';
   const title = isEditMode ? 'Edit Restaurant' : 'Add Restaurant';
   const buttonText = isEditMode ? 'Update Restaurant' : 'Create Restaurant';
+  const dataTestId = isEditMode
+    ? 'restaurant-edit-dialog'
+    : 'restaurant-add-dialog';
 
   return (
-    <Dialog open={open} title={title} onClose={onClose} showActions={false}>
+    <Dialog
+      open={open}
+      title={title}
+      onClose={onClose}
+      showActions={false}
+      data-testid={dataTestId}
+    >
       <Form<RestaurantFormValues>
         fields={RESTAURANT_FIELDS}
         onSubmit={handleSubmit}

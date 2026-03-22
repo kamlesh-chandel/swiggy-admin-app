@@ -299,7 +299,6 @@ const Restaurants = () => {
         data={restaurantDetails}
       />
       <RestaurantFormDialog
-        data-testid={'restaurant-form-dialog'}
         open={formOpen}
         onClose={() => setFormOpen(false)}
         mode={formMode}
