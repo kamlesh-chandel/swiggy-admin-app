@@ -47,9 +47,28 @@ describe('RestaurantDrawer', () => {
     expect(screen.getByText('Revenue')).toBeInTheDocument();
   });
 
-  test('renders no food items when food items array is empty', () => {
-    renderRestaurantDrawer();
-    expect(screen.getByText(/no food items/i)).toBeInTheDocument();
+  describe('Food Item array', () => {
+    test('renders food items when food items array is not empty', async () => {
+      const dataWithFoodItems: RestaurantDetails = {
+        ...baseData,
+        foodItems: [
+          {
+            id: 1,
+            name: 'Burger',
+            price: 120,
+            description: 'tasty burger',
+          },
+        ],
+      };
+
+      renderRestaurantDrawer({ data: dataWithFoodItems });
+      expect(await screen.findByText(/tasty burger/i)).toBeInTheDocument();
+    });
+
+    test('renders no food items when food items array is empty', () => {
+      renderRestaurantDrawer();
+      expect(screen.getByText(/no food items/i)).toBeInTheDocument();
+    });
   });
 
   test('shows inactive status chip when restaurant is inactive', () => {

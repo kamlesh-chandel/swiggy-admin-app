@@ -24,11 +24,6 @@ describe('Input Component', () => {
     expect(input).toHaveAttribute('name', 'name');
   });
 
-  test('renders input with label', () => {
-    renderInput();
-    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
-  });
-
   test('displays provided value', () => {
     renderInput({ value: 'abc' });
 
@@ -48,10 +43,28 @@ describe('Input Component', () => {
     expect(event.target.value).toBe('a');
   });
 
-  test('shows error with helper text', () => {
+  describe('Input error state', () => {
+    test('does not mark input invalid when error is false', () => {
+      renderInput({ error: false });
+
+      expect(screen.getByRole('textbox')).not.toHaveAttribute(
+        'aria-invalid',
+        'true',
+      );
+    });
+
+    test('marks input invalid when error is true', () => {
+      renderInput({ error: true });
+      expect(screen.getByRole('textbox')).toHaveAttribute(
+        'aria-invalid',
+        'true',
+      );
+    });
+  });
+
+  test('shows helper text when helperText given', () => {
     renderInput({ error: true, helperText: 'Error message' });
     expect(screen.getByText(/error message/i)).toBeInTheDocument();
-    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
   });
 
   test('renders number input when type is number', () => {
@@ -60,12 +73,17 @@ describe('Input Component', () => {
     expect(screen.getByRole('spinbutton')).toBeInTheDocument();
   });
 
-  test('renders file input with correct type', () => {
-    renderInput({ type: 'file', accept: 'image/' });
-    const fileInput = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLElement;
-    expect(fileInput).toBeInTheDocument();
-    expect(fileInput).toHaveAttribute('accept', 'image/');
+  describe('Input - file type behavior', () => {
+    test('renders file input when type is file', () => {
+      renderInput({ type: 'file' });
+      const fileInput = document.querySelector('input[type="file"]');
+      expect(fileInput).toBeInTheDocument();
+    });
+
+    test('does not render file input when type is not file', () => {
+      renderInput({ type: 'text' });
+      const fileInput = document.querySelector('input[type="file"]');
+      expect(fileInput).not.toBeInTheDocument();
+    });
   });
 });

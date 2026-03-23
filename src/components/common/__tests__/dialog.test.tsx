@@ -51,15 +51,8 @@ describe('Dialog Component', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  test('calls onConfirm when confirm button is clicked', async () => {
-    const onConfirm = vi.fn();
-    renderDialog({ onConfirm });
-    await user.click(getConfirmButton());
-    expect(onConfirm).toHaveBeenCalledTimes(1);
-  });
-
   describe('confirm button', () => {
-    test('when loading prop is true', () => {
+    test('should disable when loading is true', () => {
       renderDialog({
         loading: true,
       });
@@ -67,12 +60,19 @@ describe('Dialog Component', () => {
       expect(getConfirmButton()).toBeDisabled();
     });
 
-    test('enable when loading is false', () => {
+    test('should enable when loading is false', () => {
       renderDialog({
         loading: false,
       });
 
       expect(getConfirmButton()).toBeEnabled();
+    });
+
+    test('calls onConfirm when confirm button is clicked', async () => {
+      const onConfirm = vi.fn();
+      renderDialog({ onConfirm });
+      await user.click(getConfirmButton());
+      expect(onConfirm).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -11,7 +11,6 @@ describe('Loader Component', () => {
   test('renders loader with custom size', () => {
     renderLoader({ size: 50 });
 
-    expect(getLoader()).toBeInTheDocument();
     expect(getLoader()).toHaveStyle({
       width: '50px',
       height: '50px',

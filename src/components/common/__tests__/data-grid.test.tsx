@@ -26,7 +26,7 @@ describe('DataGrid Component', () => {
     expect(within(row).getByText('Pizza Hub')).toBeInTheDocument();
   });
 
-  test('shows loading state', () => {
+  test('shows loader when loading is true', () => {
     renderGrid({ loading: true });
     const grid = screen.getByRole('grid');
     expect(within(grid).getByRole('progressbar')).toBeInTheDocument();
@@ -34,12 +34,7 @@ describe('DataGrid Component', () => {
 
   test('shows failed state when error exists', () => {
     render(
-      <DataGrid
-        rows={[]}
-        columns={columns}
-        loading={false}
-        error="Something went wrong"
-      />,
+      <DataGrid rows={[]} columns={columns} error="Something went wrong" />,
     );
     const grid = screen.getByRole('grid');
     expect(within(grid).getByText(/something went wrong/i)).toBeInTheDocument();
