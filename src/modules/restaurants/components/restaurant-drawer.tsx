@@ -45,7 +45,7 @@ const RestaurantDrawer = ({ open, onClose, data }: RestaurantDrawerProps) => {
   const renderFoodItems = () => {
     if (data.foodItems.length === 0) {
       return (
-        <Box sx={styles.emptyFoodBox}>
+        <Box sx={styles.emptyFoodBox} data-testid="no-food-item">
           <Typography variant="body2" fontWeight={600}>
             No Food Items
           </Typography>
@@ -54,7 +54,7 @@ const RestaurantDrawer = ({ open, onClose, data }: RestaurantDrawerProps) => {
     }
 
     return data.foodItems.map(({ id, name, price, description }) => (
-      <Box key={id} sx={styles.foodItemBox}>
+      <Box key={id} sx={styles.foodItemBox} data-testid="food-item">
         <Typography variant="body2" fontWeight={600}>
           {name} — ₹{price}
         </Typography>

@@ -19,6 +19,12 @@ describe('Loader Component', () => {
 
   test('renders fullscreen loader when fullScreen is true', () => {
     renderLoader({ fullScreen: true });
-    expect(getLoader()).toBeInTheDocument();
+    expect(getLoader().parentElement).toHaveStyle({
+      position: 'fixed',
+      inset: '0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    });
   });
 });

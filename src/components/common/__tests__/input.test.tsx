@@ -43,7 +43,7 @@ describe('Input Component', () => {
     expect(event.target.value).toBe('a');
   });
 
-  describe('Input error state', () => {
+  describe('Error scenarios', () => {
     test('does not mark input invalid when error is false', () => {
       renderInput({ error: false });
 
@@ -73,7 +73,7 @@ describe('Input Component', () => {
     expect(screen.getByRole('spinbutton')).toBeInTheDocument();
   });
 
-  describe('Input - file type behavior', () => {
+  describe('File type behavior', () => {
     test('renders file input when type is file', () => {
       renderInput({ type: 'file' });
       const fileInput = document.querySelector('input[type="file"]');
@@ -84,6 +84,14 @@ describe('Input Component', () => {
       renderInput({ type: 'text' });
       const fileInput = document.querySelector('input[type="file"]');
       expect(fileInput).not.toBeInTheDocument();
+    });
+
+    test('renders file input with accept attribute', () => {
+      renderInput({ type: 'file', accept: 'image/' });
+      const fileInput = document.querySelector('input[type="file"]');
+
+      expect(fileInput).toBeInTheDocument();
+      expect(fileInput).toHaveAttribute('accept', 'image/');
     });
   });
 });

@@ -17,7 +17,14 @@ describe('RestaurantDrawer', () => {
       totalOrders: 10,
       totalRevenue: 1000,
     },
-    foodItems: [],
+    foodItems: [
+      {
+        id: 1,
+        name: 'Burger',
+        price: 120,
+        description: 'tasty burger',
+      },
+    ],
   };
 
   const renderRestaurantDrawer = (props = {}) => {
@@ -47,27 +54,21 @@ describe('RestaurantDrawer', () => {
     expect(screen.getByText('Revenue')).toBeInTheDocument();
   });
 
-  describe('Food Item array', () => {
-    test('renders food items when food items array is not empty', async () => {
-      const dataWithFoodItems: RestaurantDetails = {
-        ...baseData,
-        foodItems: [
-          {
-            id: 1,
-            name: 'Burger',
-            price: 120,
-            description: 'tasty burger',
-          },
-        ],
-      };
-
-      renderRestaurantDrawer({ data: dataWithFoodItems });
-      expect(await screen.findByText(/tasty burger/i)).toBeInTheDocument();
+  describe('Food Item scenario', () => {
+    test('renders food items when array is not empty', () => {
+      renderRestaurantDrawer();
+      const items = screen.getAllByTestId('food-item');
+      expect(items).toHaveLength(1);
     });
 
-    test('renders no food items when food items array is empty', () => {
-      renderRestaurantDrawer();
-      expect(screen.getByText(/no food items/i)).toBeInTheDocument();
+    test('renders empty state when food items array is empty', () => {
+      const emptyFoodItemData: RestaurantDetails = {
+        ...baseData,
+        foodItems: [],
+      };
+      renderRestaurantDrawer({ data: emptyFoodItemData });
+
+      expect(screen.getByTestId('no-food-item')).toBeInTheDocument();
     });
   });
 
