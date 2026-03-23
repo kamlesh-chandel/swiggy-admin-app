@@ -54,7 +54,7 @@ const RestaurantDrawer = ({ open, onClose, data }: RestaurantDrawerProps) => {
     }
 
     return data.foodItems.map(({ id, name, price, description }) => (
-      <Box key={id} sx={styles.foodItemBox} data-testid="food-item">
+      <Box key={id} sx={styles.foodItemBox} data-testid={`food-item-${id}`}>
         <Typography variant="body2" fontWeight={600}>
           {name} — ₹{price}
         </Typography>

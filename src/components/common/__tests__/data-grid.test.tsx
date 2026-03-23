@@ -22,7 +22,8 @@ describe('DataGrid Component', () => {
 
   test('renders rows in the table', () => {
     renderGrid();
-    const row = screen.getByRole('row', { name: /pizza hub/i });
+    const grid = screen.getByRole('grid');
+    const row = within(grid).getByRole('row', { name: /pizza hub/i });
     expect(within(row).getByText('Pizza Hub')).toBeInTheDocument();
   });
 

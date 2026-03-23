@@ -57,8 +57,8 @@ describe('RestaurantDrawer', () => {
   describe('Food Item scenario', () => {
     test('renders food items when array is not empty', () => {
       renderRestaurantDrawer();
-      const items = screen.getAllByTestId('food-item');
-      expect(items).toHaveLength(1);
+      const item = screen.getByTestId('food-item-1');
+      expect(item).toBeInTheDocument();
     });
 
     test('renders empty state when food items array is empty', () => {
@@ -72,7 +72,7 @@ describe('RestaurantDrawer', () => {
     });
   });
 
-  test('shows inactive status chip when restaurant is inactive', () => {
+  test('shows inactive status when restaurant is inactive', () => {
     const inactiveData: RestaurantDetails = {
       ...baseData,
       isActive: false,
