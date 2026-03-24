@@ -1,18 +1,9 @@
 import { render, screen, within } from '@testing-library/react';
 import DataGrid from '../data-grid';
-import type { GridColDef } from '@mui/x-data-grid';
-
-interface TestRow {
-  id: number;
-  name: string;
-}
 
 describe('DataGrid Component', () => {
-  const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', flex: 1 },
-  ];
-
-  const rows: TestRow[] = [{ id: 1, name: 'Pizza Hub' }];
+  const columns = [{ field: 'name', headerName: 'Name', flex: 1 }];
+  const rows = [{ id: 1, name: 'Pizza Hub' }];
 
   const renderGrid = (props = {}) => {
     render(
