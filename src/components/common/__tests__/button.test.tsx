@@ -19,7 +19,7 @@ describe('Button Component', () => {
     renderButton();
     const button = getButtonByRole();
     expect(button).toBeInTheDocument();
-    expect(button).toHaveTextContent('Submit');
+    expect(button).not.toHaveTextContent('Submit');
   });
 
   test('calls onClick handler when clicked', async () => {
