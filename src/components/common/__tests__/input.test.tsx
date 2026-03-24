@@ -15,13 +15,14 @@ describe('Input Component', () => {
 
   const getInputTextBox = () => screen.getByRole('textbox');
 
-  test('passes id and name props to input element', () => {
-    renderInput({ id: 'name-input', name: 'name' });
+  test('passes id prop to input element', () => {
+    renderInput({ id: 'name-input' });
+    expect(getInputTextBox()).toHaveAttribute('id', 'name-input');
+  });
 
-    const input = screen.getByRole('textbox');
-
-    expect(input).toHaveAttribute('id', 'name-input');
-    expect(input).toHaveAttribute('name', 'name');
+  test('passes name prop to input element', () => {
+    renderInput({ name: 'name' });
+    expect(getInputTextBox()).toHaveAttribute('name', 'name');
   });
 
   test('displays provided value', () => {
@@ -63,7 +64,7 @@ describe('Input Component', () => {
   });
 
   test('shows helper text when helperText given', () => {
-    renderInput({ error: true, helperText: 'Error message' });
+    renderInput({ helperText: 'Error message' });
     expect(screen.getByText(/error message/i)).toBeInTheDocument();
   });
 

@@ -63,39 +63,39 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
     await clickAddButton();
   });
 
-  const getNameTextBox = () => screen.findByRole('textbox', { name: /name/i });
+  const getNameTextBox = () => screen.getByRole('textbox', { name: /name/i });
 
   const getAddressTextBox = () =>
-    screen.findByRole('textbox', { name: /address/i });
+    screen.getByRole('textbox', { name: /address/i });
 
-  const getCityTextBox = () => screen.findByRole('textbox', { name: /city/i });
+  const getCityTextBox = () => screen.getByRole('textbox', { name: /city/i });
 
   const getRatingTextBox = () =>
-    screen.findByRole('spinbutton', { name: /rating/i });
+    screen.getByRole('spinbutton', { name: /rating/i });
 
   const getCreateRestaurantButton = () =>
-    screen.findByRole('button', { name: /create restaurant/i });
+    screen.getByRole('button', { name: /create restaurant/i });
 
   test('opens add restaurant dialog on Add button click', async () => {
     expect(
-      await screen.findByTestId('restaurant-add-dialog'),
+      await screen.getByTestId('restaurant-add-dialog'),
     ).toBeInTheDocument();
   });
 
   test('renders empty form fields and disables create button initially', async () => {
-    expect(await getNameTextBox()).toHaveValue('');
-    expect(await getAddressTextBox()).toHaveValue('');
-    expect(await getCityTextBox()).toHaveValue('');
-    expect(await getRatingTextBox()).toHaveValue(null);
+    expect(getNameTextBox()).toHaveValue('');
+    expect(getAddressTextBox()).toHaveValue('');
+    expect(getCityTextBox()).toHaveValue('');
+    expect(getRatingTextBox()).toHaveValue(null);
 
-    const button = await getCreateRestaurantButton();
+    const button = getCreateRestaurantButton();
     expect(button).toBeDisabled();
   });
 
   describe('Name field validation', () => {
     let nameTextBox: HTMLElement;
     beforeEach(async () => {
-      nameTextBox = await getNameTextBox();
+      nameTextBox = getNameTextBox();
     });
     test('does not show error when name is valid', async () => {
       await user.type(nameTextBox, 'abcdef');
@@ -117,7 +117,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   describe('Address field validation', () => {
     let addressTextBox: HTMLElement;
     beforeEach(async () => {
-      addressTextBox = await getAddressTextBox();
+      addressTextBox = getAddressTextBox();
     });
     test('does not show error when address is valid', async () => {
       await user.type(addressTextBox, 'abcdef');
@@ -139,19 +139,19 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   describe('City field validation', () => {
     let cityTextBox: HTMLElement;
     beforeEach(async () => {
-      cityTextBox = await getCityTextBox();
+      cityTextBox = getCityTextBox();
     });
     test('does not show error when city is valid', async () => {
       await user.type(cityTextBox, 'abc');
       expect(
-        screen.queryByText(/city must be at least 2 characters/i),
+        screen.queryByText(/city must be at least 3 characters/i),
       ).not.toBeInTheDocument();
     });
 
     test('shows error when city is shorter than 2 characters', async () => {
       await user.type(cityTextBox, 'a');
       expect(
-        screen.getByText(/city must be at least 2 characters/i),
+        screen.getByText(/city must be at least 3 characters/i),
       ).toBeInTheDocument();
     });
   });
@@ -159,7 +159,7 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
   describe('Rating field validation', () => {
     let ratingTextBox: HTMLElement;
     beforeEach(async () => {
-      ratingTextBox = await getRatingTextBox();
+      ratingTextBox = getRatingTextBox();
     });
     test('does not show error when rating is valid', async () => {
       await user.type(ratingTextBox, '3');
@@ -190,11 +190,11 @@ describe.each(ROLES)('Add Restaurant Flow (%s)', (role) => {
       },
     });
 
-    const nameTextBox = await getNameTextBox();
-    const addressTextBox = await getAddressTextBox();
-    const cityTextBox = await getCityTextBox();
-    const ratingTextBox = await getRatingTextBox();
-    const createButton = await getCreateRestaurantButton();
+    const nameTextBox = getNameTextBox();
+    const addressTextBox = getAddressTextBox();
+    const cityTextBox = getCityTextBox();
+    const ratingTextBox = getRatingTextBox();
+    const createButton = getCreateRestaurantButton();
 
     await user.type(nameTextBox, 'restaurant abcd');
     await user.type(addressTextBox, 'shobhagpura');

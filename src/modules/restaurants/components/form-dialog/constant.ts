@@ -24,7 +24,7 @@ export const RESTAURANT_FIELDS: FieldConfig<RestaurantFormValues>[] = [
     label: 'City',
     type: 'text',
     required: true,
-    minLength: 2,
+    minLength: 3,
   },
   {
     id: 'rating',
